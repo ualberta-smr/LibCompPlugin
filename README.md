@@ -23,4 +23,6 @@ NEXT STEPS:
 
 3. work on gathering feedback data 
 
-Note: The main code which completed the functionality described is in two main classes called `EditorIllustrationAction.java`  and `SelectRecords.java` which can be found by navigating to `libmetricplugin/pluginPhase1/My_Plugin/src/main/java/org/intellij/sdk/editor/` 
+IMPORTANT NOTES:
+* Put the database in the specified location: C:\Users\[userid]\AppData\Roaming (this is a hidden file). This is just done temporarily for testing purposes, later on the database will made not local. 
+* The main code which completed the functionality described is in two main classes called `EditorIllustrationAction.java`  and `SelectRecords.java` which can be found by navigating to `libmetricplugin/pluginPhase1/My_Plugin/src/main/java/org/intellij/sdk/editor/` 
