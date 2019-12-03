@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conversion>
+  <applied-converters>
+    <converter id="android-module-to-java-module" />
+    <converter id="android-proguard-options" />
+    <converter id="android-sdk-library" />
+    <converter id="junit-to-android-junit-configurations" />
+    <converter id="kotlin-non-jvm-source-roots" />
+  </applied-converters>
+  <project-files>
+    <file path="C:\Users\elhajjm\Dropbox\University\Rehab\My_Plugin - Copy\.idea\codeStyles\Project.xml" timestamp="1570243528000" />
+    <file path="C:\Users\elhajjm\Dropbox\University\Rehab\My_Plugin - Copy\.idea\dbnavigator.xml" timestamp="1569375880000" />
+    <file path="C:\Users\elhajjm\Dropbox\University\Rehab\My_Plugin - Copy\.idea\gradle.xml" timestamp="1570243528000" />
+    <file path="C:\Users\elhajjm\Dropbox\University\Rehab\My_Plugin - Copy\.idea\misc.xml" timestamp="1569375880000" />
+    <file path="C:\Users\elhajjm\Dropbox\University\Rehab\My_Plugin - Copy\.idea\workspace.xml" timestamp="1573937788616" />
+  </project-files>
+</conversion>
+

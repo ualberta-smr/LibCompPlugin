@@ -5,15 +5,11 @@
       &lt;em&gt;most HTML tags may be used&lt;/em&gt;</change-notes>
   <idea-version since-build="192.6603" until-build="192.*"/>
   <id>my_Plugin.LibraryCompare</id>
-  <name>Plugin display name here</name>
-  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
-  <description>
-    Enter short description for your plugin here.&lt;br&gt;
-    &lt;em&gt;most HTML tags may be used&lt;/em&gt;
-    </description>
+  <name>LibraryComparison</name>
+  <vendor email="relhajj@ualberta.ca" url="http://cs.ualberta.ca">Rehab el hajj</vendor>
   <extensions defaultExtensionNs="com.intellij"/>
   <actions>
-    <action id="EditorBasics.EditorIllustrationAction" class="org.intellij.sdk.editor.EditorIllustrationAction" text="Library Compariosn" description="Replaces selected text with suggested library.">
+    <action id="EditorBasics.EditorIllustrationAction" class="org.intellij.sdk.editor.EditorIllustrationAction" text="Library Comparison" description="Replaces selected text with suggested library.">
       <add-to-group group-id="EditorPopupMenu" anchor="first"/>
     </action>
   </actions>
@@ -30,4 +26,9 @@
       <implementation-class>MainClassPlugin</implementation-class>
     </component>
   </project-components>
+  <module-components>
+    <component>
+      <implementation-class>ModuleClassComponent</implementation-class>
+    </component>
+  </module-components>
 </idea-plugin>

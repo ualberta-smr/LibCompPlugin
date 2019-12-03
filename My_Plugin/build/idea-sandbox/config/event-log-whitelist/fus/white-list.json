@@ -3,7 +3,8 @@
     "id" : "JavaFindUsages",
     "builds" : [ ],
     "versions" : [ {
-      "from" : "1"
+      "from" : "1",
+      "to" : "2"
     } ],
     "rules" : {
       "event_id" : [ "{enum#__event_id}" ],
@@ -85,6 +86,7 @@
     "rules" : {
       "event_id" : [ "{enum:started|finished}" ],
       "event_data" : {
+        "duration_ms" : [ "{regexp#integer}" ],
         "ide_activity_id" : [ "{regexp#integer}" ],
         "plugin" : [ "{util#plugin}" ],
         "plugin_type" : [ "{util#plugin_type}" ],
@@ -240,6 +242,31 @@
       }
     }
   }, {
+    "id" : "completion",
+    "builds" : [ ],
+    "versions" : [ {
+      "from" : "1"
+    } ],
+    "rules" : {
+      "event_id" : [ "{enum:finished}" ],
+      "event_data" : {
+        "alphabetically" : [ "{enum#boolean}" ],
+        "backspaces" : [ "{regexp#integer}" ],
+        "duration" : [ "{regexp#integer}" ],
+        "finish_type" : [ "{enum:TYPED|EXPLICIT|CANCELED_EXPLICITLY|CANCELED_BY_TYPING}" ],
+        "lang" : [ "{util#lang}" ],
+        "ml_used" : [ "{enum#boolean}" ],
+        "query_length" : [ "{regexp#integer}" ],
+        "selected_index" : [ "{regexp#integer}" ],
+        "selection_changed" : [ "{regexp#integer}" ],
+        "time_to_show" : [ "{regexp#integer}" ],
+        "token_length" : [ "{regexp#integer}" ],
+        "total_ml_time" : [ "{regexp#integer}" ],
+        "typing" : [ "{regexp#integer}" ],
+        "version" : [ "{regexp#version}", "{enum:unknown}" ]
+      }
+    }
+  }, {
     "id" : "completion.postfix",
     "builds" : [ ],
     "versions" : [ {
@@ -257,8 +284,9 @@
     }
   }, {
     "id" : "create.directory.dialog",
-    "builds" : [ {
-      "from" : "193.1337"
+    "builds" : [ ],
+    "versions" : [ {
+      "from" : "1"
     } ],
     "rules" : {
       "event_id" : [ "{enum:completion.variant.chosen}" ],
@@ -267,6 +295,26 @@
       },
       "enums" : {
         "contributor_name" : [ "third.party", "GradleDirectoryCompletionContributor", "MavenDirectoryCompletionContributor" ]
+      }
+    }
+  }, {
+    "id" : "customize.wizard",
+    "builds" : [ ],
+    "versions" : [ {
+      "from" : "1"
+    } ],
+    "rules" : {
+      "event_id" : [ "{enum#__event_id}" ],
+      "event_data" : {
+        "group" : [ "{enum#__group}" ],
+        "page" : [ "{regexp#integer}" ],
+        "plugin" : [ "{util#plugin}" ],
+        "plugin_type" : [ "{util#plugin_type}" ],
+        "timestamp" : [ "{regexp#integer}" ]
+      },
+      "enums" : {
+        "__event_id" : [ "remaining.pages.skipped", "WizardDisplayed", "UIThemeChanged", "DesktopEntryCreated", "LauncherScriptCreated", "BundledPluginGroupDisabled", "BundledPluginGroupEnabled", "BundledPluginGroupCustomized", "FeaturedPluginInstalled" ],
+        "__group" : [ "Java_Frameworks", "Web_Development", "Version_Controls", "Test_Tools", "Application_Servers", "Clouds", "Swing", "Android", "Database_Tools", "Other_Tools", "Plugin_Development" ]
       }
     }
   }, {
@@ -365,7 +413,7 @@
     "id" : "disabled.bundled.tools",
     "builds" : [ {
       "from" : "191.4811",
-      "to" : "192.4831"
+      "to" : "191.99999"
     } ],
     "rules" : {
       "event_id" : [ "{util#tool}" ],
@@ -377,7 +425,7 @@
     "id" : "disabled.listed.tools",
     "builds" : [ {
       "from" : "191.4811",
-      "to" : "192.4831"
+      "to" : "191.99999"
     } ],
     "rules" : {
       "event_id" : [ "{util#tool}" ],
@@ -491,7 +539,7 @@
     "id" : "enabled.bundled.tools",
     "builds" : [ {
       "from" : "191.4811",
-      "to" : "192.4831"
+      "to" : "191.99999"
     } ],
     "rules" : {
       "event_id" : [ "{util#tool}" ],
@@ -503,7 +551,7 @@
     "id" : "enabled.listed.tools",
     "builds" : [ {
       "from" : "191.4811",
-      "to" : "192.4831"
+      "to" : "191.99999"
     } ],
     "rules" : {
       "event_id" : [ "{util#tool}" ],
@@ -576,16 +624,26 @@
     }
   }, {
     "id" : "find",
-    "builds" : [ {
-      "from" : "192.5438",
-      "to" : "193.0"
-    }, {
-      "from" : "193.653"
+    "builds" : [ ],
+    "versions" : [ {
+      "from" : "1"
     } ],
     "rules" : {
-      "event_id" : [ "{enum#_}" ],
+      "event_id" : [ "{enum#_}", "{enum:search.session.started|check.box.toggled|regexp.help.clicked}" ],
+      "event_data" : {
+        "case_sensitive" : [ "{enum#boolean}" ],
+        "context" : [ "{enum#__context}" ],
+        "option_name" : [ "{enum#__option_name}" ],
+        "option_value" : [ "{enum#boolean}" ],
+        "regular_expressions" : [ "{enum#boolean}" ],
+        "type" : [ "{enum:FindInFile|FindInPath}", "{enum:FindInPath}", "{enum:FindInFile|FindInPath|Unknown}" ],
+        "whole_words_only" : [ "{enum#boolean}" ],
+        "with_file_filter" : [ "{enum#boolean}" ]
+      },
       "enums" : {
-        "_" : [ "FindPopupPanel$ToggleCaseSensitive", "FindPopupPanel$TogglePreserveCase", "FindPopupPanel$ToggleWholeWords", "FindPopupPanel$ToggleRegex", "FindPopupPanel$ToggleFileFilter", "FindInEditor.MatchCaseOn", "FindInEditor.WholeWordsOn", "FindInEditor.RegexOn", "FindInEditor.Context.IN_STRING_LITERALS", "FindInEditor.Context.IN_COMMENTS", "FindInEditor.Context.EXCEPT_STRING_LITERALS", "FindInEditor.Context.EXCEPT_COMMENTS", "FindInEditor.Context.EXCEPT_COMMENTS_AND_STRING_LITERALS", "FindInPath.MatchCaseOn", "FindInPath.WholeWordsOn", "FindInPath.RegexOn", "FindInPath.FileFilterOn", "FindInPath.Context.IN_STRING_LITERALS", "FindInPath.Context.IN_COMMENTS", "FindInPath.Context.EXCEPT_STRING_LITERALS", "FindInPath.Context.EXCEPT_COMMENTS", "FindInPath.Context.EXCEPT_COMMENTS_AND_STRING_LITERALS" ]
+        "_" : [ "FindPopupPanel$ToggleCaseSensitive", "FindPopupPanel$TogglePreserveCase", "FindPopupPanel$ToggleWholeWords", "FindPopupPanel$ToggleRegex", "FindPopupPanel$ToggleFileFilter", "FindInEditor.MatchCaseOn", "FindInEditor.WholeWordsOn", "FindInEditor.RegexOn", "FindInEditor.Context.IN_STRING_LITERALS", "FindInEditor.Context.IN_COMMENTS", "FindInEditor.Context.EXCEPT_STRING_LITERALS", "FindInEditor.Context.EXCEPT_COMMENTS", "FindInEditor.Context.EXCEPT_COMMENTS_AND_STRING_LITERALS", "FindInPath.MatchCaseOn", "FindInPath.WholeWordsOn", "FindInPath.RegexOn", "FindInPath.FileFilterOn", "FindInPath.Context.IN_STRING_LITERALS", "FindInPath.Context.IN_COMMENTS", "FindInPath.Context.EXCEPT_STRING_LITERALS", "FindInPath.Context.EXCEPT_COMMENTS", "FindInPath.Context.EXCEPT_COMMENTS_AND_STRING_LITERALS" ],
+        "__context" : [ "ANY", "IN_STRING_LITERALS", "IN_COMMENTS", "EXCEPT_STRING_LITERALS", "EXCEPT_COMMENTS", "EXCEPT_COMMENTS_AND_STRING_LITERALS" ],
+        "__option_name" : [ "CaseSensitive", "PreserveCase", "WholeWords", "Regex", "FileFilter" ]
       }
     }
   }, {
@@ -723,11 +781,15 @@
       "from" : "1"
     } ],
     "rules" : {
-      "event_id" : [ "{enum#ide_features}", "start.swift.refactorings.{enum#ide_features}", "start.swift.{enum#ide_features}", "start.swift.navigation.{enum#ide_features}", "start.swift.editorbasics.{enum#ide_features}", "start.swift.codegeneration.{enum#ide_features}", "start.swift.codeassistance.{enum#ide_features}", "start.{enum#ide_features}", "start.refactorings.{enum#ide_features}", "start.navigation.{enum#ide_features}", "start.codeassistance.{enum#ide_features}", "passed.swift.navigation.{enum#ide_features}", "passed.swift.editorbasics.{enum#ide_features}", "passed.swift.codeassistance.{enum#ide_features}", "passed.{enum#ide_features}", "passed.refactorings.{enum#ide_features}", "passed.navigation.{enum#ide_features}", "passed.codeassistance.{enum#ide_features}", "{enum:start|passed}" ],
+      "event_id" : [ "{enum#ide_features}", "start.swift.refactorings.{enum#ide_features}", "start.swift.{enum#ide_features}", "start.swift.navigation.{enum#ide_features}", "start.swift.editorbasics.{enum#ide_features}", "start.swift.codegeneration.{enum#ide_features}", "start.swift.codeassistance.{enum#ide_features}", "start.{enum#ide_features}", "start.refactorings.{enum#ide_features}", "start.navigation.{enum#ide_features}", "start.codeassistance.{enum#ide_features}", "passed.swift.navigation.{enum#ide_features}", "passed.swift.editorbasics.{enum#ide_features}", "passed.swift.codeassistance.{enum#ide_features}", "passed.{enum#ide_features}", "passed.refactorings.{enum#ide_features}", "passed.navigation.{enum#ide_features}", "passed.codeassistance.{enum#ide_features}", "{enum:start|passed|group_event|start_module_action}" ],
       "event_data" : {
-        "duration" : [ "{regexp#integer}", "-{regexp#integer}" ],
+        "duration" : [ "{regexp#integer}" ],
+        "group_name" : [ "{enum:TUTORIALS|PROJECTS}" ],
+        "group_state" : [ "{enum:expanded|collapsed}" ],
         "language" : [ "{enum:java|go|ruby|swift|html|objectivec}" ],
-        "lesson_id" : [ "{util#lesson_id}" ]
+        "lesson_id" : [ "{util#lesson_id}" ],
+        "module_name" : [ "{util#module_name}" ],
+        "progress_percentage" : [ "{regexp#integer}" ]
       },
       "enums" : {
         "ide_features" : [ "rename", "extract.variable", "extract.method", "extract.closure", "rdt.test", "rdt.run", "rdt.debug", "toolwindows", "search", "code", "selection", "multipleselections", "move", "duplicate", "deleteline", "commentline", "collapse", "completions.basiccompletion", "quickfixes", "overrideimplement", "generate", "createfromusage", "quickpopups", "codeformatting", "smarttypecompletion", "select", "refactoringbasics", "extractvariablefield", "extractmethod", "postfixcompletion", "nextpreviousoccurrences", "jumptosource", "filestructure", "declarationimplementation", "ideactions", "hippiecompletion", "editorbasics.deleteline", "declarationandusages", "completionwithtab", "completions.statementcompletion", "completions.completionwithtab", "parameterinfo", "editorcodingassistance", "classsearch", "basiccompletion", "actions", "swift.completions.basiccompletion", "statementcompletion" ]
@@ -759,6 +821,7 @@
     "rules" : {
       "event_id" : [ "{enum:started|stage|finished}" ],
       "event_data" : {
+        "duration_ms" : [ "{regexp#integer}" ],
         "ide_activity_id" : [ "{regexp#integer}" ],
         "plugin" : [ "{util#plugin}" ],
         "plugin_type" : [ "{util#plugin_type}" ],
@@ -785,13 +848,35 @@
       "from" : "1"
     } ],
     "rules" : {
-      "event_id" : [ "{util#tool}", "{enum:not.default.state}" ],
+      "event_id" : [ "{util#tool}", "{enum:not.default.state|setting.non.default.state}" ],
       "event_data" : {
         "enabled" : [ "{enum#boolean}" ],
+        "inspection_enabled" : [ "{enum#boolean}" ],
         "inspection_id" : [ "{util#tool}" ],
         "lang" : [ "{util#lang}" ],
+        "option_index" : [ "{regexp#integer}" ],
+        "option_type" : [ "{enum:integer|boolean}" ],
+        "option_value" : [ "{enum#boolean}", "{regexp#integer}" ],
         "plugin" : [ "{util#plugin}" ],
         "plugin_type" : [ "{util#plugin_type}" ]
+      }
+    }
+  }, {
+    "id" : "intellij.cds",
+    "builds" : [ ],
+    "versions" : [ {
+      "from" : "2"
+    } ],
+    "rules" : {
+      "event_id" : [ "{enum:building.cds.started|building.cds.finished|running.with.cds}" ],
+      "event_data" : {
+        "duration" : [ "{regexp#integer}" ],
+        "running_with_archive" : [ "{enum#boolean}" ],
+        "status" : [ "{enum#__status}", "{enum:enabled|disabled}" ],
+        "uptime_millis" : [ "{regexp#integer}" ]
+      },
+      "enums" : {
+        "__status" : [ "success", "cancelled", "terminated-by-user", "plugins-changed", "failed" ]
       }
     }
   }, {
@@ -827,6 +912,36 @@
       }
     }
   }, {
+    "id" : "java.find.usages",
+    "builds" : [ ],
+    "versions" : [ {
+      "from" : "1"
+    } ],
+    "rules" : {
+      "event_id" : [ "{enum#__event_id}" ],
+      "event_data" : {
+        "classesUsages" : [ "{enum#boolean}" ],
+        "derivedInterfaces" : [ "{enum#boolean}" ],
+        "derivedUsages" : [ "{enum#boolean}" ],
+        "fieldUsages" : [ "{enum#boolean}" ],
+        "implementingClasses" : [ "{enum#boolean}" ],
+        "implementingMethods" : [ "{enum#boolean}" ],
+        "implicitCalls" : [ "{enum#boolean}" ],
+        "includeInherited" : [ "{enum#boolean}" ],
+        "includeOverload" : [ "{enum#boolean}" ],
+        "methodUsages" : [ "{enum#boolean}" ],
+        "overridingMethods" : [ "{enum#boolean}" ],
+        "readAccess" : [ "{enum#boolean}" ],
+        "searchScope" : [ "{enum:All_Places|Project_Files|Project_and_Libraries|Project_Production_Files|Project_Test_Files|Scratches_and_Consoles|Recently_Viewed_Files|Recently_Changed_Files|Open_Files|Current_File]}" ],
+        "textOccurrences" : [ "{enum#boolean}" ],
+        "usages" : [ "{enum#boolean}" ],
+        "writeAccess" : [ "{enum#boolean}" ]
+      },
+      "enums" : {
+        "__event_id" : [ "find.class.started", "find.method.started", "find.package.started", "find.throw.started", "find.variable.started" ]
+      }
+    }
+  }, {
     "id" : "java.language",
     "builds" : [ ],
     "versions" : [ {
@@ -855,6 +970,21 @@
       "event_data" : {
         "preview" : [ "{enum#boolean}" ],
         "version" : [ "{regexp#integer}" ]
+      }
+    }
+  }, {
+    "id" : "java.refactoring.settings",
+    "builds" : [ ],
+    "versions" : [ {
+      "from" : "1"
+    } ],
+    "rules" : {
+      "event_id" : [ "encapsulate.fields.use.accessors", "inheritance.to.delegation.delegate.other", "inline.class.search.in.comments", "inline.class.search.in.non.java", "inline.field.this.only.choice", "inline.local.this.only.choice", "inline.method.this.only.choice", "inline.super.class.this.only.choice", "introduce.constant.move.to.another.class", "introduce.constant.visibility", "introduce.field.visibility", "introduce.local.create.finals", "introduce.local.use.var", "introduce.parameter.create.finals", "introduce.parameter.delete.local", "introduce.parameter.replace.fields.with.getters", "introduce.parameter.use.initializer", "move.search.for.text", "move.search.in.comments", "rename.auto.inheritors", "rename.auto.overloads", "rename.auto.tests", "rename.auto.variables", "rename.search.for.text.for.class", "rename.search.for.text.for.field", "rename.search.for.text.for.method", "rename.search.for.text.for.package", "rename.search.for.text.for.variable", "rename.search.in.comments.for.class", "rename.search.in.comments.for.field", "rename.search.in.comments.for.method", "rename.search.in.comments.for.package", "rename.search.in.comments.for.variable", "extract.interface.javadoc", "extract.superclass.javadoc", "pull.up.members.javadoc" ],
+      "event_data" : {
+        "enabled" : [ "{enum#boolean}" ],
+        "javadoc" : [ "{enum:as_is|copy|move|unknown}" ],
+        "replace_fields_with_getters" : [ "{enum:none|inaccessible|all|unknown}" ],
+        "visibility" : [ "{enum:public|protected|packageLocal|private|EscalateVisible|unknown}" ]
       }
     }
   }, {
@@ -928,24 +1058,23 @@
       }
     }
   }, {
-    "id" : "kotlin.ide.debugger.eval",
+    "id" : "kotlin.ide.debugger",
     "builds" : [ ],
     "versions" : [ {
       "from" : "1"
     } ],
     "rules" : {
-      "event_id" : [ "{enum#_}" ],
+      "event_id" : [ "{enum:Evaluation}" ],
       "event_data" : {
-        "contextLanguage" : [ "Java", "Kotlin", "Other" ],
-        "evaluationType" : [ "WATCH", "WINDOW", "POPUP", "UNKNOWN" ],
-        "evaluator" : [ "Bytecode", "Eval4j" ],
-        "plugin_version" : [ "{regexp#plugin_version}" ]
+        "contextLanguage" : [ "{enum:Java|Kotlin|Other}" ],
+        "evaluationType" : [ "{enum#__evaluationType}" ],
+        "evaluator" : [ "{enum:Bytecode|Eval4j}" ],
+        "plugin_version" : [ "{regexp#kotlin_version}" ],
+        "status" : [ "{enum#__status}" ]
       },
       "enums" : {
-        "_" : [ "Success", "NoFrameProxy", "ThreadNotAvailable", "ThreadNotSuspended", "ProcessCancelledException", "InterpretingException", "EvaluateException", "SpecialException", "GenericException", "FrontendException", "BackendException", "ErrorsInCode" ]
-      },
-      "regexps" : {
-        "plugin_version" : "\\d\\.\\d\\.\\d{1,3}-(dev|eap|release)-(\\d+-)?(AppCode|CLion|IJ|Studio)[0-9\\-\\.]+"
+        "__evaluationType" : [ "WATCH", "WINDOW", "POPUP", "FROM_JAVA", "UNKNOWN" ],
+        "__status" : [ "Success", "DebuggerNotAttached", "DumbMode", "NoFrameProxy", "ThreadNotAvailable", "ThreadNotSuspended", "ProcessCancelledException", "InterpretingException", "EvaluateException", "SpecialException", "GenericException", "CannotFindVariable", "CoroutineContextUnavailable", "ParameterNotCaptured", "InsideDefaultMethod", "BackingFieldNotFound", "SuspendCall", "CrossInlineLambda", "Eval4JAbnormalTermination", "Eval4JUnknownException", "ExceptionFromEvaluatedCode", "ErrorElementOccurred", "FrontendException", "BackendException", "ErrorsInCode" ]
       }
     }
   }, {
@@ -955,7 +1084,7 @@
       "from" : "1"
     } ],
     "rules" : {
-      "event_id" : [ "{enum:Completion}" ],
+      "event_id" : [ "{enum:Completion|AddValToDataClassParameters}" ],
       "event_data" : {
         "choice_at_position" : [ "{regexp#integer}" ],
         "completion_event" : [ "{enum:chosen|not_chosen}" ],
@@ -963,6 +1092,10 @@
         "file_type" : [ "{enum:KT|GRADLEKTS|KTS}" ],
         "finish_reason" : [ "{enum:DONE|CANCELLED|HIDDEN|INTERRUPTED}" ],
         "invocation_count" : [ "{regexp#integer}" ],
+        "is_before_typing" : [ "{enum#boolean}" ],
+        "is_val_added" : [ "{enum#boolean}" ],
+        "lagging" : [ "{regexp#integer}" ],
+        "on_symbol" : [ "{enum:comma|bracket|unknown}" ],
         "plugin_version" : [ "{regexp#kotlin_version}" ],
         "window_appearance_time" : [ "{regexp#integer}" ],
         "window_population_time" : [ "{regexp#integer}" ]
@@ -1051,40 +1184,24 @@
       "from" : "1"
     } ],
     "rules" : {
-      "event_id" : [ "{enum:newInference}" ],
+      "event_id" : [ "{enum:newInference|scriptingAutoReloadEnabled}" ],
       "event_data" : {
         "enabled" : [ "{enum#boolean}" ],
         "pluginVersion" : [ "{regexp#kotlin_version}" ]
       }
     }
   }, {
-    "id" : "kotlin.jps.target",
+    "id" : "kotlin.project.configuration",
     "builds" : [ ],
     "versions" : [ {
       "from" : "1"
     } ],
     "rules" : {
-      "event_id" : [ "{enum:jvm|native|common|js}" ],
+      "event_id" : [ "{enum:Build}" ],
       "event_data" : {
-        "plugin_version" : [ "{regexp#kotlin_version}", "{enum:@snapshot@}" ]
-      },
-      "regexps" : {
-        "kotlin_version" : "\\d\\.\\d\\.\\d{1,3}-(dev|eap|release)-(\\d+-)?(AppCode|CLion|IJ|Studio)[0-9\\-\\.]+"
-      }
-    }
-  }, {
-    "id" : "kotlin.maven.target",
-    "builds" : [ ],
-    "versions" : [ {
-      "from" : "1"
-    } ],
-    "rules" : {
-      "event_id" : [ "{enum:jvm|js|common}" ],
-      "event_data" : {
-        "plugin_version" : [ "{regexp#kotlin_version}" ]
-      },
-      "regexps" : {
-        "kotlin_version" : "\\d\\.\\d\\.\\d{1,3}-(dev|eap|release)-(\\d+-)?(AppCode|CLion|IJ|Studio)[0-9\\-\\.]+"
+        "platform" : [ "{enum:jvm|js|native|common}" ],
+        "pluginVersion" : [ "{regexp#kotlin_version}" ],
+        "system" : [ "{enum:JPS|Maven|Gradle|unknown}" ]
       }
     }
   }, {
@@ -1119,12 +1236,12 @@
       "event_data" : {
         "command_line" : [ "{enum#boolean}" ],
         "duration_grouped" : [ "{regexp#integer}s", "-{regexp#integer}s", "{regexp#integer}s+" ],
-        "duration_ms" : [ "{regexp#integer}", "-{regexp#integer}" ],
-        "duration_s" : [ "{regexp#integer}", "-{regexp#integer}" ],
+        "duration_ms" : [ "{regexp#integer}" ],
+        "duration_s" : [ "{regexp#integer}" ],
         "eap" : [ "{enum#boolean}" ],
         "error" : [ "{util#class_name}" ],
         "error_frames" : [ "{util#method_name}" ],
-        "error_hash" : [ "{regexp#integer}", "-{regexp#integer}" ],
+        "error_hash" : [ "{regexp#integer}" ],
         "error_size" : [ "{regexp#integer}" ],
         "headless" : [ "{enum#boolean}" ],
         "internal" : [ "{enum#boolean}" ],
@@ -1135,7 +1252,7 @@
         "plugin_type" : [ "{util#plugin_type}" ],
         "restart" : [ "{enum#boolean}" ],
         "test" : [ "{enum#boolean}" ],
-        "time_ms" : [ "{regexp#integer}", "-{regexp#integer}" ],
+        "time_ms" : [ "{regexp#integer}" ],
         "too_many_errors" : [ "{enum#boolean}" ]
       },
       "enums" : {
@@ -1208,13 +1325,18 @@
     }
   }, {
     "id" : "os.linux.wm",
-    "builds" : [ {
-      "from" : "191.4811"
+    "builds" : [ ],
+    "versions" : [ {
+      "from" : "1"
     } ],
     "rules" : {
-      "event_id" : [ "{enum#_}" ],
+      "event_id" : [ "{enum#_}", "{enum:xdg.current.desktop|wm.name}" ],
+      "event_data" : {
+        "value" : [ "{enum#__value}" ]
+      },
       "enums" : {
-        "_" : [ "KDE", "Gnome", "Ubuntu_Gnome", "Budgie_Gnome", "GNOME_Flashback_Unity", "GNOME_Flashback_Gnome", "pop_GNOME", "Awesome_GNOME", "X-Cinnamon", "Unity", "Unity7", "XFCE", "XDG_CURRENT_DESKTOP_is_empty", "i3", "MATE", "Pantheon", "Deepin", "LXDE", "LXQt", "Enlightenment", "UKUI", "X-Generic", "ICEWM", "Fluxbox", "default.desktop", "Unknown" ]
+        "_" : [ "KDE", "Gnome", "Ubuntu_Gnome", "Budgie_Gnome", "GNOME_Flashback_Unity", "GNOME_Flashback_Gnome", "pop_GNOME", "Awesome_GNOME", "X-Cinnamon", "Unity", "Unity7", "XFCE", "XDG_CURRENT_DESKTOP_is_empty", "i3", "MATE", "Pantheon", "Deepin", "LXDE", "LXQt", "Enlightenment", "UKUI", "X-Generic", "ICEWM", "Fluxbox", "default.desktop", "Unknown" ],
+        "__value" : [ "LG3D", "KDE", "Gnome", "Gnome_Shell", "Gnome_Classic", "Ubuntu_Gnome", "Budgie_Gnome", "GNOME_Flashback_Unity", "GNOME_Flashback_Gnome", "GNOME_Flashback", "pop_GNOME", "Awesome_GNOME", "X-Cinnamon", "Unity", "Unity7", "XFCE", "XDG_CURRENT_DESKTOP_is_empty", "i3", "MATE", "Pantheon", "Deepin", "LXDE", "LXQt", "Enlightenment", "UKUI", "X-Generic", "ICEWM", "Fluxbox", "default.desktop", "Unknown", "empty" ]
       }
     }
   }, {
@@ -1248,7 +1370,7 @@
         "build-system" : [ "{enum#build_system}" ],
         "gradle-groovy" : [ "{regexp#integer}" ],
         "gradle-kts" : [ "{regexp#integer}" ],
-        "hit-min-order" : [ "{regexp#integer}", "-{regexp#integer}" ],
+        "hit-min-order" : [ "{regexp#integer}" ],
         "ij" : [ "{regexp#integer}" ],
         "match-groups" : [ "{regexp#integer}" ],
         "match-items" : [ "{regexp#integer}" ],
@@ -1300,6 +1422,18 @@
       "event_id" : [ "{enum:build.file}" ]
     }
   }, {
+    "id" : "platform.installer",
+    "builds" : [ ],
+    "versions" : [ {
+      "from" : "1"
+    } ],
+    "rules" : {
+      "event_id" : [ "{enum:Update_Manager}" ],
+      "event_data" : {
+        "value" : [ "{enum:Toolbox_App|Snap|IDE}" ]
+      }
+    }
+  }, {
     "id" : "platform.registry",
     "builds" : [ ],
     "versions" : [ {
@@ -1336,10 +1470,26 @@
       }
     }
   }, {
+    "id" : "plugins.advertiser",
+    "builds" : [ ],
+    "versions" : [ {
+      "from" : "1"
+    } ],
+    "rules" : {
+      "event_id" : [ "{enum#__event_id}" ],
+      "event_data" : {
+        "plugins" : [ "{util#plugin}" ],
+        "source" : [ "{enum:editor|notification}" ]
+      },
+      "enums" : {
+        "__event_id" : [ "install.plugins", "ignore.extensions", "open.download.page", "ignore.ultimate", "ignore.unknown.features", "enable.plugins", "configure.plugins" ]
+      }
+    }
+  }, {
     "id" : "plugins.disabled",
     "builds" : [ {
       "from" : "191.4811",
-      "to" : "192.4831"
+      "to" : "191.99999"
     } ],
     "rules" : {
       "event_id" : [ "{util#plugin}" ]
@@ -1348,7 +1498,7 @@
     "id" : "plugins.non.bundled",
     "builds" : [ {
       "from" : "191.4811",
-      "to" : "192.4831"
+      "to" : "191.99999"
     } ],
     "rules" : {
       "event_id" : [ "{util#plugin}" ]
@@ -1380,7 +1530,7 @@
         "cs-implicit" : [ "{enum#boolean}" ],
         "cs-project" : [ "{enum#boolean}" ],
         "cs-system" : [ "{enum#boolean}" ],
-        "pct-non-watched" : [ "{regexp#integer}", "-{regexp#integer}" ]
+        "pct-non-watched" : [ "{regexp#integer}" ]
       },
       "enums" : {
         "_" : [ "case-sensitivity", "roots-watched" ]
@@ -1395,6 +1545,7 @@
     "rules" : {
       "event_id" : [ "{enum:started|finished}" ],
       "event_data" : {
+        "duration_ms" : [ "{regexp#integer}" ],
         "ide_activity_id" : [ "{regexp#integer}" ],
         "system_id" : [ "{enum#build_tools}" ],
         "task_class" : [ "{util#class_name}" ]
@@ -1474,6 +1625,23 @@
       }
     }
   }, {
+    "id" : "rename.refactoring",
+    "builds" : [ ],
+    "versions" : [ {
+      "from" : "1"
+    } ],
+    "rules" : {
+      "event_id" : [ "{enum:started|executed}" ],
+      "event_data" : {
+        "lang" : [ "{util#lang}" ],
+        "rename_processor" : [ "{util#class_name}" ],
+        "scope_type" : [ "{enum#__scope_type}" ]
+      },
+      "enums" : {
+        "__scope_type" : [ "project", "test", "production", "module", "current file", "third.party", "unknown" ]
+      }
+    }
+  }, {
     "id" : "run.configuration.exec",
     "builds" : [ ],
     "versions" : [ {
@@ -1482,6 +1650,7 @@
     "rules" : {
       "event_id" : [ "{util#run_config_factory}", "{enum:started|ui.shown|finished}" ],
       "event_data" : {
+        "duration_ms" : [ "{regexp#integer}" ],
         "executor" : [ "{util#run_config_executor}" ],
         "factory" : [ "{util#run_config_factory}" ],
         "id" : [ "{util#run_config_id}" ],
@@ -1598,6 +1767,18 @@
       "event_id" : [ "{enum#_}" ],
       "enums" : {
         "_" : [ "FilePathCompletionUsed", "BaseKeywordCompletionUsed", "ConditionKeywordCompletionUsed", "GenerateActionUsed", "ExternalFormatterDownloaded", "RenamingActionUsed", "QuickFixUsed", "SuppressInspectionUsed", "DisableInspectionUsed", "ExternalAnnotatorDownloaded", "DocumentationProviderUsed", "ExplainShellUsed" ]
+      }
+    }
+  }, {
+    "id" : "startup",
+    "builds" : [ ],
+    "versions" : [ {
+      "from" : "1"
+    } ],
+    "rules" : {
+      "event_id" : [ "{enum:bootstrap|splash|appInit|totalDuration}" ],
+      "event_data" : {
+        "duration" : [ "{regexp#integer}", "{enum:{-regexp#integer}}" ]
       }
     }
   }, {
@@ -1757,7 +1938,8 @@
   }, {
     "id" : "ui.accessibility.screen.reader",
     "builds" : [ {
-      "from" : "191.4811"
+      "from" : "191.4811",
+      "to" : "193.5096"
     } ],
     "rules" : {
       "event_id" : [ "screen.reader.{enum:ENABLED|DISABLED}" ]
@@ -1803,9 +1985,13 @@
       "from" : "1"
     } ],
     "rules" : {
-      "event_id" : [ "{enum#_}", "{enum:ProgressPaused|ProgressResumed|NavBarShowPopup|NavBarNavigate}" ],
+      "event_id" : [ "{enum#_}", "{enum#__event_id}" ],
+      "event_data" : {
+        "with_selection" : [ "{enum#boolean}" ]
+      },
       "enums" : {
-        "_" : [ "HectorPopupDisplayed", "LookupShowElementActions", "DaemonEditorPopupInvoked", "NavBarNavigate", "NavBarShowPopup", "LookupExecuteElementAction" ]
+        "_" : [ "HectorPopupDisplayed", "LookupShowElementActions", "DaemonEditorPopupInvoked", "NavBarNavigate", "NavBarShowPopup", "LookupExecuteElementAction" ],
+        "__event_id" : [ "ProgressPaused", "ProgressResumed", "NavBarShowPopup", "NavBarNavigate", "BreadcrumbShowTooltip", "BreadcrumbNavigate" ]
       }
     }
   }, {
@@ -1814,19 +2000,23 @@
       "from" : "191.4811"
     } ],
     "rules" : {
-      "event_id" : [ "UI.font.size[{regexp#integer}]", "Presentation.mode.font.size[{regexp#integer}]", "Editor.font.size[{regexp#integer}]", "IDE.editor.font.size[{regexp#integer}]", "Console.font.size[{regexp#integer}]", "QuickDoc.font.size[{enum#_}]", "UI.font.name[{enum#font}]", "Editor.font.name[{enum#font}]", "IDE.editor.font.name[{enum#font}]", "Console.font.name[{enum#font}]", "{enum:editor.lineSpacing}" ],
+      "event_id" : [ "UI.font.size[{regexp#integer}]", "Presentation.mode.font.size[{regexp#integer}]", "Editor.font.size[{regexp#integer}]", "IDE.editor.font.size[{regexp#integer}]", "Console.font.size[{regexp#integer}]", "QuickDoc.font.size[{enum#_}]", "UI.font.name[{enum#font}]", "Editor.font.name[{enum#font}]", "IDE.editor.font.name[{enum#font}]", "Console.font.name[{enum#font}]", "{enum:editor.lineSpacing}", "{enum#metrics}" ],
       "event_data" : {
+        "font_name" : [ "{enum#font}" ],
+        "font_size" : [ "{regexp#integer}", "{enum#_}" ],
         "value" : [ "{regexp#float}" ]
       },
       "enums" : {
         "_" : [ "X_SMALL", "X_LARGE", "XX_SMALL", "XX_LARGE", "SMALL", "MEDIUM", "LARGE" ],
-        "font" : [ "Monospaced", "Menlo", "DejaVu_Sans_Mono", ".SFNSText-Regular", "Fira_Code", "Lucida_Grande", "Source_Code_Pro", "Segoe_UI", "Ubuntu", ".SF_NS_Text", "Consolas", "Noto_Sans_Regular", "Microsoft_YaHei", "Fira_Code_Retina", "Cantarell_Regular", "Microsoft_YaHei_UI", "Monaco", "Noto_Sans", "Dialog.plain", "Fira_Code_Medium", "Courier_New", "Tahoma", "Hack", "DejaVu_Sans", "Ubuntu_Mono", "Droid_Sans_Mono", "Dialog", "Inconsolata", "Malgun_Gothic", "Cantarell", "DialogInput", "Yu_Gothic_UI_Regular", "Roboto", "Liberation_Mono", "Lucida_Console", "D2Coding", "Lucida_Sans_Typewriter", "Fira_Code_Light", "Droid_Sans", "Verdana", "Arial", "Roboto_Mono", "Segoe_UI_Semibold", "SF_Mono", "Droid_Sans_Mono_Slashed", "LucidaGrande", "Operator_Mono", "Ayuthaya", "Hasklig", "Iosevka", "Andale_Mono", "Anonymous_Pro", "Anonymous_Pro_for_Powerline", "D2Coding_ligature", "Dank_Mono", "DejaVu_Sans_Mono_for_Powerline", "Fantasque_Sans_Mono", "Fira_Mono_for_Powerline", "Hack_Nerd_Font", "IBM_Plex_Mono", "Meslo_LG_L_DZ_for_Powerline", "Meslo_LG_M_for_Powerline", "Meslo_LG_S_for_Powerline", "Microsoft_YaHei_Mono", "Noto_Mono_for_Powerline", "Noto_Sans_Mono", "PT_Mono", "PragmataPro", "SourceCodePro+Powerline+Awesome_Regular", "Source_Code_Pro_Semibold", "Source_Code_Pro_for_Powerline", "Ubuntu_Mono_derivative_Powerline", "YaHei_Consolas_Hybrid", "mononoki", "Bitstream_Vera_Sans_Mono", "Comic_Sans_MS", "Courier_10_Pitch", "Cousine", "2Coding_ligature", "Droid_Sans_Mono_Dotted", "Inconsolata-dz", "Input", "Input_Mono", "Meslo_LG_M_DZ_for_Powerline", "Migu_2M", "Monoid", "Operator_Mono_Book", "Operator_Mono_Lig", "Operator_Mono_Medium", "Abadi_MT_Condensed_Extra_Bold", "Al_Bayan", "Meiryo", "Microsoft_JhengHei", "Microsoft_Yahei_UI", "SansSerif", "Ubuntu_Light", "JetBrains_Mono", "null" ]
+        "font" : [ "Monospaced", "Menlo", "DejaVu_Sans_Mono", ".SFNSText-Regular", "Fira_Code", "Lucida_Grande", "Source_Code_Pro", "Segoe_UI", "Ubuntu", ".SF_NS_Text", "Consolas", "Noto_Sans_Regular", "Microsoft_YaHei", "Fira_Code_Retina", "Cantarell_Regular", "Microsoft_YaHei_UI", "Monaco", "Noto_Sans", "Dialog.plain", "Fira_Code_Medium", "Courier_New", "Tahoma", "Hack", "DejaVu_Sans", "Ubuntu_Mono", "Droid_Sans_Mono", "Dialog", "Inconsolata", "Malgun_Gothic", "Cantarell", "DialogInput", "Yu_Gothic_UI_Regular", "Roboto", "Liberation_Mono", "Lucida_Console", "D2Coding", "Lucida_Sans_Typewriter", "Fira_Code_Light", "Droid_Sans", "Verdana", "Arial", "Roboto_Mono", "Segoe_UI_Semibold", "SF_Mono", "Droid_Sans_Mono_Slashed", "LucidaGrande", "Operator_Mono", "Ayuthaya", "Hasklig", "Iosevka", "Andale_Mono", "Anonymous_Pro", "Anonymous_Pro_for_Powerline", "D2Coding_ligature", "Dank_Mono", "DejaVu_Sans_Mono_for_Powerline", "Fantasque_Sans_Mono", "Fira_Mono_for_Powerline", "Hack_Nerd_Font", "IBM_Plex_Mono", "Meslo_LG_L_DZ_for_Powerline", "Meslo_LG_M_for_Powerline", "Meslo_LG_S_for_Powerline", "Microsoft_YaHei_Mono", "Noto_Mono_for_Powerline", "Noto_Sans_Mono", "PT_Mono", "PragmataPro", "SourceCodePro+Powerline+Awesome_Regular", "Source_Code_Pro_Semibold", "Source_Code_Pro_for_Powerline", "Ubuntu_Mono_derivative_Powerline", "YaHei_Consolas_Hybrid", "mononoki", "Bitstream_Vera_Sans_Mono", "Comic_Sans_MS", "Courier_10_Pitch", "Cousine", "2Coding_ligature", "Droid_Sans_Mono_Dotted", "Inconsolata-dz", "Input", "Input_Mono", "Meslo_LG_M_DZ_for_Powerline", "Migu_2M", "Monoid", "Operator_Mono_Book", "Operator_Mono_Lig", "Operator_Mono_Medium", "Abadi_MT_Condensed_Extra_Bold", "Al_Bayan", "Meiryo", "Microsoft_JhengHei", "Microsoft_Yahei_UI", "SansSerif", "Ubuntu_Light", "JetBrains_Mono", ".AppleSystemUIFont", "null" ],
+        "metrics" : [ "UI", "Presentation.mode", "Editor", "IDE.editor", "Console", "QuickDoc", "editor.lineSpacing" ]
       }
     }
   }, {
     "id" : "ui.hidpi.mode",
     "builds" : [ {
-      "from" : "191.4811"
+      "from" : "191.4811",
+      "to" : "193.5096"
     } ],
     "rules" : {
       "event_id" : [ "{enum#_}" ],
@@ -1841,18 +2031,28 @@
       "from" : "1"
     } ],
     "rules" : {
-      "event_id" : [ "{enum#_}", "Recent.Files[{enum:30_50|more.than.50|15_30|15}]", "Tabs.{enum:Top|None|Right|Left|Bottom}", "Allow.merging.buttons.{enum#state}", "Tool.Window.buttons.{enum:hidden|visible}", "Toolbar.and.NavBar.{enum:hidden|visible}", "Toolbar.{enum:hidden|visible}", "Nav.Bar.{enum:hidden|visible|floating}", "Status.bar.{enum:visible|hidden}" ],
+      "event_id" : [ "{enum#_}", "Recent.Files[{enum:30_50|more.than.50|15_30|15}]", "Tabs.{enum:Top|None|Right|Left|Bottom}", "Allow.merging.buttons.{enum#state}", "Tool.Window.buttons.{enum:hidden|visible}", "Toolbar.and.NavBar.{enum:hidden|visible}", "Toolbar.{enum:hidden|visible}", "Nav.Bar.{enum:hidden|visible|floating}", "Status.bar.{enum:visible|hidden}", "{enum#__event_id}" ],
       "event_data" : {
-        "grouped" : [ "{enum:[30_50]|[more.than.50]|[15_30]|[15]}" ]
+        "count" : [ "{regexp#integer}" ],
+        "enabled" : [ "{enum#boolean}" ],
+        "grouped" : [ "{enum:[30_50]|[more.than.50]|[15_30]|[15]}" ],
+        "navbar" : [ "{enum:visible|hidden}" ],
+        "scale" : [ "{regexp#float}" ],
+        "scale_mode" : [ "{enum#boolean}" ],
+        "toolbar" : [ "{enum:visible|hidden}" ],
+        "value" : [ "{enum:visible|floating}", "{enum:visible|hidden}", "{enum:Top|None|Right|Left|Bottom}", "{enum#__value}", "{enum:per_monitor_dpi|system_dpi}" ]
       },
       "enums" : {
-        "_" : [ "recent.files", "Gutter.Icons", "Line.Numbers", "Toolbar.and.NavBar", "Show.tips.on.startup", "Retina", "Soft.Wraps", "Block.cursor", "QuickDoc.Show.Toolwindow", "QuickDoc.AutoUpdate" ]
+        "_" : [ "recent.files", "Gutter.Icons", "Line.Numbers", "Toolbar.and.NavBar", "Show.tips.on.startup", "Retina", "Soft.Wraps", "Block.cursor", "QuickDoc.Show.Toolwindow", "QuickDoc.AutoUpdate" ],
+        "__event_id" : [ "Nav.Bar", "Toolbar", "Status.bar", "Tool.Window.buttons", "Toolbar.and.NavBar", "Recent.files.limit", "Show.Editor.Tabs.In.Single.Row", "Hide.Editor.Tabs.If.Needed", "Block.cursor", "Line.Numbers", "Gutter.Icons", "Soft.Wraps", "Tabs", "Retina", "Show.tips.on.startup", "Allow.merging.buttons", "QuickDoc.Show.Toolwindow", "QuickDoc.AutoUpdate", "Look.and.Feel", "Hidpi.Mode", "Screen.Reader", "Screen.Scale" ],
+        "__value" : [ "Darcula", "IntelliJ", "Light", "High_contrast", "Dark_purple", "Cyan_light", "Rider_Dark", "Gray" ]
       }
     }
   }, {
     "id" : "ui.look.and.feel",
     "builds" : [ {
-      "from" : "191.4811"
+      "from" : "191.4811",
+      "to" : "193.5096"
     } ],
     "rules" : {
       "event_id" : [ "{enum#laf}" ],
@@ -1863,7 +2063,8 @@
   }, {
     "id" : "ui.screen.scale",
     "builds" : [ {
-      "from" : "191.4811"
+      "from" : "191.4811",
+      "to" : "193.5096"
     } ],
     "rules" : {
       "event_id" : [ "{regexp#integer}", "{regexp#integer}.{regexp#integer}", "ScaledMode_{regexp#integer}", "ScaledMode_{regexp#integer}.{regexp#integer}" ]
@@ -1925,6 +2126,7 @@
     "rules" : {
       "event_id" : [ "{enum#__event_id}" ],
       "event_data" : {
+        "duration_ms" : [ "{regexp#integer}" ],
         "ide_activity_id" : [ "{regexp#integer}" ]
       },
       "enums" : {
@@ -1967,15 +2169,22 @@
       "from" : "1"
     } ],
     "rules" : {
-      "event_id" : [ "{enum#_}" ],
+      "event_id" : [ "{enum#_}", "{enum:changelist_changed|changes_committed|node_expanded}" ],
       "event_data" : {
+        "committed_files" : [ "{regexp#hash}" ],
+        "cur_modified_files" : [ "{regexp#hash}" ],
+        "displayed_prediction" : [ "{regexp#hash}" ],
+        "empty_reason" : [ "{enum#__empty_reason}" ],
         "execution.time" : [ "{regexp#integer}" ],
         "execution_time" : [ "{regexp#integer}" ],
+        "prediction_for_files" : [ "{regexp#hash}" ],
+        "prev_modified_files" : [ "{regexp#hash}" ],
         "show.dialog.time" : [ "{regexp#integer}" ],
         "show_dialog_time" : [ "{regexp#integer}" ]
       },
       "enums" : {
-        "_" : [ "handler.registered", "plugin.disabled", "dialog.closed", "committed.anyway", "commit.canceled", "not.showed", "prediction.calculated" ]
+        "_" : [ "handler.registered", "plugin.disabled", "dialog.closed", "committed.anyway", "commit.canceled", "not.showed", "prediction.calculated" ],
+        "__empty_reason" : [ "service_init", "too_many_files", "data_manager_removed", "requirements_not_met", "data_pack_is_not_full", "data_pack_changed", "exception_thrown", "calculation_canceled", "unexpected_reason" ]
       }
     }
   }, {
@@ -2274,6 +2483,7 @@
     "rules" : {
       "event_id" : [ "{enum:refreshed}" ],
       "event_data" : {
+        "duration_ms" : [ "{regexp#integer}" ],
         "finish_time_ms" : [ "{regexp#integer}" ],
         "start_time_ms" : [ "{regexp#integer}" ]
       }
@@ -2290,12 +2500,14 @@
     },
     "regexps" : {
       "count" : "\\d+K?M?\\+?",
-      "float" : "\\d+\\.\\d+",
-      "integer" : "\\d+(\\+)?",
+      "float" : "-?\\d+\\.\\d+",
+      "hash" : ".+",
+      "integer" : "-?\\d+(\\+)?",
       "kotlin_version" : "\\d\\.\\d\\.\\d{1,3}-(dev|eap|release)-(\\d+-)?(AppCode|CLion|IJ|Studio)[0-9\\-\\.]+",
-      "mcu_name" : "UNKNOWN|UPDATE_FAILED|(STM32[A-Z]{1,2}\\W+)",
+      "mcu_name" : "UNKNOWN|UPDATE_FAILED|(STM32[A-Z]{1,2}\\w+)",
+      "series" : "^(?:AreaRange|Area|Bubble|Heatmap|Pie|Stock|Scatter|Line|Bar)+(?:_(?:AreaRange|Area|Bubble|Heatmap|Pie|Stock|Scatter|Line|Bar)+)*$",
       "version" : "(\\d+\\.?)*\\d+"
     }
   },
-  "version" : "848"
+  "version" : "939"
 }

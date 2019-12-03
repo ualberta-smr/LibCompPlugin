@@ -1,12 +1,9 @@
 <idea-plugin>
     <id>my_Plugin.LibraryCompare</id>
-    <name>Plugin display name here</name>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <name>LibraryComparison</name>
+    <vendor email="relhajj@ualberta.ca" url="http://cs.ualberta.ca">Rehab el hajj</vendor>
 
-    <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
-    ]]></description>
+
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -22,7 +19,7 @@
         <!-- Add your actions here -->
         <action id="EditorBasics.EditorIllustrationAction"
                 class="org.intellij.sdk.editor.EditorIllustrationAction"
-                text="Library Compariosn"
+                text="Library Comparison"
                 description="Replaces selected text with suggested library."
                 >
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
@@ -42,4 +39,9 @@
             <implementation-class>MainClassPlugin</implementation-class>
         </component>
     </project-components>
+    <module-components>
+        <component>
+            <implementation-class>ModuleClassComponent</implementation-class>
+        </component>
+    </module-components>
 </idea-plugin>

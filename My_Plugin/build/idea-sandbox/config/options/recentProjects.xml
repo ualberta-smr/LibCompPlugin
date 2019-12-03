@@ -2,18 +2,20 @@
   <component name="RecentProjectsManager">
     <option name="recentPaths">
       <list>
-        <option value="$USER_HOME$/Documents/SEMESTER 5/DirectedStudies/ConnectDB" />
+        <option value="$USER_HOME$/Documents/SEMESTER 5/DirectedStudies/Test" />
         <option value="$USER_HOME$/IdeaProjects/untitled" />
-        <option value="$USER_HOME$/IdeaProjects/test2" />
+        <option value="$USER_HOME$/Dropbox/University/Rehab/My_Plugin - Copy" />
         <option value="$USER_HOME$/Dropbox/University/Rehab/Test_LSP1" />
+        <option value="$USER_HOME$/Documents/SEMESTER 5/DirectedStudies/ConnectDB" />
+        <option value="$USER_HOME$/IdeaProjects/test2" />
       </list>
     </option>
     <option name="openPaths">
       <list>
-        <option value="$USER_HOME$/Documents/SEMESTER 5/DirectedStudies/ConnectDB" />
+        <option value="$USER_HOME$/Documents/SEMESTER 5/DirectedStudies/Test" />
       </list>
     </option>
-    <option name="lastPath" value="$USER_HOME$/Documents/SEMESTER 5/DirectedStudies/ConnectDB" />
+    <option name="lastPath" value="$USER_HOME$/Documents/SEMESTER 5/DirectedStudies/Test" />
     <option name="pid" value="" />
     <option name="additionalInfo">
       <map>
@@ -39,14 +41,36 @@
             </RecentProjectMetaInfo>
           </value>
         </entry>
+        <entry key="$USER_HOME$/Documents/SEMESTER 5/DirectedStudies/Test">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="IC-192.6603.28" />
+              <option name="productionCode" value="IC" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1574973960637" />
+              <option name="buildTimestamp" value="1567756850781" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Dropbox/University/Rehab/My_Plugin - Copy">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="IC-192.6603.28" />
+              <option name="productionCode" value="IC" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1573937729455" />
+              <option name="buildTimestamp" value="1567756816842" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
         <entry key="$USER_HOME$/Dropbox/University/Rehab/Test_LSP1">
           <value>
             <RecentProjectMetaInfo>
               <option name="build" value="IC-192.6603.28" />
               <option name="productionCode" value="IC" />
               <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
-              <option name="projectOpenTimestamp" value="1570427628622" />
-              <option name="buildTimestamp" value="1567756819866" />
+              <option name="projectOpenTimestamp" value="1573936966277" />
+              <option name="buildTimestamp" value="1567756804528" />
             </RecentProjectMetaInfo>
           </value>
         </entry>
@@ -78,8 +102,8 @@
               <option name="build" value="IC-192.6603.28" />
               <option name="productionCode" value="IC" />
               <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
-              <option name="projectOpenTimestamp" value="1571891265278" />
-              <option name="buildTimestamp" value="1567756831821" />
+              <option name="projectOpenTimestamp" value="1574872847764" />
+              <option name="buildTimestamp" value="1567756837560" />
             </RecentProjectMetaInfo>
           </value>
         </entry>
