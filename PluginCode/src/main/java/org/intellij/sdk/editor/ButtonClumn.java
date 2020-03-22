@@ -39,7 +39,7 @@ public class ButtonClumn extends JFrame {
     private String selectionLibrary = " ";
     private double[][] dataDouble;
     private JTable table;
-    private String columnHeaders[];
+    private String[] columnHeaders;
     private DecimalFormat df;
     private DecimalFormat intf;
     private DecimalFormat daysf;
@@ -154,10 +154,8 @@ public class ButtonClumn extends JFrame {
         // make sure that only the first 3 columns buttomsn are editable
         table = new JTable(data, columnHeaders) {
             public boolean isCellEditable(int row, int column) {
-                if (column > 2) {
-                    return false;
-                } else
-                    return true; //column of buttons
+                //column of buttons
+                return column <= 2;
             }
 
              //Implement table cell tool tips.
@@ -246,7 +244,6 @@ public class ButtonClumn extends JFrame {
                 return c;
             }
 
-            ;
         });
 
         int ColumnWidth = 1000; // I made the column width bigger so that I can increase font size
@@ -528,7 +525,7 @@ class SwingDemo extends JFrame {
         try {
             r.add(new JLabel(new ImageIcon(ImageIO.read(new File(imagePath)))));
         }catch (IOException e) {
-            e.getMessage().toString();
+            e.getMessage();
         }
         JButton bConfirm=new JButton("Okay");
         r.add(bConfirm, BorderLayout.SOUTH);

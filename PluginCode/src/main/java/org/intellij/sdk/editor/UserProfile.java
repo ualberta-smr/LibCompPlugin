@@ -1,14 +1,11 @@
 package org.intellij.sdk.editor;
 
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 
 import static java.awt.GridBagConstraints.LINE_START;
 

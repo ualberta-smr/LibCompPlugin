@@ -238,6 +238,36 @@ public class SelectRecords {
     }
 
 
+    public int updateUserProfile2(userData userRecord, int type){
+
+        String insetStatement = "UPDATE userprofile SET rate = ?, optionalFeedback = ? WHERE userID = ?";
+
+        int returnValue = 1;
+        try {
+            Connection conn;
+            if (type == 1)
+            {
+                conn  = this.connectLocal("\\library_feedback.sqlite3");
+            }
+            else
+            {
+                conn  = this.connectcloud("library_feedback");
+            }
+
+            PreparedStatement pstmt = conn.prepareStatement(insetStatement);
+            pstmt.setString(1, userRecord.getRate());
+            pstmt.setString(2, userRecord.getOptionalFeedback());
+            pstmt.setString(3, userRecord.getUserID());
+            pstmt.executeUpdate();
+
+        } catch (SQLException | ClassNotFoundException e) {
+            //System.out.println(e.getMessage());
+            returnValue = 0;
+        }
+        return (returnValue);
+    }
+
+
     public int updateFeedback(feedback feedbackData, int type){
         String insetStatement = "";
         int returnValue = 1;
