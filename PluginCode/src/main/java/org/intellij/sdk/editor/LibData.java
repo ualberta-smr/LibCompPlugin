@@ -1,8 +1,11 @@
 package org.intellij.sdk.editor;
 
 public class LibData {
+    private int id;
     private int library_id;
+    private int domain_id;
     private String name;
+    private String repository;
     private int year;
     private int month;
     private String Package;
@@ -18,8 +21,11 @@ public class LibData {
 
     }
 
-    public LibData(int library_id, String name, int year, int month, String aPackage, double popularity, double release_frequency, double issue_closing_time, double issue_response_time, double performance, double security, double backwards_compatibility) {
+    public LibData(int id, int library_id,int domain_id, String repository, String name, int year, int month, String aPackage, double popularity, double release_frequency, double issue_closing_time, double issue_response_time, double performance, double security, double backwards_compatibility) {
+        this.id = id;
         this.library_id = library_id;
+        this.domain_id = domain_id;
+        this.repository = repository;
         this.name = name;
         this.year = year;
         this.month = month;
@@ -33,12 +39,28 @@ public class LibData {
         this.backwards_compatibility = backwards_compatibility;
     }
 
+
+
+    public int getId() {
+        return id;
+    }
+
     public int getLibrary_id() {
         return library_id;
     }
 
+    public int getDomain_id() {
+        return domain_id;
+    }
+
+
     public String getName() {
         return name;
+    }
+
+
+    public String getRepository() {
+        return repository;
     }
 
     public int getYear() {
@@ -85,9 +107,27 @@ public class LibData {
         this.library_id = library_id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setDomain_id(int domain_id) {
+        this.domain_id = domain_id;
+    }
+
+
+
+
+
     public void setName(String name) {
         this.name = name;
     }
+
+
+    public void setRepository(String repository) {
+        this.repository = repository;
+    }
+
 
     public void setYear(int year) {
         this.year = year;
@@ -129,4 +169,3 @@ public class LibData {
         this.backwards_compatibility = backwards_compatibility;
     }
 }
-

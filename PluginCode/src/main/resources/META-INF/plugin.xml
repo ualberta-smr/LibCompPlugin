@@ -19,10 +19,22 @@
         <!-- Add your actions here -->
         <action id="EditorBasics.EditorIllustrationAction"
                 class="org.intellij.sdk.editor.EditorIllustrationAction"
+                popup="true"
                 text="Library Comparison"
                 description="Replaces selected text with suggested library."
                 >
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+
+        </action>
+
+        <action id="EditorBasics.EditorIllustrationAct"
+                class="org.intellij.sdk.editor.EditorAction2"
+                popup="true"
+                text="LibComp Profile"
+                description="Replaces selected text with suggested library."
+        >
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="control alt G" second-keystroke="C"/>
         </action>
 
     </actions>

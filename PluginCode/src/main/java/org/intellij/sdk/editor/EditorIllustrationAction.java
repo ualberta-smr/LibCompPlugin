@@ -10,6 +10,7 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectLocator;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.ui.DebuggerColors;
@@ -19,7 +20,9 @@ import com.intellij.openapi.editor.*;
 import com.intellij.psi.*;
 import com.intellij.psi.PsiImportList;
 import com.intellij.psi.PsiFile;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.SystemIndependent;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -42,8 +45,10 @@ public class EditorIllustrationAction extends AnAction {
         ImportListObjects = new ArrayList<>();
     }
 
+    public void ResetAllLibrary(String allLibrary) {  this.allLibrary = allLibrary;  }
     public void setAllLibrary(String allLibrary) {  this.allLibrary = this.allLibrary + ";" + allLibrary;  }
     public String getAllLibrary() { return allLibrary; }
+
 
     /**
      * The actionPerformed method is called whenever an action event is executed, i.e. a right click on the editor
@@ -51,7 +56,7 @@ public class EditorIllustrationAction extends AnAction {
      */
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
-       // detectAllOpenEditors();
+       // to be returned later detectAllOpenEditors();
 
 
        replaceRequestedImport(event);
@@ -70,6 +75,7 @@ public class EditorIllustrationAction extends AnAction {
 
         while (i < editorFileAll.length)
         {
+
             PsiFile psiFile = PsiManager.getInstance(proj).findFile(filesAll[i]);
             Editor editor = ((TextEditor)editorFileAll[i]).getEditor();
             detectionImports(psiFile, editor);
@@ -91,15 +97,13 @@ public class EditorIllustrationAction extends AnAction {
        final Project project = event.getProject();
        final Editor editor = event.getData(CommonDataKeys.EDITOR);
 
-        detectAllOpenEditors();
+  //      detectAllOpenEditors();
 
 
         if ((project != null) && (editor != null))
         {
             detectImportStatements(event);
         }
-
-
     }
 
      /**
@@ -160,9 +164,15 @@ public class EditorIllustrationAction extends AnAction {
                             WriteCommandAction.runWriteCommandAction(project, () ->
                                     document.replaceString(locationStartOfImport, locationEndOfImport, finalChoice1));
                         }
+
+             //           String[] options = {"Yes Please", "No"};
+             //           int sendtye = JOptionPane.showOptionDialog(null, "Send to the cloud...",
+             //                   "Update Server", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+                        int sendtye = 2;
                         SelectRecords dataAccessObject = new SelectRecords();
                         feedback feedbackDataPoint = new feedback(importStatementFull,finalChoice, locationStartOfImport,projectID,className,getAllLibrary(),bc.getSelectionLibrary());
-                        int results = dataAccessObject.updateFeedback(feedbackDataPoint);
+                        int results = dataAccessObject.updateFeedback(feedbackDataPoint,sendtye);
                     }
 
                     @Override
@@ -175,11 +185,11 @@ public class EditorIllustrationAction extends AnAction {
                                     document.replaceString(locationStartOfImport, locationEndOfImport, finalChoice1));
                             SelectRecords dataAccessObject = new SelectRecords();
                             feedback feedbackDataPoint = new feedback(importStatementFull,finalChoice1, locationStartOfImport,projectID,className,getAllLibrary(),bc.getSelectionLibrary());
-                            int results = dataAccessObject.updateFeedback(feedbackDataPoint);
+                            int results = dataAccessObject.updateFeedback(feedbackDataPoint,2);
                         }
                         SelectRecords dataAccessObject = new SelectRecords();
                         feedback feedbackDataPoint = new feedback(importStatementFull,finalChoice, locationStartOfImport,projectID,className,getAllLibrary(),bc.getSelectionLibrary());
-                        int results = dataAccessObject.updateFeedback(feedbackDataPoint);
+                        int results = dataAccessObject.updateFeedback(feedbackDataPoint,2);
                     }
                 };
 
@@ -198,74 +208,140 @@ public class EditorIllustrationAction extends AnAction {
      * The trigger for this to occur is a right click anywhere in the editor, I have yet to figure out how to have it work onLoad
      * Right now, the library being queried is the "last word" of the import statement
      * ex. for my.import.statement.rehab, the term queried against in the database is "rehab"
-     * @param event This is the current action event
      */
 
     public void detectionImports(@NotNull final PsiFile psiFile,@NotNull final Editor editor )
     {
-        final MarkupModel editorModel = editor.getMarkupModel();
-        final Document document = editor.getDocument();
-
         //Work off of the primary caret to get the selection info
-        final PsiJavaFile javaFile = (PsiJavaFile)psiFile;
+        try {
+            //  Block of code to try
+            final MarkupModel editorModel = editor.getMarkupModel();
+            final Document document = editor.getDocument();
+            final PsiJavaFile javaFile = (PsiJavaFile)psiFile;
 
-        //Prepare the color for the the highlighted lines
-        TextAttributes attributes =
-                EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
-        TextAttributes softerAttributes = attributes.clone();
+            //Prepare the color for the the highlighted lines
+            TextAttributes attributes =
+                    EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
+            TextAttributes softerAttributes = attributes.clone();
 
-        final PsiImportList importList = javaFile.getImportList();
-        if (importList == null) {
-            return;
-        }
+            final PsiImportList importList = javaFile.getImportList();
+            if (importList == null) {
+                return;
+            }
 
-        ImportListObjects.clear();
-        editorModel.removeAllHighlighters();
+            ImportListObjects.clear();
+            editorModel.removeAllHighlighters();
 
-        int locationLastWord = 0;
-        int importLineNumber;
+            int locationLastWord = 0;
+            int importLineNumber;
+            ResetAllLibrary("");
+            //iterate through import statements, if the "last term" is in the database, highlight that line
+            for (PsiImportStatementBase importStatementObject : importList.getAllImportStatements()){
 
-        //iterate through import statements, if the "last term" is in the database, highlight that line
-        for (PsiImportStatementBase importStatementObject : importList.getAllImportStatements()){
+                //get location of import statement
+                String TermSelected = importStatementObject.getImportReference().getReferenceName();
+                locationLastWord = importStatementObject.getImportReference().getTextOffset();
+                importLineNumber = document.getLineNumber(locationLastWord);
+                setAllLibrary(TermSelected);
 
-            //get location of import statement
-            String TermSelected = importStatementObject.getImportReference().getReferenceName();
-            locationLastWord = importStatementObject.getImportReference().getTextOffset();
-            importLineNumber = document.getLineNumber(locationLastWord);
-            setAllLibrary(TermSelected);
+                //check database
+                SelectRecords dataAccessObject = new SelectRecords();
+                ArrayList<String> choicesArray = dataAccessObject.selectAllLibraries(TermSelected);
+                if (choicesArray.size()>0){
 
-            //check database
-            SelectRecords dataAccessObject = new SelectRecords();
-            ArrayList<String> choicesArray = dataAccessObject.selectAllLibraries(TermSelected);
-            if (choicesArray.size()>0){
+                    // Prepare the object for the PSI, location, library, and domain
+                    ImportStatement impObj = new ImportStatement();
+                    impObj.setImportListBase(importStatementObject);
+                    impObj.setImportLocation(importLineNumber);
+                    impObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
+                    impObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
+                    impObj.setDomainName(choicesArray.get(4));
+                    ImportListObjects.add(impObj);
 
-                // Prepare the object for the PSI, location, library, and domain
-                ImportStatement impObj = new ImportStatement();
-                impObj.setImportListBase(importStatementObject);
-                impObj.setImportLocation(importLineNumber);
-                impObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
-                impObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
-                impObj.setDomainName(choicesArray.get(4));
-                ImportListObjects.add(impObj);
+                    year = Integer.parseInt(choicesArray.get(2));
+                    month = Integer.parseInt(choicesArray.get(3));
+                    //domainName = ;
 
-                year = Integer.parseInt(choicesArray.get(2));
-                month = Integer.parseInt(choicesArray.get(3));
-                //domainName = ;
-
-                //highlight the line
-                editorModel.addLineHighlighter(importLineNumber,
-                        DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1,softerAttributes);
+                    //highlight the line
+                    editorModel.addLineHighlighter(importLineNumber,
+                            DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1,softerAttributes);
+                }
             }
         }
-
-
+        catch(Exception e) {
+            //  Block of code to handle errors
+        }
     }
+
+
+    public void detectionDependencies(@NotNull final PsiFile psiFile,@NotNull final Editor editor )
+    {
+        //Work off of the primary caret to get the selection info
+
+            //  Block of code to try
+            final MarkupModel editorModel = editor.getMarkupModel();
+            final Document document = editor.getDocument();
+
+            TextAttributes attributes =
+                    EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
+            TextAttributes softerAttributes = attributes.clone();
+
+
+            String lineText;
+            String TermSelected;
+            // Replace the selection with a fixed string.
+
+            editorModel.removeAllHighlighters();
+            boolean Searchmode = false;
+
+            for (int i = 0; i < document.getLineCount(); i++) {
+                int startOffset = document.getLineStartOffset(i);
+                int endOffset = document.getLineEndOffset(i);
+
+                lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
+
+                if (Searchmode) {
+                   // boolean isTerm = lineText.contains("junit");
+                    String[] valuesInQuotes = StringUtils.substringsBetween(lineText, "\'", "\'");
+                    if (valuesInQuotes.length > 0) {
+                        TermSelected = valuesInQuotes[0];
+                        SelectRecords dataAccessObject = new SelectRecords();
+                        ArrayList<String> choicesArray = dataAccessObject.selectAllLibraries(TermSelected);
+                        if (choicesArray.size() > 0) {
+                            editorModel.addLineHighlighter(i,
+                                    DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
+
+                        }
+                    }
+                }
+
+                boolean isContains = lineText.contains("dependencies");
+                if (isContains)
+                {
+                    Searchmode = true;
+                }
+
+                boolean isContainsEnd = lineText.contains("}");
+                if (Searchmode && isContainsEnd)
+                {
+                    Searchmode = false;
+                }
+            }
+
+        }
 
     public void detectImportStatements(@NotNull final AnActionEvent event) {
 
          PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
          Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-        detectionImports(psiFile, editor);
 
+         try {
+             final PsiJavaFile javaFile = (PsiJavaFile) psiFile;
+             detectionImports(psiFile, editor);
+         }
+         catch(Exception e) {
+             //  Block of code to handle errors
+             detectionDependencies(psiFile, editor);
+         }
     }
 }
