@@ -29,7 +29,7 @@
         </action>
 
            <!-- Add your actions here -->
-            <group id="MyPlugin.test" text="Library Compare"  popup="true">
+            <group id="MyPlugin.test" text="LibComp"  popup="true">
 
                 <!--<action id="Myplugin.Textboxes" class="Mypackage.TextBoxes" text="Text _Boxes" description="A  menu item" />
                 <action id="Myplugin.Dialogs" class="Mypackage.MyShowDialog" text="Show _Dialog" description="A  menu item" />-->
@@ -45,7 +45,7 @@
                 <action id="EditorBasics.EditorIllustrationAct3"
                         class="org.intellij.sdk.editor.EditorAction3"
                         popup="true"
-                        text="Rate it"
+                        text="Send Us Your Feedback"
                         description="Replaces selected text with suggested library."
                 >
                     <keyboard-shortcut keymap="$default" first-keystroke="control alt G" second-keystroke="C"/>

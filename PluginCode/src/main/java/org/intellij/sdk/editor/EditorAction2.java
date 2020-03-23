@@ -14,7 +14,7 @@ public class EditorAction2 extends AnAction {
     public void actionPerformed(@NotNull final AnActionEvent event) {
 
         // JOptionPane.showMessageDialog(null,"message 2");
-        UserProfile f = new UserProfile("User Profile");
+        UserProfileDialog f = new UserProfileDialog("User Profile");
         f.init();
 
     }

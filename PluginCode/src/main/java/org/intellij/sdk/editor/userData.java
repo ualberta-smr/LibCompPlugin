@@ -2,6 +2,7 @@ package org.intellij.sdk.editor;
 
 
 public class userData {
+
     public userData() {
     }
 
@@ -159,9 +160,9 @@ public class userData {
     public String getCloudStore() {
         return CloudStore;
     }
+/*
 
-
-    public userData(String ID, String userID, String rate, String optionalFeedback, String project1, String project2, String project3, String project4, String project5, String occupation, String team1, String team2, String team3, String team4, String programming, String javaSkills) {
+    public UserData(String ID, String userID, String rate, String optionalFeedback, String project1, String project2, String project3, String project4, String project5, String occupation, String team1, String team2, String team3, String team4, String programming, String javaSkills) {
         this.ID = ID;
         this.userID = userID;
         this.rate = rate;
@@ -179,5 +180,7 @@ public class userData {
         Programming = programming;
         JavaSkills = javaSkills;
     }
+
+ */
 }
 
