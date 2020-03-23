@@ -1,31 +1,36 @@
-# library metric comparison plugin
+# LibComp: An IntelliJ IDE Plugin for Java Library Metric Comparison
 
-INSTALLING THE PLUGIN:
+## Installing LibComp:
 
-* Put the database in the specified location: `C:\Users\[userid]\AppData\Roaming` (this is a hidden file). This is just done temporarily for testing purposes, later on the database will be made not local. 
-* The main code which completed the functionality described is in two main classes called `EditorIllustrationAction.java`  and `SelectRecords.java` which can be found by navigating to `libmetricplugin/pluginPhase1/My_Plugin/src/main/java/org/intellij/sdk/editor/` 
+1. Clone the repository 
 
+2. Navigate to `C:\Users\[userid]\AppData\Roaming` on your machine and insert the LibComp folder there. This is where the library data DB and feedback DB as well as all of the .png's showing the trends of library metrics are stored. 
 
-HOW TO USE THE PLUGIN:
+3. Open the project `PluginCode` in your intelliJ IDE
 
-* If a user right clicks on a line that is not highlighted and selects libraycomparison, a dialog with a message indicating there is no match will appear. If they click on a line which is highkighted, a dialog with possible options will appear for them to choose from. If they click cancel nothing will happen. If they click a replacement then it will rpelace the old library being imported. 
+4. Compile and run the plugin (a new IDE window will open with the plugin running, you may now open any Java files of your choice and use the tool to analyze your library packages)
 
+`Currently working on making this an installable plugin`
 
-DATABASE SCHEMA:
+## How to use LibComp:
 
-* db.sqlite database is taken from the LibraryComparisonWebsite repo, click here to see the schema on their repo
-* feedback.sqlite database is for tracking feedback data 
+* Right click on the java file you want our plugin to analyze, all the libraries we have information on will be highlighted in pink 
 
-NEXT STEPS:
+* If you want to compare a specific library package (only valid for the ones highlighted in pink), right click on the import statement and click `Library Comparison`
 
-1. work on fixing the onLoad functionality (I have opened an issue about this) 
+* A dialog will now pop up with all alternative libraries. We provide the ability to sort by any chosen metric (in ascending or descending order) and there are trends shown in graphs. 
 
-2. add sorting functionality 
+* To replace a library package, select the relavent column and click `replace`. Otherwise click `cancel`. Note that you cannot replace a library with itself. 
 
-3. need a proper user study 
+## Sending us feedback:
+* To help us understand the types of users and projects LibComp is most relevent to, we have set up a feedback collection system. To be a part of this, follow these steps:
 
-4. look into adding graphs and trends 
+1. Navigate to `Tools > LibComp > User Profile` 
 
-5. What is the plan with the database? will it stay local or be kept on a server?
+2. Fill in the form and click the `update` button. **Congratulations, you have just created a user profile!** (You are free to update your profile at any point as the information about you is updated, just navigate to the same dialog, update the relevant information, and click `Update`)
 
+3. Navigate to `Tools > LibComp > Send Us Your Feedback` 
 
+4. Here you have 3 capabilities: you may rate our plugin from 1 (worst) to 5 (best), you may send us a comment about your user experience, and you may click `save to the cloud` for all of your previous feedback data to be sent to our central database. 
+
+5. We will not be saving any feedback data to our central database unless you explicitly allow it
