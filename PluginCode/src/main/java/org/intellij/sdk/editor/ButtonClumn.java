@@ -326,12 +326,8 @@ public class ButtonClumn extends JFrame {
 
         //SCROLLPANE,SET SZE,SET CLOSE OPERATION
         JBScrollPane pane = new JBScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
         //JScrollPane pane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
         table.setSize(ColumnWidth, frameHeight);
-
-
         pane.setBorder(border);
         pane.setBounds(0, 0, ColumnWidth, frameHeight);
         getContentPane().add(pane);

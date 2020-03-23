@@ -197,7 +197,7 @@ public class SelectRecords {
 
     public int updateUserProfile(userData userRecord, int type){
 
-        String insetStatement = "UPDATE userprofile SET rate = ?, optionalFeedback = ?, Project1 = ?, Project2 = ?, Project3 = ?, Project4 = ?, Project5 = ?, Occupation = ?, Team1 = ?, Team2 = ?, Team3 = ?, Team4 = ?, Programming = ?, JavaSkills = ?, CloudStore = ? WHERE userID = ?";
+        String insetStatement = "UPDATE userprofile SET Project1 = ?, Project2 = ?, Project3 = ?, Project4 = ?, Project5 = ?, Occupation = ?, Team1 = ?, Team2 = ?, Team3 = ?, Team4 = ?, Programming = ?, JavaSkills = ?, CloudStore = ? WHERE userID = ?";
 
         int returnValue = 1;
         try {
@@ -212,22 +212,22 @@ public class SelectRecords {
             }
 
             PreparedStatement pstmt = conn.prepareStatement(insetStatement);
-            pstmt.setString(1, userRecord.getRate());
-            pstmt.setString(2, userRecord.getOptionalFeedback());
-            pstmt.setString(3, userRecord.getProject1());
-            pstmt.setString(4, userRecord.getProject2());
-            pstmt.setString(5, userRecord.getProject3());
-            pstmt.setString(6, userRecord.getProject4());
-            pstmt.setString(7, userRecord.getProject5());
-            pstmt.setString(8, userRecord.getOccupation());
-            pstmt.setString(9, userRecord.getTeam1());
-            pstmt.setString(10, userRecord.getTeam2());
-            pstmt.setString(11, userRecord.getTeam3());
-            pstmt.setString(12, userRecord.getTeam4());
-            pstmt.setString(13, userRecord.getProgramming());
-            pstmt.setString(14, userRecord.getJavaSkills());
-            pstmt.setString(15, userRecord.getCloudStore());
-            pstmt.setString(16, userRecord.getUserID());
+          //  pstmt.setString(1, userRecord.getRate());
+          //  pstmt.setString(2, userRecord.getOptionalFeedback());
+            pstmt.setString(1, userRecord.getProject1());
+            pstmt.setString(2, userRecord.getProject2());
+            pstmt.setString(3, userRecord.getProject3());
+            pstmt.setString(4, userRecord.getProject4());
+            pstmt.setString(5, userRecord.getProject5());
+            pstmt.setString(6, userRecord.getOccupation());
+            pstmt.setString(7, userRecord.getTeam1());
+            pstmt.setString(8, userRecord.getTeam2());
+            pstmt.setString(9, userRecord.getTeam3());
+            pstmt.setString(10, userRecord.getTeam4());
+            pstmt.setString(11, userRecord.getProgramming());
+            pstmt.setString(12, userRecord.getJavaSkills());
+            pstmt.setString(13, userRecord.getCloudStore());
+            pstmt.setString(14, userRecord.getUserID());
             pstmt.executeUpdate();
 
         } catch (SQLException | ClassNotFoundException e) {
@@ -240,7 +240,7 @@ public class SelectRecords {
 
     public int updateUserProfile2(userData userRecord, int type){
 
-        String insetStatement = "UPDATE userprofile SET rate = ?, optionalFeedback = ? WHERE userID = ?";
+        String insetStatement = "UPDATE userprofile SET rate = ?, optionalFeedback = ?, CloudStore = ? WHERE userID = ?";
 
         int returnValue = 1;
         try {
@@ -257,7 +257,8 @@ public class SelectRecords {
             PreparedStatement pstmt = conn.prepareStatement(insetStatement);
             pstmt.setString(1, userRecord.getRate());
             pstmt.setString(2, userRecord.getOptionalFeedback());
-            pstmt.setString(3, userRecord.getUserID());
+            pstmt.setString(3, userRecord.getCloudStore());
+            pstmt.setString(4, userRecord.getUserID());
             pstmt.executeUpdate();
 
         } catch (SQLException | ClassNotFoundException e) {
