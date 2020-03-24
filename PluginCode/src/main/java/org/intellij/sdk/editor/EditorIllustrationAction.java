@@ -8,10 +8,8 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectLocator;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import com.intellij.openapi.actionSystem.*;
@@ -22,24 +20,20 @@ import com.intellij.psi.PsiImportList;
 import com.intellij.psi.PsiFile;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.SystemIndependent;
-
-import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 public class EditorIllustrationAction extends AnAction {
-
-
+    
     public ArrayList<ImportStatement> ImportListObjects;
 
     private String allLibrary;
     private int year;
     private int month;
-  //  String domainName;
-  //  private int libID;
-  //  private int domainID ;
+    //String domainName;
+    //private int libID;
+    //private int domainID ;
 
     public EditorIllustrationAction() {
         ImportListObjects = new ArrayList<>();
@@ -48,43 +42,33 @@ public class EditorIllustrationAction extends AnAction {
     public void ResetAllLibrary(String allLibrary) {  this.allLibrary = allLibrary;  }
     public void setAllLibrary(String allLibrary) {  this.allLibrary = this.allLibrary + ";" + allLibrary;  }
     public String getAllLibrary() { return allLibrary; }
-
-
+    
     /**
      * The actionPerformed method is called whenever an action event is executed, i.e. a right click on the editor
      * @param event is the current action event
      */
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
-       // to be returned later detectAllOpenEditors();
-
-
+       //Returned later: detectAllOpenEditors();
        replaceRequestedImport(event);
        detectImportStatements(event);
     }
 
     public void detectAllOpenEditors() {
-
         int i = 0;
         Project proj= ProjectManager.getInstance().getOpenProjects()[0];
         FileEditorManager manager = FileEditorManager.getInstance(proj);
-
         VirtualFile[] filesAll = manager.getOpenFiles();
         FileEditor[] editorFileAll = manager.getAllEditors();
-
-
-        while (i < editorFileAll.length)
-        {
-
+        
+        while (i < editorFileAll.length) {
             PsiFile psiFile = PsiManager.getInstance(proj).findFile(filesAll[i]);
             Editor editor = ((TextEditor)editorFileAll[i]).getEditor();
             detectionImports(psiFile, editor);
             i = i + 1;
         }
-
     }
-
-
+    
     /**
      * The update method is called whenever the action event is updated.
      * This will later be replaced with the onLoad method once I figure that out
@@ -96,12 +80,9 @@ public class EditorIllustrationAction extends AnAction {
     public void update(@NotNull final AnActionEvent event) {
        final Project project = event.getProject();
        final Editor editor = event.getData(CommonDataKeys.EDITOR);
-
-  //      detectAllOpenEditors();
-
-
-        if ((project != null) && (editor != null))
-        {
+       //detectAllOpenEditors();
+        
+        if ((project != null) && (editor != null)) {
             detectImportStatements(event);
         }
     }
@@ -131,7 +112,6 @@ public class EditorIllustrationAction extends AnAction {
 
         //Check if the user clicked on a line that is potentially replaceable (i.e. import statement is in database)
         int currentLine = 0;
-
 
         while (currentLine < ImportListObjects.size()) {
             if (ImportListObjects.get(currentLine).getImportLocation() == clickedLineNumber) {
@@ -164,15 +144,14 @@ public class EditorIllustrationAction extends AnAction {
                             WriteCommandAction.runWriteCommandAction(project, () ->
                                     document.replaceString(locationStartOfImport, locationEndOfImport, finalChoice1));
                         }
+                        //String[] options = {"Yes Please", "No"};
+                        //int sendToCloud = JOptionPane.showOptionDialog(null, "Send to the cloud...",
+                        //"Update Server", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
-             //           String[] options = {"Yes Please", "No"};
-             //           int sendtye = JOptionPane.showOptionDialog(null, "Send to the cloud...",
-             //                   "Update Server", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-
-                        int sendtye = 2;
+                        int sendToCloud = 2;
                         SelectRecords dataAccessObject = new SelectRecords();
-                        feedback feedbackDataPoint = new feedback(importStatementFull,finalChoice, locationStartOfImport,projectID,className,getAllLibrary(),bc.getSelectionLibrary());
-                        int results = dataAccessObject.updateFeedback(feedbackDataPoint,sendtye);
+                        FeedbackData feedbackDataPoint = new FeedbackData(importStatementFull,finalChoice, locationStartOfImport,projectID,className,getAllLibrary(),bc.getSelectionLibrary());
+                        int results = dataAccessObject.updateFeedback(feedbackDataPoint,sendToCloud);
                     }
 
                     @Override
@@ -184,20 +163,17 @@ public class EditorIllustrationAction extends AnAction {
                             WriteCommandAction.runWriteCommandAction(project, () ->
                                     document.replaceString(locationStartOfImport, locationEndOfImport, finalChoice1));
                             SelectRecords dataAccessObject = new SelectRecords();
-                            feedback feedbackDataPoint = new feedback(importStatementFull,finalChoice1, locationStartOfImport,projectID,className,getAllLibrary(),bc.getSelectionLibrary());
+                            FeedbackData feedbackDataPoint = new FeedbackData(importStatementFull,finalChoice1, locationStartOfImport,projectID,className,getAllLibrary(),bc.getSelectionLibrary());
                             int results = dataAccessObject.updateFeedback(feedbackDataPoint,2);
                         }
                         SelectRecords dataAccessObject = new SelectRecords();
-                        feedback feedbackDataPoint = new feedback(importStatementFull,finalChoice, locationStartOfImport,projectID,className,getAllLibrary(),bc.getSelectionLibrary());
+                        FeedbackData feedbackDataPoint = new FeedbackData(importStatementFull,finalChoice, locationStartOfImport,projectID,className,getAllLibrary(),bc.getSelectionLibrary());
                         int results = dataAccessObject.updateFeedback(feedbackDataPoint,2);
                     }
                 };
-
                bc.addWindowListener(adapter);
                bc.addWindowFocusListener(adapter);
-
-                bc.setVisible(true);
-
+               bc.setVisible(true);
             }
             currentLine = currentLine + 1;
         }
@@ -210,8 +186,7 @@ public class EditorIllustrationAction extends AnAction {
      * ex. for my.import.statement.rehab, the term queried against in the database is "rehab"
      */
 
-    public void detectionImports(@NotNull final PsiFile psiFile,@NotNull final Editor editor )
-    {
+    public void detectionImports(@NotNull final PsiFile psiFile,@NotNull final Editor editor ) {
         //Work off of the primary caret to get the selection info
         try {
             //  Block of code to try
@@ -273,7 +248,6 @@ public class EditorIllustrationAction extends AnAction {
         }
     }
 
-
     public void detectionDependencies(@NotNull final PsiFile psiFile,@NotNull final Editor editor )
     {
         //Work off of the primary caret to get the selection info
@@ -310,24 +284,20 @@ public class EditorIllustrationAction extends AnAction {
                         if (choicesArray.size() > 0) {
                             editorModel.addLineHighlighter(i,
                                     DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
-
                         }
                     }
                 }
 
                 boolean isContains = lineText.contains("dependencies");
-                if (isContains)
-                {
+                if (isContains) {
                     Searchmode = true;
                 }
 
                 boolean isContainsEnd = lineText.contains("}");
-                if (Searchmode && isContainsEnd)
-                {
+                if (Searchmode && isContainsEnd) {
                     Searchmode = false;
                 }
             }
-
         }
 
     public void detectImportStatements(@NotNull final AnActionEvent event) {

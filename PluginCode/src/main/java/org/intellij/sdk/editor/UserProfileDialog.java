@@ -1,15 +1,14 @@
 package org.intellij.sdk.editor;
 
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import static java.awt.GridBagConstraints.LINE_START;
 
 public class UserProfileDialog extends JFrame {
+
     UserProfileDialog(String title) {
         super(title);
     }
@@ -35,12 +34,10 @@ public class UserProfileDialog extends JFrame {
         this.setContentPane(mainPanel);
         gbc.anchor = LINE_START;
 
-        // Rate the Plugin
+        // Question 1: occupation
 
         xlocation = 0;
         ylocation = 1;
-
-        // Rate the Plugin
 
         gbc.gridx = xlocation;
         gbc.gridy = ylocation;
@@ -49,7 +46,6 @@ public class UserProfileDialog extends JFrame {
         labelOccupation.setFont(titleFont);
         gbLayout.setConstraints(labelOccupation, gbc);
         mainPanel.add(labelOccupation, gbc);
-
 
         xlocation = 0;
         ylocation = ylocation + 3;
@@ -62,7 +58,6 @@ public class UserProfileDialog extends JFrame {
         gbLayout.setConstraints(OccupationMenu, gbc);
         mainPanel.add(OccupationMenu, gbc);
 
-
         xlocation = 0;
         ylocation = ylocation + 1;
         gbc.gridx = xlocation;
@@ -73,7 +68,8 @@ public class UserProfileDialog extends JFrame {
 
         xlocation = 0;
 
-        // types of projects
+        // Question 2: types of projects
+
         ylocation = ylocation + 1;
         gbc.gridx = xlocation;
         gbc.gridy = ylocation;
@@ -123,7 +119,7 @@ public class UserProfileDialog extends JFrame {
         gbLayout.setConstraints(proj_Check5, gbc);
         mainPanel.add(proj_Check5);
 
-        // Types of teams
+        // Question 3: types of teams
 
         xlocation = 0;
         ylocation = ylocation + 1;
@@ -174,7 +170,7 @@ public class UserProfileDialog extends JFrame {
         gbLayout.setConstraints(team_Check4, gbc);
         mainPanel.add(team_Check4);
 
-        // Rate the Plugin
+        // Question 4: general programming skills
 
         xlocation = 0;
         ylocation = ylocation + 1;
@@ -193,7 +189,6 @@ public class UserProfileDialog extends JFrame {
         labelProgramming.setFont(titleFont);
         gbLayout.setConstraints(labelProgramming, gbc);
         mainPanel.add(labelProgramming, gbc);
-
 
         xlocation = 1;
 
@@ -252,7 +247,6 @@ public class UserProfileDialog extends JFrame {
         gbLayout.setConstraints(Programming5, gbc);
         mainPanel.add(Programming5, gbc);
 
-
         ButtonGroup groupProgramming = new ButtonGroup();
         groupProgramming.add(Programming0);
         groupProgramming.add(Programming1);
@@ -261,6 +255,7 @@ public class UserProfileDialog extends JFrame {
         groupProgramming.add(Programming4);
         groupProgramming.add(Programming5);
 
+        // Question 5: java programming skills
 
         xlocation = 0;
         ylocation = ylocation + 4;
@@ -271,7 +266,6 @@ public class UserProfileDialog extends JFrame {
         labelJava.setFont(titleFont);
         gbLayout.setConstraints(labelJava, gbc);
         mainPanel.add(labelJava, gbc);
-
 
         xlocation = 1;
 
@@ -330,7 +324,6 @@ public class UserProfileDialog extends JFrame {
         gbLayout.setConstraints(Java5, gbc);
         mainPanel.add(Java5, gbc);
 
-
         ButtonGroup groupJava = new ButtonGroup();
         groupJava.add(Java0);
         groupJava.add(Java1);
@@ -339,7 +332,6 @@ public class UserProfileDialog extends JFrame {
         groupJava.add(Java4);
         groupJava.add(Java5);
 
-
         xlocation = 0;
         ylocation = ylocation + 1;
         gbc.gridx = xlocation;
@@ -347,6 +339,8 @@ public class UserProfileDialog extends JFrame {
         JPanel fillerLine4 = new JPanel();
         gbLayout.setConstraints(fillerLine4, gbc);
         mainPanel.add(fillerLine4, gbc);
+
+        // Button to update user profile
 
         xlocation = 2;
         ylocation = ylocation + 1;
@@ -361,11 +355,11 @@ public class UserProfileDialog extends JFrame {
         bUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-
-               String groupJavatxt =  groupJava.getSelection().getActionCommand();
+                String groupJavatxt =  groupJava.getSelection().getActionCommand();
                 String groupProgtxt =  groupProgramming.getSelection().getActionCommand();
-  //              String optionalFeedback = optionalRating.getText();
+
                 String Occupationtxt = String.valueOf(OccupationMenu.getSelectedIndex());
+
                 String proj_Check1txt = "0";
                 String proj_Check2txt = "0";
                 String proj_Check3txt = "0";
@@ -390,9 +384,7 @@ public class UserProfileDialog extends JFrame {
 
                 userData userRecord = new userData();
 
-                userRecord.setUserID("rehab001");
-    //            userRecord.setRate(groupRatetxt);
-    //            userRecord.setOptionalFeedback(optionalFeedback);
+                userRecord.setUserID("rehab001"); // hard coded for now, will eventually randomly generate ID
                 userRecord.setProject1(proj_Check1txt);
                 userRecord.setProject2(proj_Check2txt);
                 userRecord.setProject3(proj_Check3txt);
@@ -409,16 +401,12 @@ public class UserProfileDialog extends JFrame {
                 SelectRecords dataAccessObject = new SelectRecords();
                 int xyx = dataAccessObject.updateUserProfile(userRecord,1);
                 dispose();
-
-
             }
         });
-
         this.pack();
         this.setVisible(true);
-   //     this.setUndecorated(true);
+        //this.setUndecorated(true);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
-
     }
 }

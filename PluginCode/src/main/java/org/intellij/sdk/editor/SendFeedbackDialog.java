@@ -21,8 +21,6 @@ public class SendFeedbackDialog extends JFrame {
 
 
     void init() {
-
-
         mainPanel = new JPanel();
         mainPanel.setLayout(gbLayout);
         this.setTitle("LibComp ");
@@ -39,7 +37,6 @@ public class SendFeedbackDialog extends JFrame {
         gbc.anchor = LINE_START;
 
         // Rate the Plugin
-
         xlocation = 0;
         ylocation = 1;
         gbc.gridx = xlocation;
@@ -123,6 +120,7 @@ public class SendFeedbackDialog extends JFrame {
         gbLayout.setConstraints(fillerLine1, gbc);
         mainPanel.add(fillerLine1, gbc);
 
+        // Enter optional feedback
         xlocation = 0;
         ylocation = ylocation + 1;
         gbc.gridx = xlocation;
@@ -132,7 +130,6 @@ public class SendFeedbackDialog extends JFrame {
         optionaltext.setFont(titleFont);
         gbLayout.setConstraints(optionaltext, gbc);
         mainPanel.add(optionaltext, gbc);
-
 
         xlocation = 0;
         ylocation = ylocation + 1;
@@ -152,7 +149,7 @@ public class SendFeedbackDialog extends JFrame {
         gbLayout.setConstraints(fillerLine2, gbc);
         mainPanel.add(fillerLine2, gbc);
 
-
+        // Checkbox to send data to server
         ylocation = ylocation + 1;
         gbc.gridx = xlocation;
         gbc.gridy = ylocation;
@@ -160,7 +157,6 @@ public class SendFeedbackDialog extends JFrame {
         proj_Check1.setFont(mainFont);
         gbLayout.setConstraints(proj_Check1, gbc);
         mainPanel.add(proj_Check1);
-
 
         xlocation = 1;
         ylocation = ylocation + 6;
@@ -174,14 +170,13 @@ public class SendFeedbackDialog extends JFrame {
         bUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-
                 String groupRatetxt = Rategroup.getSelection().getActionCommand();
                 String optionalFeedback = optionalRating.getText();
                 String proj_Check1txt = "0";
                 if (proj_Check1.isSelected()) {proj_Check1txt = "1";}
 
                 userData userRecord = new userData();
-                userRecord.setUserID("rehab001");
+                userRecord.setUserID("rehab001"); // hardcoded ID for now, will change to randomly generated user ID's
                 userRecord.setRate(groupRatetxt);
                 userRecord.setOptionalFeedback(optionalFeedback);
 
@@ -192,7 +187,6 @@ public class SendFeedbackDialog extends JFrame {
                 dispose();
             }
         });
-
         this.pack();
         this.setVisible(true);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);

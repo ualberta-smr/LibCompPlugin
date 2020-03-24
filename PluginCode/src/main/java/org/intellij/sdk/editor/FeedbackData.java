@@ -2,7 +2,7 @@ package org.intellij.sdk.editor;
 
 import java.util.Date;
 
-public class feedback {
+public class FeedbackData {
     private String fromLibrary;
     private String toLibrary;
     private Date dateReplace;
@@ -12,8 +12,7 @@ public class feedback {
     private String allLibrary;
     private String selectionLibrary;
 
-
-    public feedback(String fromLibrary, String toLibrary, int location, String projectId, String classId, String allLibrary, String selectionLibrary  ) {
+    public FeedbackData(String fromLibrary, String toLibrary, int location, String projectId, String classId, String allLibrary, String selectionLibrary  ) {
         this.fromLibrary = fromLibrary;
         this.toLibrary = toLibrary;
         this.dateReplace = dateReplace;

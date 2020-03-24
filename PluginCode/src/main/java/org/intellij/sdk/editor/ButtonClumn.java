@@ -1,7 +1,6 @@
 package org.intellij.sdk.editor;
 
 import com.intellij.ui.components.JBScrollPane;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.Component;
@@ -21,11 +20,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 
-
 //OUR MAIN CLASS
 public class ButtonClumn extends JFrame {
-    private String termSelected;
 
+    private String termSelected;
     private String LibraryReturned = "None";
     private int month;
     private int year;
@@ -66,7 +64,6 @@ public class ButtonClumn extends JFrame {
             "Average number of code breaking changes per release"}; //backwards compatibility
 
     public String getSelectionLibrary() { return selectionLibrary; }
-
     public String getLibraryReturned() {
         return LibraryReturned;
     }
@@ -81,7 +78,6 @@ public class ButtonClumn extends JFrame {
 
         //DATA FOR OUR TABLE
         this.setTitle(domainName);
-
         SelectRecords dataAccessObject = new SelectRecords();
 
         libraryList = dataAccessObject.GetPerformanceValues(domainId, libID, year, month);
@@ -116,7 +112,6 @@ public class ButtonClumn extends JFrame {
         percentf = new DecimalFormat("# %");
         changef = new DecimalFormat("# Changes");
 
-
         data[0][offsetBtnCols - 1] = "Popularity (Repos)";
         data[1][offsetBtnCols - 1] = "Release Frequency (Days)";
         data[2][offsetBtnCols - 1] = "Issue Closing Time (Days)";
@@ -126,7 +121,6 @@ public class ButtonClumn extends JFrame {
         data[6][offsetBtnCols - 1] = "Backwards Compatibility";
 
         while (current < columnLength - offsetBtnCols) {
-
             dataDouble[0][current + offsetBtnCols] = (libraryList.get(current).getPopularity());
             dataDouble[1][current + offsetBtnCols] = (libraryList.get(current).getRelease_frequency());
             dataDouble[2][current + offsetBtnCols] = (libraryList.get(current).getIssue_closing_time());
@@ -134,7 +128,6 @@ public class ButtonClumn extends JFrame {
             dataDouble[4][current + offsetBtnCols] = (libraryList.get(current).getPerformance());
             dataDouble[5][current + offsetBtnCols] = (libraryList.get(current).getSecurity());
             dataDouble[6][current + offsetBtnCols] = (libraryList.get(current).getBackwards_compatibility());
-
 
             data[0][current + offsetBtnCols] = intf.format(libraryList.get(current).getPopularity());
             data[1][current + offsetBtnCols] = daysf.format(libraryList.get(current).getRelease_frequency());
@@ -172,7 +165,8 @@ public class ButtonClumn extends JFrame {
                     tip = columnToolTips[realRowIndex + offsetBtnCols];
                     if (realColumnIndex < offsetBtnCols - 1)
                         tip = columnToolTips[realColumnIndex] + " : " + columnToolTips[realRowIndex + offsetBtnCols];
-                } catch (RuntimeException e1) {
+                }
+                catch (RuntimeException e1) {
                     //catch null pointer exception if mouse is over an empty line
                 }
                 return tip;
@@ -205,7 +199,6 @@ public class ButtonClumn extends JFrame {
             table.getColumnModel().getColumn(i).setMaxWidth(30);
             table.getColumnModel().getColumn(i).setPreferredWidth(30);
             table.getColumnModel().getColumn(i).setHeaderRenderer(new MergeHeaderRenderer()); // change the cell of the header, remove borders
-
         }
 
         table.getColumnModel().getColumn(3).setMaxWidth(225);
@@ -276,8 +269,8 @@ public class ButtonClumn extends JFrame {
                 if ((column >= 4)) {
                     LibraryReturned = libraryList.get(column - offsetBtnCols).getPackage();
                     //these 2 lines for pop-up are just for testing - will be removed
-                   // String message = "Selected Package is for " + LibraryReturned;
-                  //  JOptionPane.showMessageDialog(null, message);
+                    //String message = "Selected Package is for " + LibraryReturned;
+                    //JOptionPane.showMessageDialog(null, message);
                     dispose(); //force close
                 }
             }
@@ -309,9 +302,7 @@ public class ButtonClumn extends JFrame {
                     String message = " "+ data[rowM][3];
                     String filePath = System.getenv("APPDATA")+"\\LibComp";
                     String imagepath = filePath + "\\Image-" + year + "-" + month + "-" + domainID + "-" + (rowM + 1) + ".png";
-                    //   imagepath =  "c:\\temp\\Image-2019-6-72-1.jpg";
-                        new SwingDemo(message,imagepath);
-
+                        new ImageDisplay(message,imagepath);
                 }
                 if (columnM == 1) {
                     int typeofSort = 1;
@@ -324,7 +315,7 @@ public class ButtonClumn extends JFrame {
             }
         });
 
-        //SCROLLPANE,SET SZE,SET CLOSE OPERATION
+        //SCROLLPANE,SET SIZE,SET CLOSE OPERATION
         JBScrollPane pane = new JBScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         //JScrollPane pane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         table.setSize(ColumnWidth, frameHeight);
@@ -379,7 +370,6 @@ public class ButtonClumn extends JFrame {
             else if (i == currentLibrary)
                 currentLibrary = largest;
 
-
             for (rowIndex = 0; rowIndex < rowLength; rowIndex++) {
                 tempValue = dataDouble[rowIndex][i];
                 dataDouble[rowIndex][i] = dataDouble[rowIndex][largest];
@@ -425,7 +415,6 @@ public class ButtonClumn extends JFrame {
     }
 }
 
-
     class ImageRenderer extends DefaultTableCellRenderer {
         JLabel lbl = new JLabel();
 
@@ -454,7 +443,6 @@ public class ButtonClumn extends JFrame {
             return lbl;
         }
     }
-
 
     class MergeHeaderRenderer extends JLabel implements TableCellRenderer {
 
@@ -507,10 +495,10 @@ public class ButtonClumn extends JFrame {
         }
     }
 
-class SwingDemo extends JFrame {
+class ImageDisplay extends JFrame {
     private  String imagePath;
 
-    public SwingDemo(String title, String imagePath) throws HeadlessException {
+    public ImageDisplay(String title, String imagePath) throws HeadlessException {
         super(title);
         this.imagePath = imagePath;
         pack();

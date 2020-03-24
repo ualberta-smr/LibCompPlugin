@@ -2,8 +2,6 @@ package org.intellij.sdk.editor;
 
 import com.intellij.psi.PsiImportStatementBase;
 
-import java.util.ArrayList;
-
 public class ImportStatement {
 
     public PsiImportStatementBase importListBase;
@@ -12,10 +10,7 @@ public class ImportStatement {
     public Integer importLib;
     private String domainName;
 
-
-
     public ImportStatement() {
-
     }
 
     public PsiImportStatementBase getImportListBase() { return importListBase; }

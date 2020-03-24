@@ -4,18 +4,14 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
 
+public class SendFeedbackAction extends AnAction {
 
-public class EditorAction3 extends AnAction {
-    public EditorAction3() {
-        //  JOptionPane.showMessageDialog(null,"message 1");
+    public SendFeedbackAction() {
     }
 
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
-
-        // JOptionPane.showMessageDialog(null,"message 2");
         SendFeedbackDialog f = new SendFeedbackDialog("User Profile");
         f.init();
-
     }
 }
