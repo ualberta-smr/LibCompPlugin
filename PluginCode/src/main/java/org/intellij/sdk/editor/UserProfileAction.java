@@ -11,8 +11,8 @@ public class UserProfileAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
-        UserProfileDialog f = new UserProfileDialog("User Profile");
-        f.init();
+        UserProfileDialog userProfileDialog = new UserProfileDialog("User Profile");
+        userProfileDialog.init();
 
     }
 }

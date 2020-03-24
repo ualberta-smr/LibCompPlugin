@@ -166,20 +166,19 @@ public class SelectRecords {
         int returnValue = 1;
         int localVersion = 10;
         int cloudVersion = 20;
-        // First Read Version No from local Db, and Store in localVersion;
 
+        // First Read Version Number from local DB, and Store in localVersion
         String sql = "SELECT VersionNo from Properties;";
-        // Then Read Version No from cloud Db, and Store in cloudVerlVer;
+
+        // Then Read Version Number from cloud DB, and Store in cloudVersion
         localVersion= updateVersionLocal(sql);
         cloudVersion= updateVersionCloud(sql);
 
-        // check now the if we need to upload
-        if  (localVersion < cloudVersion)
-        {
+        //Check if data must be updated
+        if  (localVersion < cloudVersion) {
             // read data from Cloud, and store in local Db
             ArrayList <LibData> libraryList = GetVersionPerformanceValues();
-            if (libraryList.size()>0)
-            {
+            if (libraryList.size()>0) {
                 returnValue = deleteLocalData();
                 returnValue = UpdateNewData(libraryList);
                 returnValue = updateVersionNumberLocal(localVersion,cloudVersion );
@@ -187,7 +186,6 @@ public class SelectRecords {
         }
         return (returnValue);
     }
-
 
     public int updateUserProfile(userData userRecord, int type){
 
@@ -205,7 +203,7 @@ public class SelectRecords {
 
             PreparedStatement preparedStatement = connection.prepareStatement(insetStatement);
             //preparedStatement.setString(1, userRecord.getRate());
-            // preparedStatement.setString(2, userRecord.getOptionalFeedback());
+            //preparedStatement.setString(2, userRecord.getOptionalFeedback());
             preparedStatement.setString(1, userRecord.getProject1());
             preparedStatement.setString(2, userRecord.getProject2());
             preparedStatement.setString(3, userRecord.getProject3());
@@ -221,7 +219,6 @@ public class SelectRecords {
             preparedStatement.setString(13, userRecord.getCloudStore());
             preparedStatement.setString(14, userRecord.getUserID());
             preparedStatement.executeUpdate();
-
         }
         catch (SQLException | ClassNotFoundException e) {
             //System.out.println(e.getMessage());
@@ -229,7 +226,6 @@ public class SelectRecords {
         }
         return (returnValue);
     }
-
 
     public int updateUserProfile2(userData userRecord, int type){
 
@@ -278,7 +274,7 @@ public class SelectRecords {
             preparedStatement.setString(5, feedbackData.getClassId());
             preparedStatement.setString(6, feedbackData.getAllLibrary());
             preparedStatement.setString(7, feedbackData.getSelectionLibrary());
-            preparedStatement.setInt(8, type); // o sent to the cloud, 1 do not send, true local
+            preparedStatement.setInt(8, type);
             preparedStatement.executeUpdate();
 
             if (type == 0){
@@ -315,7 +311,7 @@ public class SelectRecords {
             Statement statement  = connection.createStatement();
             ResultSet resultSet    = statement.executeQuery(sql);
 
-            while (resultSet.next()) { //while we still have results
+            while (resultSet.next()) {
                 libraryDataPoint = new LibData();
                 libraryDataPoint.setId(resultSet.getInt("id"));
                 libraryDataPoint.setLibrary_id(resultSet.getInt("Library_ID"));
@@ -324,7 +320,7 @@ public class SelectRecords {
                 libraryDataPoint.setRepository(resultSet.getString("repository"));
                 libraryDataPoint.setYear(resultSet.getInt("year"));
                 libraryDataPoint.setMonth(resultSet.getInt("month"));
-                libraryDataPoint.setPackage(resultSet.getString("Package")); // Change tag to package
+                libraryDataPoint.setPackage(resultSet.getString("Package"));
                 libraryDataPoint.setPopularity(resultSet.getDouble("popularity"));
                 libraryDataPoint.setRelease_frequency(resultSet.getDouble("release_frequency"));
                 libraryDataPoint.setIssue_closing_time(resultSet.getDouble("issue_closing_time"));
@@ -332,8 +328,8 @@ public class SelectRecords {
                 //libraryDataPoint.setPerformance(resultSet.getDouble("performance"));
                 //libraryDataPoint.setSecurity(resultSet.getDouble("security"));
                 libraryDataPoint.setBackwards_compatibility(resultSet.getDouble("backwards_compatibility"));
+
                 if (metricLibraryID == libraryDataPoint.getLibrary_id()) {
-                    // at the first row for the selected one
                     libraryDataPoint.setName(libraryDataPoint.getName() + " \n(Current \n Library)");
                     libraryList.add(0,libraryDataPoint);
                 }
@@ -345,7 +341,7 @@ public class SelectRecords {
         catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
-        return (libraryList); //linear list of libraries with metric values
+        return (libraryList);
     }
 
     public ArrayList <LibData> GetVersionPerformanceValues(){
@@ -361,7 +357,7 @@ public class SelectRecords {
             Statement statement  = connection.createStatement();
             ResultSet resultSet    = statement.executeQuery(sql);
 
-            while (resultSet.next()) { //while we still have results
+            while (resultSet.next()) {
                 libraryDataPoint = new LibData();
                 libraryDataPoint.setId(resultSet.getInt("id"));
                 libraryDataPoint.setLibrary_id(resultSet.getInt("library_ID"));
@@ -382,7 +378,8 @@ public class SelectRecords {
         catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
-        return (libraryList); //linear list of libraries with metric values
+        //linear list of libraries with metric values
+        return (libraryList);
     }
 }
 

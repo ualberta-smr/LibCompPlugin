@@ -134,7 +134,6 @@ public class EditorIllustrationAction extends AnAction {
                 ButtonClumn bc=new ButtonClumn(ImportListObjects.get(currentLine).getDomainName(), ImportListObjects.get(currentLine).getImportDomain(),ImportListObjects.get(currentLine).getImportLib(),year,month);
                 WindowAdapter adapter = new WindowAdapter() {
 
-                    //does not do anything right now, may remove
                     @Override
                     public void windowLostFocus(WindowEvent e) {
                         String finalChoice = bc.getLibraryReturned();
@@ -144,10 +143,6 @@ public class EditorIllustrationAction extends AnAction {
                             WriteCommandAction.runWriteCommandAction(project, () ->
                                     document.replaceString(locationStartOfImport, locationEndOfImport, finalChoice1));
                         }
-                        //String[] options = {"Yes Please", "No"};
-                        //int sendToCloud = JOptionPane.showOptionDialog(null, "Send to the cloud...",
-                        //"Update Server", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-
                         int sendToCloud = 2;
                         SelectRecords dataAccessObject = new SelectRecords();
                         FeedbackData feedbackDataPoint = new FeedbackData(importStatementFull,finalChoice, locationStartOfImport,projectID,className,getAllLibrary(),bc.getSelectionLibrary());
@@ -185,11 +180,10 @@ public class EditorIllustrationAction extends AnAction {
      * Right now, the library being queried is the "last word" of the import statement
      * ex. for my.import.statement.rehab, the term queried against in the database is "rehab"
      */
-
     public void detectionImports(@NotNull final PsiFile psiFile,@NotNull final Editor editor ) {
         //Work off of the primary caret to get the selection info
         try {
-            //  Block of code to try
+            //Block of code to try
             final MarkupModel editorModel = editor.getMarkupModel();
             final Document document = editor.getDocument();
             final PsiJavaFile javaFile = (PsiJavaFile)psiFile;
@@ -224,7 +218,7 @@ public class EditorIllustrationAction extends AnAction {
                 ArrayList<String> choicesArray = dataAccessObject.selectAllLibraries(TermSelected);
                 if (choicesArray.size()>0){
 
-                    // Prepare the object for the PSI, location, library, and domain
+                    //Prepare the object for the PSI, location, library, and domain
                     ImportStatement impObj = new ImportStatement();
                     impObj.setImportListBase(importStatementObject);
                     impObj.setImportLocation(importLineNumber);
@@ -235,7 +229,6 @@ public class EditorIllustrationAction extends AnAction {
 
                     year = Integer.parseInt(choicesArray.get(2));
                     month = Integer.parseInt(choicesArray.get(3));
-                    //domainName = ;
 
                     //highlight the line
                     editorModel.addLineHighlighter(importLineNumber,
@@ -244,61 +237,53 @@ public class EditorIllustrationAction extends AnAction {
             }
         }
         catch(Exception e) {
-            //  Block of code to handle errors
+            //Block of code to handle errors
         }
     }
 
-    public void detectionDependencies(@NotNull final PsiFile psiFile,@NotNull final Editor editor )
-    {
-        //Work off of the primary caret to get the selection info
+    public void detectionDependencies(@NotNull final PsiFile psiFile,@NotNull final Editor editor ) {
 
-            //  Block of code to try
-            final MarkupModel editorModel = editor.getMarkupModel();
-            final Document document = editor.getDocument();
+        //Block of code to try
+        final MarkupModel editorModel = editor.getMarkupModel();
+        final Document document = editor.getDocument();
 
-            TextAttributes attributes =
-                    EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
-            TextAttributes softerAttributes = attributes.clone();
+        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
+        TextAttributes softerAttributes = attributes.clone();
 
+        String lineText;
+        String TermSelected;
 
-            String lineText;
-            String TermSelected;
-            // Replace the selection with a fixed string.
+        //Replace the selection with a fixed string.
+        editorModel.removeAllHighlighters();
+        boolean Searchmode = false;
 
-            editorModel.removeAllHighlighters();
-            boolean Searchmode = false;
+        for (int i = 0; i < document.getLineCount(); i++) {
+            int startOffset = document.getLineStartOffset(i);
+            int endOffset = document.getLineEndOffset(i);
+            lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
 
-            for (int i = 0; i < document.getLineCount(); i++) {
-                int startOffset = document.getLineStartOffset(i);
-                int endOffset = document.getLineEndOffset(i);
-
-                lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
-
-                if (Searchmode) {
-                   // boolean isTerm = lineText.contains("junit");
-                    String[] valuesInQuotes = StringUtils.substringsBetween(lineText, "\'", "\'");
-                    if (valuesInQuotes.length > 0) {
-                        TermSelected = valuesInQuotes[0];
-                        SelectRecords dataAccessObject = new SelectRecords();
-                        ArrayList<String> choicesArray = dataAccessObject.selectAllLibraries(TermSelected);
-                        if (choicesArray.size() > 0) {
-                            editorModel.addLineHighlighter(i,
-                                    DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
-                        }
+            if (Searchmode) {
+                //boolean isTerm = lineText.contains("junit");
+                String[] valuesInQuotes = StringUtils.substringsBetween(lineText, "\'", "\'");
+                if (valuesInQuotes.length > 0) {
+                    TermSelected = valuesInQuotes[0];
+                    SelectRecords dataAccessObject = new SelectRecords();
+                    ArrayList<String> choicesArray = dataAccessObject.selectAllLibraries(TermSelected);
+                    if (choicesArray.size() > 0) {
+                        editorModel.addLineHighlighter(i,
+                                DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
                     }
                 }
-
-                boolean isContains = lineText.contains("dependencies");
-                if (isContains) {
-                    Searchmode = true;
-                }
-
-                boolean isContainsEnd = lineText.contains("}");
-                if (Searchmode && isContainsEnd) {
-                    Searchmode = false;
-                }
             }
+            boolean isContains = lineText.contains("dependencies");
+
+            if (isContains) { Searchmode = true; }
+
+            boolean isContainsEnd = lineText.contains("}");
+
+            if (Searchmode && isContainsEnd) { Searchmode = false; }
         }
+    }
 
     public void detectImportStatements(@NotNull final AnActionEvent event) {
 
@@ -310,7 +295,6 @@ public class EditorIllustrationAction extends AnAction {
              detectionImports(psiFile, editor);
          }
          catch(Exception e) {
-             //  Block of code to handle errors
              detectionDependencies(psiFile, editor);
          }
     }

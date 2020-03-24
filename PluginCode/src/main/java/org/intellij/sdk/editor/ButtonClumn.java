@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 
-//OUR MAIN CLASS
 public class ButtonClumn extends JFrame {
 
     private String termSelected;
@@ -52,9 +51,9 @@ public class ButtonClumn extends JFrame {
     private ArrayList<LibData> libraryList;
 
     String[] columnToolTips = {"Column 1 Chart", // chart
-            "Column 2 Sort Descending", // sort asc
-            "Column 3 Sort Ascending", // sort desc
-            "The header row shows your current library, click on an alternative library to replace", //alternative libraries
+            "Column 2 Sort Descending",
+            "Column 3 Sort Ascending",
+            "The header row shows your current library, click on an alternative library to replace",
             "Number of times the library is imported per 1000 repositories", //popularity
             "Average time in days between two consecutive releases of a library", //release frequency
             "Average time in days to close issues in the issue tracking system of a library", //issue closing time
@@ -76,7 +75,6 @@ public class ButtonClumn extends JFrame {
         this.domainID = domainId;
         Border border = BorderFactory.createLineBorder(Color.black, 1);
 
-        //DATA FOR OUR TABLE
         this.setTitle(domainName);
         SelectRecords dataAccessObject = new SelectRecords();
 
@@ -137,21 +135,21 @@ public class ButtonClumn extends JFrame {
             data[5][current + offsetBtnCols] = percentf.format(libraryList.get(current).getSecurity());
             data[6][current + offsetBtnCols] = changef.format(libraryList.get(current).getBackwards_compatibility());
 
-            selectionLibrary = selectionLibrary + ";" + libraryList.get(current).getPackage(); // for feedback
+            selectionLibrary = selectionLibrary + ";" + libraryList.get(current).getPackage();
             current = current + 1;
         }
 
         int frameHeight = 30;
         frameHeight = 110 + (frameHeight * 7);
 
-        // make sure that only the first 3 columns buttomsn are editable
+        //make sure that only the first 3 columns buttomsn are editable
         table = new JTable(data, columnHeaders) {
             public boolean isCellEditable(int row, int column) {
                 //column of buttons
                 return column <= 2;
             }
 
-             //Implement table cell tool tips.
+            //Implement table cell tool tips.
             public String getToolTipText(MouseEvent e) {
                 String tip = null;
                 java.awt.Point p = e.getPoint();
@@ -175,7 +173,6 @@ public class ButtonClumn extends JFrame {
             protected JTableHeader createDefaultTableHeader() {
                 return new JTableHeader(columnModel) {
                     public String getToolTipText(MouseEvent e) {
-                        //  String tip = null;
                         java.awt.Point p = e.getPoint();
                         int index = columnModel.getColumnIndexAtX(p.x);
                         int realIndex = columnModel.getColumn(index).getModelIndex();
@@ -186,7 +183,7 @@ public class ButtonClumn extends JFrame {
             }
         };
 
-        // Prepare the headers to be multilines
+        // Prepare the headers to be multi-lines
         MultiLineHeaderRenderer renderer = new MultiLineHeaderRenderer();
         Enumeration Enum = table.getColumnModel().getColumns();
         while (Enum.hasMoreElements()) {
@@ -195,19 +192,19 @@ public class ButtonClumn extends JFrame {
 
         for (int i = 0; i < 3; i++) {
 
-            table.getColumnModel().getColumn(i).setCellRenderer(new ImageRenderer()); // first 3 columsn make them image columns
+            table.getColumnModel().getColumn(i).setCellRenderer(new ImageRenderer());
             table.getColumnModel().getColumn(i).setMaxWidth(30);
             table.getColumnModel().getColumn(i).setPreferredWidth(30);
-            table.getColumnModel().getColumn(i).setHeaderRenderer(new MergeHeaderRenderer()); // change the cell of the header, remove borders
+            table.getColumnModel().getColumn(i).setHeaderRenderer(new MergeHeaderRenderer());
         }
 
         table.getColumnModel().getColumn(3).setMaxWidth(225);
         table.getColumnModel().getColumn(3).setPreferredWidth(225);
 
-        table.getTableHeader().setReorderingAllowed(false); // users cannot change the order of columns by dragging them
+        table.getTableHeader().setReorderingAllowed(false); //users cannot change the order of columns by dragging them
         table.setGridColor(Color.black);
-        table.setColumnSelectionAllowed(true); // to allow selection based on columns
-        table.setRowSelectionAllowed(false); // to disable section based on rows
+        table.setColumnSelectionAllowed(true); //to allow selection based on columns
+        table.setRowSelectionAllowed(false); //to disable section based on rows
         table.setRowHeight(30);
 
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -239,7 +236,7 @@ public class ButtonClumn extends JFrame {
 
         });
 
-        int ColumnWidth = 1000; // I made the column width bigger so that I can increase font size
+        int ColumnWidth = 1000;
         int x = ColumnWidth - 545;
         int y = frameHeight - 35;
         int widthsize = 100;
@@ -268,9 +265,6 @@ public class ButtonClumn extends JFrame {
                 int column = table.getSelectedColumn();
                 if ((column >= 4)) {
                     LibraryReturned = libraryList.get(column - offsetBtnCols).getPackage();
-                    //these 2 lines for pop-up are just for testing - will be removed
-                    //String message = "Selected Package is for " + LibraryReturned;
-                    //JOptionPane.showMessageDialog(null, message);
                     dispose(); //force close
                 }
             }
@@ -297,7 +291,7 @@ public class ButtonClumn extends JFrame {
                     bConfirm.setEnabled(false);
                 }
 
-                //How to add image - eventually needs to read from data base????
+                //How to add image:
                 if ((columnM == 0)) {
                     String message = " "+ data[rowM][3];
                     String filePath = System.getenv("APPDATA")+"\\LibComp";
@@ -315,20 +309,16 @@ public class ButtonClumn extends JFrame {
             }
         });
 
-        //SCROLLPANE,SET SIZE,SET CLOSE OPERATION
         JBScrollPane pane = new JBScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        //JScrollPane pane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         table.setSize(ColumnWidth, frameHeight);
         pane.setBorder(border);
         pane.setBounds(0, 0, ColumnWidth, frameHeight);
         getContentPane().add(pane);
         setSize(ColumnWidth, frameHeight + 50);
 
-        // disable (comment out) next two lines if you need to show title of the dialog and buttons of max and min
         setSize(ColumnWidth, frameHeight + 10);
         setUndecorated(true);
 
-       // setBackground(Color.black);
         setVisible(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -347,20 +337,20 @@ public class ButtonClumn extends JFrame {
                     if (dataDouble[row][largest] < dataDouble[row][j]) {
                         largest = j;
                     }
-                } else {
+                }
+                else {
                     if (dataDouble[row][largest] > dataDouble[row][j]) {
                         largest = j;
                     }
-                }// end if
-                // Swap largest
-            } // for j
+                }
+            }
 
-            // Swap Headers
+            //Swap headers
             tempHeader = columnHeaders[i];
             columnHeaders[i] = columnHeaders[largest];
             columnHeaders[largest] = tempHeader;
 
-            // Swap the datalist
+            //Swap data
             tempData = libraryList.get(i - offsetBtnCols);
             libraryList.set(i - offsetBtnCols, libraryList.get(largest - offsetBtnCols));
             libraryList.set(largest - offsetBtnCols, tempData);
@@ -375,8 +365,7 @@ public class ButtonClumn extends JFrame {
                 dataDouble[rowIndex][i] = dataDouble[rowIndex][largest];
                 dataDouble[rowIndex][largest] = tempValue;
             }
-
-        } // for i
+        }
 
         for (i = startingSort; i < columnLength; i++) {
             table.getColumnModel().getColumn(i).setHeaderValue(columnHeaders[i]);
@@ -438,7 +427,6 @@ public class ButtonClumn extends JFrame {
                 case 2:   { warnIcon = new ImageIcon(filePath+"\\SortUp.png"); }
                 break;
             }
-
             lbl.setIcon(warnIcon);
             return lbl;
         }
@@ -448,8 +436,8 @@ public class ButtonClumn extends JFrame {
 
         public MergeHeaderRenderer() {
             setOpaque(true);
-            setBackground(new Color(128,128,128)); //background color for table header
-            setForeground(new Color(255,255,255)); //background color for table header
+            setBackground(new Color(128,128,128));
+            setForeground(new Color(255,255,255));
             Border border = BorderFactory.createLineBorder(Color.black,0);
             setBorder(border);
         }
@@ -464,9 +452,8 @@ public class ButtonClumn extends JFrame {
     class MultiLineHeaderRenderer extends JList implements TableCellRenderer {
         public MultiLineHeaderRenderer() {
             setOpaque(true);
-            setBackground(new Color(128,128,128)); //background color for table header
-            setForeground(new Color(255,255,255)); //background color for table header
-            // just for header
+            setBackground(new Color(128,128,128));
+            setForeground(new Color(255,255,255));
             Border border = BorderFactory.createLineBorder(Color.black,1);
             setBorder(border);
             ListCellRenderer renderer = getCellRenderer();
@@ -474,9 +461,7 @@ public class ButtonClumn extends JFrame {
             setCellRenderer(renderer);
         }
 
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                                                       boolean isSelected, boolean hasFocus, int row, int column) {
-
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             setFont(new Font(Font.MONOSPACED, Font.BOLD, 14));
             String str = (value == null) ? "" : value.toString();
             BufferedReader br = new BufferedReader(new StringReader(str));
@@ -525,7 +510,7 @@ class ImageDisplay extends JFrame {
         bConfirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                dispose(); //force close
+                dispose();
             }
         });
     }

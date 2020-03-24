@@ -11,7 +11,7 @@ public class SendFeedbackAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
-        SendFeedbackDialog f = new SendFeedbackDialog("User Profile");
-        f.init();
+        SendFeedbackDialog sendFeedbackDialog = new SendFeedbackDialog("User Profile");
+        sendFeedbackDialog.init();
     }
 }
