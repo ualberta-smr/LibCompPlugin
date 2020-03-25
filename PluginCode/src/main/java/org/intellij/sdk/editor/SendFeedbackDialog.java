@@ -28,6 +28,10 @@ public class SendFeedbackDialog extends JFrame {
         int xlocation = 0;
         int ylocation = 1;
 
+        userData userRecord = new userData();
+        SelectRecords dataAccessObject = new SelectRecords();
+        userRecord = dataAccessObject.ReadUserProfile2();
+
         TitledBorder title;
         title = BorderFactory.createTitledBorder("Please fill this form to the best of your ability: ");
         mainPanel.setBorder(title);
@@ -112,6 +116,20 @@ public class SendFeedbackDialog extends JFrame {
         Rategroup.add(Rate4);
         Rategroup.add(Rate5);
 
+        if (userRecord.getRate().equals("0"))
+            Rate0.setSelected(true);
+        if (userRecord.getRate().equals("1"))
+            Rate1.setSelected(true);
+        if (userRecord.getRate().equals("2"))
+            Rate2.setSelected(true);
+        if (userRecord.getRate().equals("3"))
+            Rate3.setSelected(true);
+        if (userRecord.getRate().equals("4"))
+            Rate4.setSelected(true);
+        if (userRecord.getRate().equals("5"))
+            Rate5.setSelected(true);
+
+
         xlocation = 0;
         ylocation = ylocation + 1;
         gbc.gridx = xlocation;
@@ -138,6 +156,7 @@ public class SendFeedbackDialog extends JFrame {
         gbc.gridwidth = 7;
         JTextArea optionalRating = new JTextArea(2, 35);
         optionalRating.setFont(mainFont);
+        optionalRating.setText(userRecord.getOptionalFeedback());
         gbLayout.setConstraints(optionalRating, gbc);
         mainPanel.add(optionalRating, gbc);
 
@@ -155,6 +174,8 @@ public class SendFeedbackDialog extends JFrame {
         gbc.gridy = ylocation;
         JCheckBox proj_Check1 = new JCheckBox("Save on the cloud");
         proj_Check1.setFont(mainFont);
+        if (userRecord.getCloudStore().equals("1"))
+            proj_Check1.setSelected(true);
         gbLayout.setConstraints(proj_Check1, gbc);
         mainPanel.add(proj_Check1);
 
@@ -175,15 +196,15 @@ public class SendFeedbackDialog extends JFrame {
                 String proj_Check1txt = "0";
                 if (proj_Check1.isSelected()) {proj_Check1txt = "1";}
 
-                userData userRecord = new userData();
-                userRecord.setUserID("rehab001"); // hardcoded ID for now, will change to randomly generated user ID's
-                userRecord.setRate(groupRatetxt);
-                userRecord.setOptionalFeedback(optionalFeedback);
+                userData userRecordFinal = new userData();
+                userRecordFinal.setUserID("rehab001"); // hardcoded ID for now, will change to randomly generated user ID's
+                userRecordFinal.setRate(groupRatetxt);
+                userRecordFinal.setOptionalFeedback(optionalFeedback);
 
-                userRecord.setCloudStore(proj_Check1txt);
+                userRecordFinal.setCloudStore(proj_Check1txt);
                 SelectRecords dataAccessObject = new SelectRecords();
 
-                int xyx = dataAccessObject.updateUserProfile2(userRecord,1);
+                int xyx = dataAccessObject.updateUserProfile2(userRecordFinal,1);
                 dispose();
             }
         });

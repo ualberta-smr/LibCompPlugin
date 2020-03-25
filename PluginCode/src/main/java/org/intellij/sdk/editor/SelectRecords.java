@@ -167,16 +167,16 @@ public class SelectRecords {
         int localVersion = 10;
         int cloudVersion = 20;
 
-        // First Read Version Number from local DB, and Store in localVersion
+        //First Read Version Number from local DB, and Store in localVersion
         String sql = "SELECT VersionNo from Properties;";
 
-        // Then Read Version Number from cloud DB, and Store in cloudVersion
+        //Then Read Version Number from cloud DB, and Store in cloudVersion
         localVersion= updateVersionLocal(sql);
         cloudVersion= updateVersionCloud(sql);
 
         //Check if data must be updated
         if  (localVersion < cloudVersion) {
-            // read data from Cloud, and store in local Db
+            // read data from Cloud, and store in local DB
             ArrayList <LibData> libraryList = GetVersionPerformanceValues();
             if (libraryList.size()>0) {
                 returnValue = deleteLocalData();
@@ -187,7 +187,39 @@ public class SelectRecords {
         return (returnValue);
     }
 
-    public int updateUserProfile(userData userRecord, int type){
+    public userData ReadUserProfile() {
+        userData userRecord = null;
+
+        String  sql = "select  Project1, Project2, Project3 , Project4 , Project5 , Occupation , Team1 , Team2 , Team3 , Team4 , Programming , JavaSkills from userprofile";
+
+        try {
+            Connection connection  = this.connectLocal("\\library_feedback.sqlite3");
+            Statement statement  = connection.createStatement();
+            ResultSet resultSet    = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                userRecord = new userData();
+                userRecord.setProject1(resultSet.getString("Project1"));
+                userRecord.setProject2(resultSet.getString("Project2"));
+                userRecord.setProject3(resultSet.getString("Project3"));
+                userRecord.setProject4(resultSet.getString("Project4"));
+                userRecord.setProject5(resultSet.getString("Project5"));
+                userRecord.setOccupation(resultSet.getString("Occupation"));
+                userRecord.setTeam1(resultSet.getString("Team1"));
+                userRecord.setTeam2(resultSet.getString("Team2"));
+                userRecord.setTeam3(resultSet.getString("Team3"));
+                userRecord.setTeam4(resultSet.getString("Team4"));
+                userRecord.setProgramming(resultSet.getString("Programming"));
+                userRecord.setJavaSkills(resultSet.getString("JavaSkills"));
+        }
+        }
+        catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return userRecord;
+    }
+
+        public int updateUserProfile(userData userRecord, int type){
 
         String insetStatement = "UPDATE userprofile SET Project1 = ?, Project2 = ?, Project3 = ?, Project4 = ?, Project5 = ?, Occupation = ?, Team1 = ?, Team2 = ?, Team3 = ?, Team4 = ?, Programming = ?, JavaSkills = ?, CloudStore = ? WHERE userID = ?";
 
@@ -226,6 +258,31 @@ public class SelectRecords {
         }
         return (returnValue);
     }
+
+
+    public userData ReadUserProfile2() {
+        userData userRecord = null;
+
+        String  sql = "select  rate, optionalFeedback, CloudStore from userprofile";
+
+        try {
+            Connection connection  = this.connectLocal("\\library_feedback.sqlite3");
+            Statement statement  = connection.createStatement();
+            ResultSet resultSet    = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                userRecord = new userData();
+                userRecord.setRate(resultSet.getString("rate"));
+                userRecord.setOptionalFeedback(resultSet.getString("optionalFeedback"));
+                userRecord.setCloudStore(resultSet.getString("CloudStore"));
+            }
+        }
+        catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return userRecord;
+    }
+
 
     public int updateUserProfile2(userData userRecord, int type){
 

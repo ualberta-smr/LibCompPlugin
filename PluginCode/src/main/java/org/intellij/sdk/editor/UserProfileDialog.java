@@ -24,6 +24,12 @@ public class UserProfileDialog extends JFrame {
         mainPanel.setLayout(gbLayout);
         this.setTitle("LibComp User Profile");
 
+        userData userRecord = new userData();
+        SelectRecords dataAccessObject = new SelectRecords();
+        userRecord = dataAccessObject.ReadUserProfile();
+
+
+
         int xlocation = 0;
         int ylocation = 1;
 
@@ -54,6 +60,7 @@ public class UserProfileDialog extends JFrame {
         gbc.gridy = ylocation;
         String[] choices = { "Undergraduate","Graduate", "Researcher","Software Developer"};
         final JComboBox<String> OccupationMenu = new JComboBox<String>(choices);
+        OccupationMenu.setSelectedIndex(Integer.parseInt(userRecord.getOccupation())); // will be changes later
         OccupationMenu.setFont(mainFont);
         gbLayout.setConstraints(OccupationMenu, gbc);
         mainPanel.add(OccupationMenu, gbc);
@@ -83,6 +90,8 @@ public class UserProfileDialog extends JFrame {
         gbc.gridx = xlocation;
         gbc.gridy = ylocation;
         JCheckBox proj_Check1 = new JCheckBox("Assignments from classes or online courses");
+        if (userRecord.getProject1().equals("1"))
+            proj_Check1.setSelected(true);
         proj_Check1.setFont(mainFont);
         gbLayout.setConstraints(proj_Check1, gbc);
         mainPanel.add(proj_Check1);
@@ -92,6 +101,8 @@ public class UserProfileDialog extends JFrame {
         gbc.gridy = ylocation;
         JCheckBox proj_Check2 = new JCheckBox("Personal projects used for learning and exploration that might be publicly available, but exist mainly for personal use ");
         proj_Check2.setFont(mainFont);
+        if (userRecord.getProject2().equals("1"))
+            proj_Check2.setSelected(true);
         gbLayout.setConstraints(proj_Check2, gbc);
         mainPanel.add(proj_Check2);
 
@@ -100,6 +111,8 @@ public class UserProfileDialog extends JFrame {
         gbc.gridy = ylocation;
         JCheckBox proj_Check3 = new JCheckBox("Small open-source or commercial projects with <= 2000 lines of code that are used by others ");
         proj_Check3.setFont(mainFont);
+        if (userRecord.getProject3().equals("1"))
+            proj_Check3.setSelected(true);
         gbLayout.setConstraints(proj_Check3, gbc);
         mainPanel.add(proj_Check3);
 
@@ -108,6 +121,8 @@ public class UserProfileDialog extends JFrame {
         gbc.gridy = ylocation;
         JCheckBox proj_Check4 = new JCheckBox("Medium open-source or commercial projects with > 2000 and < 50,000 lines of code that are used by others ");
         proj_Check4.setFont(mainFont);
+        if (userRecord.getProject4().equals("1"))
+            proj_Check4.setSelected(true);
         gbLayout.setConstraints(proj_Check4, gbc);
         mainPanel.add(proj_Check4);
 
@@ -116,6 +131,8 @@ public class UserProfileDialog extends JFrame {
         gbc.gridy = ylocation;
         JCheckBox proj_Check5 = new JCheckBox("Large open-source or commercial projects with >= 50,000 lines of code that are used by others ");
         proj_Check5.setFont(mainFont);
+        if (userRecord.getProject5().equals("1"))
+            proj_Check5.setSelected(true);
         gbLayout.setConstraints(proj_Check5, gbc);
         mainPanel.add(proj_Check5);
 
@@ -142,6 +159,8 @@ public class UserProfileDialog extends JFrame {
         gbc.gridx = xlocation;
         gbc.gridy = ylocation;
         JCheckBox team_Check1 = new JCheckBox("Projects with me as the only regular committer");
+        if (userRecord.getTeam1().equals("1"))
+            team_Check1.setSelected(true);
         team_Check1.setFont(mainFont);
         gbLayout.setConstraints(team_Check1, gbc);
         mainPanel.add(team_Check1);
@@ -150,6 +169,9 @@ public class UserProfileDialog extends JFrame {
         gbc.gridx = xlocation;
         gbc.gridy = ylocation;
         JCheckBox team_Check2 = new JCheckBox("Small teams (<= 3 regular committers in the last year) ");
+        if (userRecord.getTeam2().equals("1"))
+            team_Check2.setSelected(true);
+
         team_Check2.setFont(mainFont);
         gbLayout.setConstraints(team_Check2, gbc);
         mainPanel.add(team_Check2);
@@ -158,6 +180,9 @@ public class UserProfileDialog extends JFrame {
         gbc.gridx = xlocation;
         gbc.gridy = ylocation;
         JCheckBox team_Check3 = new JCheckBox("Medium teams (> 3 and < 10 regular committers in the last year) ");
+        if (userRecord.getTeam3().equals("1"))
+            team_Check3.setSelected(true);
+
         team_Check3.setFont(mainFont);
         gbLayout.setConstraints(team_Check3, gbc);
         mainPanel.add(team_Check3);
@@ -166,6 +191,9 @@ public class UserProfileDialog extends JFrame {
         gbc.gridx = xlocation;
         gbc.gridy = ylocation;
         JCheckBox team_Check4 = new JCheckBox("Large teams (>= 10 regular committers in the last year)");
+        if (userRecord.getTeam4().equals("1"))
+            team_Check4.setSelected(true);
+
         team_Check4.setFont(mainFont);
         gbLayout.setConstraints(team_Check4, gbc);
         mainPanel.add(team_Check4);
@@ -255,6 +283,20 @@ public class UserProfileDialog extends JFrame {
         groupProgramming.add(Programming4);
         groupProgramming.add(Programming5);
 
+        if (userRecord.getProgramming().equals("0"))
+            Programming0.setSelected(true);
+        if (userRecord.getProgramming().equals("1"))
+            Programming1.setSelected(true);
+        if (userRecord.getProgramming().equals("2"))
+            Programming2.setSelected(true);
+        if (userRecord.getProgramming().equals("3"))
+            Programming3.setSelected(true);
+        if (userRecord.getProgramming().equals("4"))
+            Programming4.setSelected(true);
+        if (userRecord.getProgramming().equals("5"))
+            Programming5.setSelected(true);
+
+
         // Question 5: java programming skills
 
         xlocation = 0;
@@ -332,6 +374,20 @@ public class UserProfileDialog extends JFrame {
         groupJava.add(Java4);
         groupJava.add(Java5);
 
+
+        if (userRecord.getJavaSkills().equals("0"))
+            Java0.setSelected(true);
+        if (userRecord.getJavaSkills().equals("1"))
+            Java1.setSelected(true);
+        if (userRecord.getJavaSkills().equals("2"))
+            Java2.setSelected(true);
+        if (userRecord.getJavaSkills().equals("3"))
+            Java3.setSelected(true);
+        if (userRecord.getJavaSkills().equals("4"))
+            Java4.setSelected(true);
+        if (userRecord.getJavaSkills().equals("5"))
+            Java5.setSelected(true);
+
         xlocation = 0;
         ylocation = ylocation + 1;
         gbc.gridx = xlocation;
@@ -351,6 +407,7 @@ public class UserProfileDialog extends JFrame {
         bUpdate.setFont(mainFont);
         gbLayout.setConstraints(bUpdate, gbc);
         mainPanel.add(bUpdate, gbc);
+
 
         bUpdate.addActionListener(new ActionListener() {
             @Override
@@ -382,24 +439,24 @@ public class UserProfileDialog extends JFrame {
                 if (team_Check3.isSelected()) {team_Check3txt = "1";}
                 if (team_Check4.isSelected()) {team_Check4txt = "1";}
 
-                userData userRecord = new userData();
 
-                userRecord.setUserID("rehab001"); // hard coded for now, will eventually randomly generate ID
-                userRecord.setProject1(proj_Check1txt);
-                userRecord.setProject2(proj_Check2txt);
-                userRecord.setProject3(proj_Check3txt);
-                userRecord.setProject4(proj_Check4txt);
-                userRecord.setProject5(proj_Check5txt);
-                userRecord.setTeam1(team_Check1txt);
-                userRecord.setTeam2(team_Check2txt);
-                userRecord.setTeam3(team_Check3txt);
-                userRecord.setTeam4(team_Check4txt);
-                userRecord.setProgramming(groupProgtxt);
-                userRecord.setJavaSkills(groupJavatxt);
-                userRecord.setOccupation(Occupationtxt);
-                userRecord.setCloudStore("1");
+                userData finalUserRecord = new userData();
+                finalUserRecord.setUserID("rehab001"); // hard coded for now, will eventually randomly generate ID
+                finalUserRecord.setProject1(proj_Check1txt);
+                finalUserRecord.setProject2(proj_Check2txt);
+                finalUserRecord.setProject3(proj_Check3txt);
+                finalUserRecord.setProject4(proj_Check4txt);
+                finalUserRecord.setProject5(proj_Check5txt);
+                finalUserRecord.setTeam1(team_Check1txt);
+                finalUserRecord.setTeam2(team_Check2txt);
+                finalUserRecord.setTeam3(team_Check3txt);
+                finalUserRecord.setTeam4(team_Check4txt);
+                finalUserRecord.setProgramming(groupProgtxt);
+                finalUserRecord.setJavaSkills(groupJavatxt);
+                finalUserRecord.setOccupation(Occupationtxt);
+                finalUserRecord.setCloudStore("1");
                 SelectRecords dataAccessObject = new SelectRecords();
-                int xyx = dataAccessObject.updateUserProfile(userRecord,1);
+                int xyx = dataAccessObject.updateUserProfile(finalUserRecord,1);
                 dispose();
             }
         });
