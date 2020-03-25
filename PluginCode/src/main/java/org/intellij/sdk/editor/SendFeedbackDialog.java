@@ -144,7 +144,7 @@ public class SendFeedbackDialog extends JFrame {
         gbc.gridx = xlocation;
         gbc.gridy = ylocation;
         JLabel optionaltext = new JLabel();
-        optionaltext.setText("Enter and feedback to our team (optional): ");
+        optionaltext.setText("Enter any feedback for our team (optional): ");
         optionaltext.setFont(titleFont);
         gbLayout.setConstraints(optionaltext, gbc);
         mainPanel.add(optionaltext, gbc);
