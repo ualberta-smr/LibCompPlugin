@@ -1,7 +1,129 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b9000c08-9d3a-4449-b947-0c3f74a18055" name="Default Changelist" comment="" />
+    <list default="true" id="b9000c08-9d3a-4449-b947-0c3f74a18055" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/taskHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/MainClassPlugin$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/MainClassPlugin$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/MainClassPlugin.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/MainClassPlugin.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/ModuleClassComponent.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/ModuleClassComponent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ButtonClumn$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ButtonClumn$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ButtonClumn$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ButtonClumn$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ButtonClumn$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ButtonClumn$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ButtonClumn$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ButtonClumn$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ButtonClumn$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ButtonClumn$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ButtonClumn$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ButtonClumn$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ButtonClumn.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ButtonClumn.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/EditorIllustrationAction$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/EditorIllustrationAction$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/EditorIllustrationAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/EditorIllustrationAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ImportStatement.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/ImportStatement.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/LibData.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/LibData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/MultiLineHeaderRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/MultiLineHeaderRenderer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/SelectRecords.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main-instrumented/org/intellij/sdk/editor/SelectRecords.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/MainClassPlugin$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/MainClassPlugin$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/MainClassPlugin.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/MainClassPlugin.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/ModuleClassComponent.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/ModuleClassComponent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ButtonClumn$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ButtonClumn$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ButtonClumn$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ButtonClumn$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ButtonClumn$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ButtonClumn$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ButtonClumn$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ButtonClumn$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ButtonClumn$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ButtonClumn$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ButtonClumn$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ButtonClumn$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ButtonClumn.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ButtonClumn.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/EditorIllustrationAction$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/EditorIllustrationAction$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/EditorIllustrationAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/EditorIllustrationAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ImportStatement.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/ImportStatement.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/LibData.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/LibData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/MultiLineHeaderRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/MultiLineHeaderRenderer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/SelectRecords.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/org/intellij/sdk/editor/SelectRecords.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/event-log-whitelist/fus/white-list.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/config/event-log-whitelist/fus/white-list.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/options/dimensions.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/config/options/dimensions.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/options/other.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/config/options/other.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/options/path.macros.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/config/options/path.macros.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/options/recentProjects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/config/options/recentProjects.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/options/updates.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/config/options/updates.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/options/usage.statistics.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/config/options/usage.statistics.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/options/window.manager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/config/options/window.manager.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/port" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/workspace/1RJCaAOSDSyIiqUIci9oPdFPlXX.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/config/workspace/1RJCaAOSDSyIiqUIci9oPdFPlXX.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/workspace/1RJEvXVreUofmeVzd6jTUwTwEGE.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/config/workspace/1RJEvXVreUofmeVzd6jTUwTwEGE.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/workspace/1RraNVXUI6sRPrpnyIfXCH2wsI9.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/config/workspace/1RraNVXUI6sRPrpnyIfXCH2wsI9.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/workspace/1RraaC1ZSPlmBMIu47qlSCHFh2q.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/config/workspace/1RraaC1ZSPlmBMIu47qlSCHFh2q.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/workspace/1SUbr6AYVyW1SWVwW7PV1BiUSph.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/config/workspace/1SUbr6AYVyW1SWVwW7PV1BiUSph.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/config/workspace/1SUc5fUmN7IZ89tbjIhTI7AWe5f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/config/workspace/1SUc5fUmN7IZ89tbjIhTI7AWe5f.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/plugins/Library_Comparison/lib/Library_Comparison-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/plugins/Library_Comparison/lib/Library_Comparison-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/plugins/availables.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/plugins/availables.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/plugins/availables.xml.etag" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/plugins/availables.xml.etag" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/.home" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/.home" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/LocalHistory/changes.storageData" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/LocalHistory/changes.storageData" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/LocalHistory/changes.storageRecordIndex" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/LocalHistory/changes.storageRecordIndex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/attrib.dat.storageData" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/attrib.dat.storageData" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/attrib.dat.storageRecordIndex" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/attrib.dat.storageRecordIndex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/content.dat.storageData" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/content.dat.storageData" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/content.dat.storageRecordIndex" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/content.dat.storageRecordIndex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/contentHashes.dat" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/contentHashes.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/contentHashes.dat.keystream" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/contentHashes.dat.keystream" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/contentHashes.dat.keystream.len" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/contentHashes.dat.keystream.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/contentHashes.dat_i" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/contentHashes.dat_i" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/names.dat" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/names.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/names.dat.keystream" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/names.dat.keystream" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/names.dat.keystream.len" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/names.dat.keystream.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/names.dat.len" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/names.dat.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/names.dat_i" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/names.dat_i" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/names.dat_i.len" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/names.dat_i.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/records.dat" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/records.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/records.dat.len" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/records.dat.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/caches/vfs_enum_attrib.dat" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/caches/vfs_enum_attrib.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/compile-server/test_fa847a24/stale_outputs_checked" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/compile-server/test_fa847a24/ustamp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/compile-server/untitled_698b221a/stale_outputs_checked" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/compile-server/untitled_698b221a/ustamp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/conversion/My_Plugin_-_Copya692adce.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/conversion/My_Plugin_-_Copya692adce.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/conversion/Test_LSP189178a9.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/conversion/Test_LSP189178a9.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/conversion/test2ea5253d.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/conversion/test2ea5253d.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/conversion/test_LSP8e0f2f27.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/conversion/test_LSP8e0f2f27.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/conversion/untitled895b3068.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/conversion/untitled895b3068.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/conversion/untitlede5f10191.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/conversion/untitlede5f10191.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/external_build_system/my_plugin - copy.a692adce/modules/untitled.main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/external_build_system/my_plugin - copy.a692adce/modules/untitled.main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/external_build_system/my_plugin - copy.a692adce/modules/untitled.test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/external_build_system/my_plugin - copy.a692adce/modules/untitled.test.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/external_build_system/my_plugin - copy.a692adce/modules/untitled.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/external_build_system/my_plugin - copy.a692adce/modules/untitled.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/external_build_system/my_plugin - copy.a692adce/project/libraries.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/external_build_system/my_plugin - copy.a692adce/project/libraries.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/external_build_system/my_plugin - copy.a692adce/project/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/external_build_system/my_plugin - copy.a692adce/project/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.1" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.10" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.10" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.11" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.11" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.12" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.12" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.2" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.3" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.4" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.5" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.6" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.6" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.7" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.7" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.8" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.8" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.9" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log.9" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/port" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/tmp/jna15406418264702785325.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/tmp/jna15406418264702785325.dll.x" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/token" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/idea-sandbox/system/workspace/my_plugin - copy.a692adce.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/idea-sandbox/system/workspace/my_plugin - copy.a692adce.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/libs/Library_Comparison-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/libs/Library_Comparison-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/patchedPluginXmlFiles/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/patchedPluginXmlFiles/plugin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/META-INF/plugin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/EditorIllustrationAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/EditorIllustrationAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/SelectRecords.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/SelectRecords.java" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,28 +143,7 @@
         </task>
         <projects_view>
           <tree_state>
-            <expand>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="untitled" type="f1a62948:ProjectNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="untitled" type="f1a62948:ProjectNode" />
-                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="untitled" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="untitled" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="intellij" type="c8890929:TasksNode$1" />
-              </path>
-            </expand>
+            <expand />
             <select />
           </tree_state>
         </projects_view>
@@ -57,21 +158,47 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="vmOptionsForImporter" value="-Xmx768m" />
+      </MavenImportingSettings>
+    </option>
   </component>
   <component name="ProjectId" id="1RJCaAOSDSyIiqUIci9oPdFPlXX" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="Downloaded.Files.Path.Enabled" value="true" />
+    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
+    <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
+    <property name="GenerateAntBuildDialog.generateSingleFile" value="true" />
+    <property name="GenerateAntBuildDialog.outputFileNameProperty" value="library_comparison" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.27530748" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="org.intellij.sdk.editor" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.intellij.sdk.editor" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\elhajjm\Documents\GitHub\CMPUT499plugin\libmetricplugin\pluginPhase1\My_Plugin\build\libs" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -158,18 +285,30 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="added table for UI" />
     <option name="LAST_COMMIT_MESSAGE" value="added table for UI" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ButtonClumn.java</url>
+          <line>531</line>
+          <option name="timeStamp" value="45" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Remote">
         <watch expression="end" />
         <watch expression="editorFile" />
+        <watch expression="end" />
       </configuration>
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/untitled$Plugin.ic" NAME="Plugin Coverage Results" MODIFIED="1574737006639" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/Library_Comparison$Plugin.ic" NAME="Plugin Coverage Results" MODIFIED="1574928070941" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

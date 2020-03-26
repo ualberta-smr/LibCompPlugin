@@ -31,9 +31,8 @@ public class EditorIllustrationAction extends AnAction {
     private String allLibrary;
     private int year;
     private int month;
-    //String domainName;
-    //private int libID;
-    //private int domainID ;
+    private int sendToCloud = 1;
+
 
     public EditorIllustrationAction() {
         ImportListObjects = new ArrayList<>();
@@ -103,6 +102,12 @@ public class EditorIllustrationAction extends AnAction {
          String projectID = project.getName();
          String className = this.getClass().getName();
 
+        userData userRecord = new userData();
+        SelectRecords dataAccessObject = new SelectRecords();
+        userRecord = dataAccessObject.ReadUserProfile2();
+
+        sendToCloud = Integer.parseInt(userRecord.getCloudStore());
+
         //Work off of the primary caret to get the selection info
         Caret primaryCaret = editor.getCaretModel().getPrimaryCaret();
 
@@ -143,7 +148,7 @@ public class EditorIllustrationAction extends AnAction {
                             WriteCommandAction.runWriteCommandAction(project, () ->
                                     document.replaceString(locationStartOfImport, locationEndOfImport, finalChoice1));
                         }
-                        int sendToCloud = 2;
+
                         SelectRecords dataAccessObject = new SelectRecords();
                         FeedbackData feedbackDataPoint = new FeedbackData(importStatementFull,finalChoice, locationStartOfImport,projectID,className,getAllLibrary(),bc.getSelectionLibrary());
                         int results = dataAccessObject.updateFeedback(feedbackDataPoint,sendToCloud);
@@ -159,11 +164,11 @@ public class EditorIllustrationAction extends AnAction {
                                     document.replaceString(locationStartOfImport, locationEndOfImport, finalChoice1));
                             SelectRecords dataAccessObject = new SelectRecords();
                             FeedbackData feedbackDataPoint = new FeedbackData(importStatementFull,finalChoice1, locationStartOfImport,projectID,className,getAllLibrary(),bc.getSelectionLibrary());
-                            int results = dataAccessObject.updateFeedback(feedbackDataPoint,2);
+                            int results = dataAccessObject.updateFeedback(feedbackDataPoint,sendToCloud);
                         }
                         SelectRecords dataAccessObject = new SelectRecords();
                         FeedbackData feedbackDataPoint = new FeedbackData(importStatementFull,finalChoice, locationStartOfImport,projectID,className,getAllLibrary(),bc.getSelectionLibrary());
-                        int results = dataAccessObject.updateFeedback(feedbackDataPoint,2);
+                        int results = dataAccessObject.updateFeedback(feedbackDataPoint,sendToCloud);
                     }
                 };
                bc.addWindowListener(adapter);

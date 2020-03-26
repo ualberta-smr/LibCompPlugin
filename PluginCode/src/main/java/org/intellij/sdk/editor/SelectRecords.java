@@ -8,7 +8,6 @@ public class SelectRecords {
     private Connection connectcloud(String dbName) throws ClassNotFoundException, SQLException {
 
         Class.forName("com.mysql.cj.jdbc.Driver");
-        //String url = "jdbc:mysql://35.238.166.65:3306/db";
         String url = "jdbc:mysql://35.238.166.65:3306/"+dbName;
         String username = "root";
         String password = "uofa_2000";
@@ -226,16 +225,14 @@ public class SelectRecords {
         int returnValue = 1;
         try {
             Connection connection;
-            if (type == 1) {
+//            if (type == 0) {
                 connection  = this.connectLocal("\\library_feedback.sqlite3");
-            }
-            else {
-                connection  = this.connectcloud("library_feedback");
-            }
+//            }
+//            else {
+//                connection  = this.connectcloud("library_feedback");
+//            }
 
             PreparedStatement preparedStatement = connection.prepareStatement(insetStatement);
-            //preparedStatement.setString(1, userRecord.getRate());
-            //preparedStatement.setString(2, userRecord.getOptionalFeedback());
             preparedStatement.setString(1, userRecord.getProject1());
             preparedStatement.setString(2, userRecord.getProject2());
             preparedStatement.setString(3, userRecord.getProject3());
@@ -291,12 +288,12 @@ public class SelectRecords {
         int returnValue = 1;
         try {
             Connection connection;
-            if (type == 1) {
+//            if (type == 0) {
                 connection  = this.connectLocal("\\library_feedback.sqlite3");
-            }
-            else {
-                connection  = this.connectcloud("library_feedback");
-            }
+//            }
+//            else {
+//                connection  = this.connectcloud("library_feedback");
+//           }
 
             PreparedStatement preparedStatement = connection.prepareStatement(insetStatement);
             preparedStatement.setString(1, userRecord.getRate());
@@ -319,6 +316,8 @@ public class SelectRecords {
 
         try {
             Connection connection;
+            Connection connection2;
+
             PreparedStatement preparedStatement;
 
             insetStatement = "INSERT INTO feedback(fromLibrary,toLibrary,Location,projectID, classID,allLibrary,selectionLibrary,Local) VALUES(?,?,?,?,?,?,?,?)";
@@ -334,10 +333,10 @@ public class SelectRecords {
             preparedStatement.setInt(8, type);
             preparedStatement.executeUpdate();
 
-            if (type == 0){
+            if (type == 1){
                 insetStatement = "INSERT INTO library_feedback.feedback(fromLibrary,toLibrary,Location,projectID, classID,allLibrary,selectionLibrary) VALUES(?,?,?,?,?,?,?)";
-                connection  = this.connectcloud("library_feedback");
-                preparedStatement = connection.prepareStatement(insetStatement);
+                connection2  = this.connectcloud("library_feedback");
+                preparedStatement = connection2.prepareStatement(insetStatement);
                 preparedStatement.setString(1, feedbackData.getFromLibrary());
                 preparedStatement.setString(2, feedbackData.getToLibrary());
                 preparedStatement.setInt(3, feedbackData.getLocation());
