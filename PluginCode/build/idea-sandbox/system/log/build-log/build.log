@@ -1,0 +1,290 @@
+2019-12-29 11:22:27,398 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2019-12-29 11:22:27,399 [      1]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2019-12-29 11:22:27,843 [    445]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 412 ms
+2019-12-29 11:22:28,023 [    625]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2019-12-29 11:22:28,211 [    813]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 188 ms
+2019-12-29 11:22:28,211 [    813]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2019-12-29 11:22:28,296 [    898]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2019-12-29 11:22:28,456 [   1058]   INFO - .incremental.IncProjectBuilder - Building project; isRebuild:true; isMake:false parallel compilation:false
+2019-12-29 11:22:28,458 [   1060]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin incremental compilation enabled for JVM: true
+2019-12-29 11:22:28,458 [   1060]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin incremental compilation enabled for JS: true
+2019-12-29 11:22:28,460 [   1062]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin compiler daemon enabled: true
+2019-12-29 11:22:28,460 [   1062]   INFO - kotlin.jps.build.KotlinBuilder - Label in local history: build started 1f38b4bb
+2019-12-29 11:22:28,466 [   1068]   INFO - s.index.CompilerReferenceIndex - backward reference index version doesn't exist
+2019-12-29 11:22:28,562 [   1164]   INFO - .incremental.IncProjectBuilder - Cleaned output directories in 10 ms
+2019-12-29 11:22:30,348 [   2950]   INFO - kotlin.jps.build.KotlinBuilder - KotlinTargetsIndex created in 584 ms
+2019-12-29 11:22:30,360 [   2962]   INFO - kotlin.jps.build.KotlinBuilder - Total Kotlin global compile context initialization time: 598 ms
+2019-12-29 11:22:30,448 [   3050]   INFO - s.incremental.java.JavaBuilder - Compiling 3 java files; module: TestGuiForm
+2019-12-29 11:22:32,060 [   4662]   INFO - rains.jps.cmdline.BuildSession - Build duration: Builder 'Form-bindings' took 67 ms; 0 sources processed
+2019-12-29 11:22:32,060 [   4662]   INFO - rains.jps.cmdline.BuildSession - Build duration: Builder 'Forms' took 193 ms; 0 sources processed
+2019-12-29 11:22:32,060 [   4662]   INFO - rains.jps.cmdline.BuildSession - Build duration: Builder 'Java' took 1 s 251 ms; 3 sources processed (417 ms per file)
+2019-12-29 11:22:32,076 [   4678]   INFO - s.incremental.java.JavaBuilder - javac 11.0.3 was used to compile [TestGuiForm]
+2019-12-29 11:22:33,126 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2019-12-29 11:22:33,126 [      0]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2019-12-29 11:22:33,592 [    466]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 434 ms
+2019-12-29 11:22:33,603 [    477]   INFO - penapi.util.io.win32.IdeaWin32 - Native filesystem for Windows is operational
+2019-12-29 11:22:33,629 [    503]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2019-12-29 11:22:33,790 [    664]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 161 ms
+2019-12-29 11:22:33,790 [    664]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2019-12-29 11:22:33,852 [    726]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2019-12-29 11:22:34,148 [   1022]   INFO - etbrains.jps.cmdline.BuildMain - Pre-loaded process ready in 1023 ms
+2019-12-29 11:28:42,013 [ 368887]   WARN - channel.DefaultChannelPipeline - An exceptionCaught() event was fired, and it reached at the tail of the pipeline. It usually means the last handler in the pipeline did not handle the exception.
+java.io.IOException: An existing connection was forcibly closed by the remote host
+	at java.base/sun.nio.ch.SocketDispatcher.read0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:43)
+	at java.base/sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:276)
+	at java.base/sun.nio.ch.IOUtil.read(IOUtil.java:233)
+	at java.base/sun.nio.ch.IOUtil.read(IOUtil.java:223)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:358)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:247)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1140)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:347)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:148)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:697)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysPlain(NioEventLoop.java:597)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:551)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:511)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:918)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2019-12-29 11:29:01,913 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2019-12-29 11:29:01,914 [      1]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2019-12-29 11:29:03,611 [   1698]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 1603 ms
+2019-12-29 11:29:04,242 [   2329]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2019-12-29 11:29:04,886 [   2973]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 645 ms
+2019-12-29 11:29:04,886 [   2973]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2019-12-29 11:29:05,414 [   3501]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2019-12-29 11:29:08,439 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2019-12-29 11:29:08,440 [      1]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2019-12-29 11:29:09,146 [    707]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 524 ms
+2019-12-29 11:29:09,157 [    718]   INFO - penapi.util.io.win32.IdeaWin32 - Native filesystem for Windows is operational
+2019-12-29 11:29:09,182 [    743]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2019-12-29 11:29:09,366 [    927]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 184 ms
+2019-12-29 11:29:09,367 [    928]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2019-12-29 11:29:09,431 [    992]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2019-12-29 11:29:09,736 [   1297]   INFO - etbrains.jps.cmdline.BuildMain - Pre-loaded process ready in 1299 ms
+2019-12-29 11:31:01,909 [ 113470]   WARN - channel.DefaultChannelPipeline - An exceptionCaught() event was fired, and it reached at the tail of the pipeline. It usually means the last handler in the pipeline did not handle the exception.
+java.io.IOException: An existing connection was forcibly closed by the remote host
+	at java.base/sun.nio.ch.SocketDispatcher.read0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:43)
+	at java.base/sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:276)
+	at java.base/sun.nio.ch.IOUtil.read(IOUtil.java:233)
+	at java.base/sun.nio.ch.IOUtil.read(IOUtil.java:223)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:358)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:247)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1140)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:347)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:148)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:697)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysPlain(NioEventLoop.java:597)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:551)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:511)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:918)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2019-12-29 11:31:28,150 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2019-12-29 11:31:28,151 [      1]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2019-12-29 11:31:29,615 [   1465]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 1379 ms
+2019-12-29 11:31:29,983 [   1833]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2019-12-29 11:31:30,506 [   2356]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 523 ms
+2019-12-29 11:31:30,506 [   2356]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2019-12-29 11:31:30,733 [   2583]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2019-12-29 11:31:33,046 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2019-12-29 11:31:33,047 [      1]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2019-12-29 11:31:34,277 [   1231]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 1112 ms
+2019-12-29 11:31:34,293 [   1247]   INFO - penapi.util.io.win32.IdeaWin32 - Native filesystem for Windows is operational
+2019-12-29 11:31:34,346 [   1300]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2019-12-29 11:31:34,723 [   1677]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 377 ms
+2019-12-29 11:31:34,724 [   1678]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2019-12-29 11:31:34,817 [   1771]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2019-12-29 11:31:35,173 [   2127]   INFO - etbrains.jps.cmdline.BuildMain - Pre-loaded process ready in 2130 ms
+2019-12-29 11:35:11,022 [ 217976]   WARN - channel.DefaultChannelPipeline - An exceptionCaught() event was fired, and it reached at the tail of the pipeline. It usually means the last handler in the pipeline did not handle the exception.
+java.io.IOException: An existing connection was forcibly closed by the remote host
+	at java.base/sun.nio.ch.SocketDispatcher.read0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:43)
+	at java.base/sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:276)
+	at java.base/sun.nio.ch.IOUtil.read(IOUtil.java:233)
+	at java.base/sun.nio.ch.IOUtil.read(IOUtil.java:223)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:358)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:247)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1140)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:347)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:148)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:697)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysPlain(NioEventLoop.java:597)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:551)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:511)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:918)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2019-12-29 11:35:26,537 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2019-12-29 11:35:26,538 [      1]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2019-12-29 11:35:27,501 [    964]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 876 ms
+2019-12-29 11:35:27,713 [   1176]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2019-12-29 11:35:27,955 [   1418]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 242 ms
+2019-12-29 11:35:27,956 [   1419]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2019-12-29 11:35:28,053 [   1516]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2019-12-29 11:35:29,433 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2019-12-29 11:35:29,434 [      1]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2019-12-29 11:35:30,137 [    704]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 665 ms
+2019-12-29 11:35:30,150 [    717]   INFO - penapi.util.io.win32.IdeaWin32 - Native filesystem for Windows is operational
+2019-12-29 11:35:30,189 [    756]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2019-12-29 11:35:30,470 [   1037]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 281 ms
+2019-12-29 11:35:30,470 [   1037]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2019-12-29 11:35:30,664 [   1231]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2019-12-29 11:35:31,119 [   1686]   INFO - etbrains.jps.cmdline.BuildMain - Pre-loaded process ready in 1687 ms
+2019-12-29 11:35:53,197 [  23764]   INFO - etbrains.jps.cmdline.BuildMain - Build canceled, but no build session is running. Exiting.
+2019-12-29 11:36:09,042 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2019-12-29 11:36:09,049 [      7]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2019-12-29 11:36:10,050 [   1008]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 872 ms
+2019-12-29 11:36:10,374 [   1332]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2019-12-29 11:36:11,144 [   2102]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 770 ms
+2019-12-29 11:36:11,145 [   2103]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2019-12-29 11:36:11,568 [   2526]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2019-12-29 11:36:13,278 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2019-12-29 11:36:13,279 [      1]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2019-12-29 11:36:14,480 [   1202]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 1035 ms
+2019-12-29 11:36:14,515 [   1237]   INFO - penapi.util.io.win32.IdeaWin32 - Native filesystem for Windows is operational
+2019-12-29 11:36:14,746 [   1468]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2019-12-29 11:36:15,663 [   2385]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 917 ms
+2019-12-29 11:36:15,663 [   2385]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2019-12-29 11:36:16,112 [   2834]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2019-12-29 11:36:17,614 [   4336]   INFO - etbrains.jps.cmdline.BuildMain - Pre-loaded process ready in 4338 ms
+2019-12-29 11:36:17,931 [   4653]   INFO - etbrains.jps.cmdline.BuildMain - Build canceled, but no build session is running. Exiting.
+2020-01-14 09:16:57,030 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2020-01-14 09:16:57,034 [      4]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2020-01-14 09:16:57,781 [    751]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 683 ms
+2020-01-14 09:16:57,957 [    927]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2020-01-14 09:16:58,427 [   1397]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 470 ms
+2020-01-14 09:16:58,427 [   1397]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2020-01-14 09:16:58,512 [   1482]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2020-01-14 09:16:59,803 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2020-01-14 09:16:59,804 [      1]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2020-01-14 09:17:00,241 [    438]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 404 ms
+2020-01-14 09:17:00,252 [    449]   INFO - penapi.util.io.win32.IdeaWin32 - Native filesystem for Windows is operational
+2020-01-14 09:17:00,278 [    475]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2020-01-14 09:17:00,432 [    629]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 154 ms
+2020-01-14 09:17:00,432 [    629]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2020-01-14 09:17:00,484 [    681]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2020-01-14 09:17:00,782 [    979]   INFO - etbrains.jps.cmdline.BuildMain - Pre-loaded process ready in 979 ms
+2020-01-14 09:17:08,648 [   8845]   INFO - rains.jps.cmdline.BuildSession - No changes found since last build. Exiting.
+2020-01-14 09:17:09,323 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2020-01-14 09:17:09,324 [      1]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2020-01-14 09:17:09,909 [    586]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 536 ms
+2020-01-14 09:17:09,925 [    602]   INFO - penapi.util.io.win32.IdeaWin32 - Native filesystem for Windows is operational
+2020-01-14 09:17:09,976 [    653]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2020-01-14 09:17:10,304 [    981]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 328 ms
+2020-01-14 09:17:10,305 [    982]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2020-01-14 09:17:10,397 [   1074]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2020-01-14 09:17:10,813 [   1490]   INFO - etbrains.jps.cmdline.BuildMain - Pre-loaded process ready in 1491 ms
+2020-01-14 09:18:03,891 [  54568]   INFO - rains.jps.cmdline.BuildSession - No changes found since last build. Exiting.
+2020-01-14 09:18:04,495 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2020-01-14 09:18:04,496 [      1]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2020-01-14 09:18:05,024 [    529]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 489 ms
+2020-01-14 09:18:05,034 [    539]   INFO - penapi.util.io.win32.IdeaWin32 - Native filesystem for Windows is operational
+2020-01-14 09:18:05,069 [    574]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2020-01-14 09:18:05,238 [    743]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 170 ms
+2020-01-14 09:18:05,238 [    743]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2020-01-14 09:18:05,292 [    797]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2020-01-14 09:18:05,583 [   1088]   INFO - etbrains.jps.cmdline.BuildMain - Pre-loaded process ready in 1089 ms
+2020-01-14 09:18:39,798 [  35303]   INFO - rains.jps.cmdline.BuildSession - No changes found since last build. Exiting.
+2020-01-14 09:18:40,371 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2020-01-14 09:18:40,372 [      1]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2020-01-14 09:18:40,908 [    537]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 497 ms
+2020-01-14 09:18:40,920 [    549]   INFO - penapi.util.io.win32.IdeaWin32 - Native filesystem for Windows is operational
+2020-01-14 09:18:40,955 [    584]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2020-01-14 09:18:41,138 [    767]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 183 ms
+2020-01-14 09:18:41,138 [    767]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2020-01-14 09:18:41,202 [    831]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2020-01-14 09:18:41,983 [   1612]   INFO - etbrains.jps.cmdline.BuildMain - Pre-loaded process ready in 1613 ms
+2020-01-14 09:19:17,978 [  37607]   INFO - .incremental.IncProjectBuilder - Building project; isRebuild:false; isMake:true parallel compilation:false
+2020-01-14 09:19:17,985 [  37614]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin incremental compilation enabled for JVM: true
+2020-01-14 09:19:17,986 [  37615]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin incremental compilation enabled for JS: true
+2020-01-14 09:19:17,989 [  37618]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin compiler daemon enabled: true
+2020-01-14 09:19:17,989 [  37618]   INFO - kotlin.jps.build.KotlinBuilder - Label in local history: build started c97823c9
+2020-01-14 09:19:18,113 [  37742]   INFO - .incremental.IncProjectBuilder - Cleaned output directories in 2 ms
+2020-01-14 09:19:18,616 [  38245]   INFO - kotlin.jps.build.KotlinBuilder - KotlinTargetsIndex created in 435 ms
+2020-01-14 09:19:18,624 [  38253]   INFO - kotlin.jps.build.KotlinBuilder - Total Kotlin global compile context initialization time: 446 ms
+2020-01-14 09:19:18,708 [  38337]   INFO - s.incremental.java.JavaBuilder - Compiling 1 java files; module: TestGuiForm
+2020-01-14 09:19:19,700 [  39329]   INFO - brains.jps.incremental.Builder - Dependency analysis found 0 affected files
+2020-01-14 09:19:19,959 [  39588]   INFO - rains.jps.cmdline.BuildSession - Build duration: Builder 'Forms' took 186 ms; 0 sources processed
+2020-01-14 09:19:19,959 [  39588]   INFO - rains.jps.cmdline.BuildSession - Build duration: Builder 'Java' took 959 ms; 1 sources processed (959 ms per file)
+2020-01-14 09:19:19,961 [  39590]   INFO - s.incremental.java.JavaBuilder - javac 11.0.3 was used to compile [TestGuiForm]
+2020-01-14 09:19:20,714 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2020-01-14 09:19:20,716 [      2]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2020-01-14 09:19:21,261 [    547]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 504 ms
+2020-01-14 09:19:21,277 [    563]   INFO - penapi.util.io.win32.IdeaWin32 - Native filesystem for Windows is operational
+2020-01-14 09:19:21,313 [    599]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2020-01-14 09:19:21,503 [    789]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 190 ms
+2020-01-14 09:19:21,503 [    789]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2020-01-14 09:19:21,563 [    849]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2020-01-14 09:19:22,045 [   1331]   INFO - etbrains.jps.cmdline.BuildMain - Pre-loaded process ready in 1332 ms
+2020-01-14 10:39:13,308 [4792594]   INFO - .incremental.IncProjectBuilder - Building project; isRebuild:false; isMake:true parallel compilation:false
+2020-01-14 10:39:13,311 [4792597]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin incremental compilation enabled for JVM: true
+2020-01-14 10:39:13,311 [4792597]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin incremental compilation enabled for JS: true
+2020-01-14 10:39:13,313 [4792599]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin compiler daemon enabled: true
+2020-01-14 10:39:13,313 [4792599]   INFO - kotlin.jps.build.KotlinBuilder - Label in local history: build started 304b14ba
+2020-01-14 10:39:13,381 [4792667]   INFO - .incremental.IncProjectBuilder - Cleaned output directories in 1 ms
+2020-01-14 10:39:13,818 [4793104]   INFO - kotlin.jps.build.KotlinBuilder - KotlinTargetsIndex created in 411 ms
+2020-01-14 10:39:13,826 [4793112]   INFO - kotlin.jps.build.KotlinBuilder - Total Kotlin global compile context initialization time: 420 ms
+2020-01-14 10:39:13,895 [4793181]   INFO - s.incremental.java.JavaBuilder - Compiling 1 java files; module: TestGuiForm
+2020-01-14 10:39:15,533 [4794819]   INFO - brains.jps.incremental.Builder - Dependency analysis found 0 affected files
+2020-01-14 10:39:15,809 [4795095]   INFO - rains.jps.cmdline.BuildSession - Build duration: Builder 'Forms' took 218 ms; 0 sources processed
+2020-01-14 10:39:15,809 [4795095]   INFO - rains.jps.cmdline.BuildSession - Build duration: Builder 'Java' took 1 s 609 ms; 1 sources processed (1609 ms per file)
+2020-01-14 10:39:15,810 [4795096]   INFO - s.incremental.java.JavaBuilder - javac 11.0.3 was used to compile [TestGuiForm]
+2020-01-14 10:39:17,326 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2020-01-14 10:39:17,326 [      0]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2020-01-14 10:39:17,764 [    438]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 406 ms
+2020-01-14 10:39:17,789 [    463]   INFO - penapi.util.io.win32.IdeaWin32 - Native filesystem for Windows is operational
+2020-01-14 10:39:17,867 [    541]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2020-01-14 10:39:18,036 [    710]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 169 ms
+2020-01-14 10:39:18,036 [    710]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2020-01-14 10:39:18,092 [    766]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2020-01-14 10:39:18,393 [   1067]   INFO - etbrains.jps.cmdline.BuildMain - Pre-loaded process ready in 1068 ms
+2020-01-14 10:54:43,548 [ 926222]   INFO - .incremental.IncProjectBuilder - Building project; isRebuild:false; isMake:true parallel compilation:false
+2020-01-14 10:54:43,554 [ 926228]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin incremental compilation enabled for JVM: true
+2020-01-14 10:54:43,554 [ 926228]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin incremental compilation enabled for JS: true
+2020-01-14 10:54:43,556 [ 926230]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin compiler daemon enabled: true
+2020-01-14 10:54:43,556 [ 926230]   INFO - kotlin.jps.build.KotlinBuilder - Label in local history: build started e7afba65
+2020-01-14 10:54:43,626 [ 926300]   INFO - .incremental.IncProjectBuilder - Cleaned output directories in 1 ms
+2020-01-14 10:54:44,094 [ 926768]   INFO - kotlin.jps.build.KotlinBuilder - KotlinTargetsIndex created in 439 ms
+2020-01-14 10:54:44,101 [ 926775]   INFO - kotlin.jps.build.KotlinBuilder - Total Kotlin global compile context initialization time: 448 ms
+2020-01-14 10:54:44,161 [ 926835]   INFO - s.incremental.java.JavaBuilder - Compiling 2 java files; module: TestGuiForm
+2020-01-14 10:54:45,006 [ 927680]   INFO - brains.jps.incremental.Builder - Dependency analysis found 0 affected files
+2020-01-14 10:54:45,023 [ 927697]   INFO - s.incremental.java.JavaBuilder - javac 11.0.3 was used to compile [TestGuiForm]
+2020-01-14 10:54:45,689 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2020-01-14 10:54:45,689 [      0]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2020-01-14 10:54:46,097 [    408]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 375 ms
+2020-01-14 10:54:46,109 [    420]   INFO - penapi.util.io.win32.IdeaWin32 - Native filesystem for Windows is operational
+2020-01-14 10:54:46,138 [    449]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2020-01-14 10:54:46,297 [    608]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 159 ms
+2020-01-14 10:54:46,297 [    608]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2020-01-14 10:54:46,355 [    666]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2020-01-14 10:54:47,144 [   1455]   INFO - etbrains.jps.cmdline.BuildMain - Pre-loaded process ready in 1456 ms
+2020-01-14 10:55:21,362 [  35673]   INFO - .incremental.IncProjectBuilder - Building project; isRebuild:false; isMake:true parallel compilation:false
+2020-01-14 10:55:21,366 [  35677]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin incremental compilation enabled for JVM: true
+2020-01-14 10:55:21,366 [  35677]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin incremental compilation enabled for JS: true
+2020-01-14 10:55:21,369 [  35680]   INFO - kotlin.jps.build.KotlinBuilder - is Kotlin compiler daemon enabled: true
+2020-01-14 10:55:21,369 [  35680]   INFO - kotlin.jps.build.KotlinBuilder - Label in local history: build started 529dd2a4
+2020-01-14 10:55:21,462 [  35773]   INFO - .incremental.IncProjectBuilder - Cleaned output directories in 3 ms
+2020-01-14 10:55:21,965 [  36276]   INFO - kotlin.jps.build.KotlinBuilder - KotlinTargetsIndex created in 466 ms
+2020-01-14 10:55:21,974 [  36285]   INFO - kotlin.jps.build.KotlinBuilder - Total Kotlin global compile context initialization time: 477 ms
+2020-01-14 10:55:21,989 [  36300]   INFO - brains.jps.incremental.Builder - Dependency analysis found 0 affected files
+2020-01-14 10:55:24,814 [  39125]   INFO - kotlin.jps.build.KotlinBuilder - Compiled successfully
+2020-01-14 10:55:24,856 [  39167]   INFO - brains.jps.incremental.Builder - Dependency analysis found 0 affected files
+2020-01-14 10:55:24,858 [  39169]   INFO - s.incremental.java.JavaBuilder - Compiling 1 java files; module: TestGuiForm
+2020-01-14 10:55:25,750 [  40061]   INFO - brains.jps.incremental.Builder - Dependency analysis found 0 affected files
+2020-01-14 10:55:25,982 [  40293]   INFO - rains.jps.cmdline.BuildSession - Build duration: Builder 'Kotlin Builder' took 2 s 824 ms; 0 sources processed
+2020-01-14 10:55:25,982 [  40293]   INFO - rains.jps.cmdline.BuildSession - Build duration: Builder 'Forms' took 164 ms; 0 sources processed
+2020-01-14 10:55:25,982 [  40293]   INFO - rains.jps.cmdline.BuildSession - Build duration: Builder 'Java' took 870 ms; 1 sources processed (870 ms per file)
+2020-01-14 10:55:25,983 [  40294]   INFO - s.incremental.java.JavaBuilder - javac 11.0.3 was used to compile [TestGuiForm]
+2020-01-14 10:55:27,066 [      0]   INFO - etbrains.jps.cmdline.BuildMain - ==================================================
+2020-01-14 10:55:27,066 [      0]   INFO - etbrains.jps.cmdline.BuildMain - Build process started. Classpath: C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2019.2.2/675ec4f0f2c5a3507f7308d8fd7d83b6d2a337c7/ideaIC-2019.2.2/plugins/java/lib/jps-launcher.jar
+2020-01-14 10:55:27,477 [    411]   INFO - etbrains.jps.cmdline.BuildMain - Connection to IDE established in 375 ms
+2020-01-14 10:55:27,488 [    422]   INFO - penapi.util.io.win32.IdeaWin32 - Native filesystem for Windows is operational
+2020-01-14 10:55:27,522 [    456]   INFO - jps.cmdline.JpsModelLoaderImpl - Loading model: project path = C:/Users/elhajjm/IdeaProjects/TestGuiForm, global options path = C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1/My_Plugin/build/idea-sandbox/config/options
+2020-01-14 10:55:27,701 [    635]   INFO - jps.cmdline.JpsModelLoaderImpl - Model loaded in 179 ms
+2020-01-14 10:55:27,702 [    636]   INFO - jps.cmdline.JpsModelLoaderImpl - Project has 1 modules, 0 libraries
+2020-01-14 10:55:27,766 [    700]   INFO - ellij.util.io.PagedFileStorage - lower=100; upper=500; buffer=10; max=680
+2020-01-14 10:55:28,095 [   1029]   INFO - etbrains.jps.cmdline.BuildMain - Pre-loaded process ready in 1030 ms
+2020-01-14 10:56:52,600 [  85534]   INFO - etbrains.jps.cmdline.BuildMain - Build canceled, but no build session is running. Exiting.

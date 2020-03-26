@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conversion>
+  <applied-converters>
+    <converter id="android-module-to-java-module" />
+    <converter id="android-proguard-options" />
+    <converter id="android-sdk-library" />
+    <converter id="junit-to-android-junit-configurations" />
+    <converter id="kotlin-non-jvm-source-roots" />
+  </applied-converters>
+  <project-files>
+    <file path="C:\Users\elhajjm\Documents\GitHub\CMPUT499plugin\libmetricplugin\Backup\pluginPhase1 - Copy (2)\.idea\misc.xml" timestamp="1580486345315" />
+    <file path="C:\Users\elhajjm\Documents\GitHub\CMPUT499plugin\libmetricplugin\Backup\pluginPhase1 - Copy (2)\.idea\modules.xml" timestamp="1579291953041" />
+    <file path="C:\Users\elhajjm\Documents\GitHub\CMPUT499plugin\libmetricplugin\Backup\pluginPhase1 - Copy (2)\.idea\pluginPhase1.iml" timestamp="1579291952983" />
+    <file path="C:\Users\elhajjm\Documents\GitHub\CMPUT499plugin\libmetricplugin\Backup\pluginPhase1 - Copy (2)\.idea\vcs.xml" timestamp="1580321299169" />
+    <file path="C:\Users\elhajjm\Documents\GitHub\CMPUT499plugin\libmetricplugin\Backup\pluginPhase1 - Copy (2)\.idea\workspace.xml" timestamp="1582143814375" />
+  </project-files>
+</conversion>
+

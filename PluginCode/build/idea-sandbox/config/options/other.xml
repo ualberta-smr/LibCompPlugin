@@ -1,11 +1,14 @@
 <application>
   <component name="PropertiesComponent">
+    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
     <property name="build.toolwindow.Sync.selection.state" value="com.intellij.build.BuildTreeConsoleView" />
+    <property name="build.toolwindow.run.selection.state" value="com.intellij.build.BuildTreeConsoleView" />
     <property name="decompiler.legal.notice.accepted" value="true" />
     <property name="defaultJdkConfigured" value="true" />
-    <property name="file.chooser.recent.files" value="$USER_HOME$/Documents/SEMESTER 5/DirectedStudies/Test&#10;C:/Users/rehab/Dropbox/University/Rehab/My_Plugin - Copy&#10;C:/Users/elhajjm/Documents/SEMESTER 5/DirectedStudies/ConnectDB&#10;C:/Users/rehab/Demo3Plugin1&#10;C:/Users/Mohamad/Dropbox/University/Rehab/untitled/test_LSP&#10;C:/Users/elhajjm/Dropbox/University/Rehab/Test_LSP1" />
-    <property name="file.gist.reindex.count" value="27" />
-    <property name="fileTypeChangedCounter" value="390" />
+    <property name="file.chooser.recent.files" value="$USER_HOME$/Documents/Winter-work-Feb25/TestJTableBut&#10;C:/Users/rehab/IdeaProjects/ProjectTest/pom.xml&#10;C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/Backup/pluginPhase1 - Copy (2)&#10;C:/Users/elhajjm/IdeaProjects/TestGuiForm&#10;C:/Users/elhajjm&#10;C:/Users/elhajjm/IdeaProjects/TestGuiForm/TestGuiForm.iml&#10;C:/Users/elhajjm/IdeaProjects/TestJTableBut&#10;C:/Users/elhajjm/IdeaProjects/untitled&#10;C:/Users/elhajjm/.gradle/caches/modules-2/files-2.1/com.jetbrains/jbre/jbr-11_0_3-windows-x64-b304.56/jbr&#10;C:/Users/elhajjm/Documents/GitHub/CMPUT499plugin/libmetricplugin/pluginPhase1 - Copy/My_Plugin&#10;C:/Users/elhajjm/Dropbox/University/Rehab/My_Plugin&#10;C:/Users/elhajjm/Dropbox/University/Rehab/My_Plugin - Copy (2)&#10;C:/Users/elhajjm/Dropbox/University/Rehab/untitled/test_LSP&#10;C:/Users/elhajjm/Dropbox/University/Rehab/My_Plugin - Copy&#10;C:/Users/elhajjm/Documents/SEMESTER 5/DirectedStudies/ConnectDB&#10;C:/Users/rehab/Demo3Plugin1&#10;C:/Users/Mohamad/Dropbox/University/Rehab/untitled/test_LSP&#10;C:/Users/elhajjm/Dropbox/University/Rehab/Test_LSP1" />
+    <property name="file.gist.reindex.count" value="54" />
+    <property name="fileTypeChangedCounter" value="520" />
     <property name="ide.memory.adjusted" value="true" />
     <property name="installed.kotlin.plugin.version" value="1.3.41-release-IJ2019.2-1" />
     <property name="jdk.selected.JAVA_MODULE" value="11" />
@@ -13,7 +16,7 @@
     <property name="lastTip" value="5" />
     <property name="packagesearch.endpoint.url.fulltext" value="https://package-search.services.jetbrains.com/api/search/idea/fulltext" />
     <property name="packagesearch.endpoint.url.suggest" value="https://package-search.services.jetbrains.com/api/search/idea/suggest" />
-    <property name="packagesearch.status.updated.ts" value="1574649170898" />
+    <property name="packagesearch.status.updated.ts" value="1585202415022" />
     <property name="project.wizard.group" value="JAVA_MODULE" />
     <property name="project.wizard.template" value="Empty Project" />
     <property name="tasks.pass.word.conversion.enforced" value="true" />

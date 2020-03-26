@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conversion>
+  <applied-converters>
+    <converter id="android-module-to-java-module" />
+    <converter id="android-proguard-options" />
+    <converter id="android-sdk-library" />
+    <converter id="junit-to-android-junit-configurations" />
+    <converter id="kotlin-non-jvm-source-roots" />
+  </applied-converters>
+  <project-files>
+    <file path="C:\Users\elhajjm\IdeaProjects\TestJTableBut\.idea\codeStyles\Project.xml" timestamp="1579229976303" />
+    <file path="C:\Users\elhajjm\IdeaProjects\TestJTableBut\.idea\dbnavigator.xml" timestamp="1579152606000" />
+    <file path="C:\Users\elhajjm\IdeaProjects\TestJTableBut\.idea\libraries\org_xerial_sqlite_jdbc_3_27_2_1.xml" timestamp="1572214106000" />
+    <file path="C:\Users\elhajjm\IdeaProjects\TestJTableBut\.idea\misc.xml" timestamp="1572160920000" />
+    <file path="C:\Users\elhajjm\IdeaProjects\TestJTableBut\.idea\modules.xml" timestamp="1572160920000" />
+    <file path="C:\Users\elhajjm\IdeaProjects\TestJTableBut\.idea\workspace.xml" timestamp="1580080891332" />
+    <file path="C:\Users\elhajjm\IdeaProjects\TestJTableBut\TestJTableBut.iml" timestamp="1575261412000" />
+  </project-files>
+</conversion>
+

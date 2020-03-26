@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conversion>
+  <applied-converters>
+    <converter id="android-module-to-java-module" />
+    <converter id="android-proguard-options" />
+    <converter id="android-sdk-library" />
+    <converter id="junit-to-android-junit-configurations" />
+    <converter id="kotlin-non-jvm-source-roots" />
+  </applied-converters>
+  <project-files>
+    <file path="C:\Users\rehab\Documents\WinterW\projectTest\.idea\misc.xml" timestamp="1584996860153" />
+    <file path="C:\Users\rehab\Documents\WinterW\projectTest\.idea\modules.xml" timestamp="1579291954000" />
+    <file path="C:\Users\rehab\Documents\WinterW\projectTest\.idea\pluginPhase1.iml" timestamp="1579291954000" />
+    <file path="C:\Users\rehab\Documents\WinterW\projectTest\.idea\vcs.xml" timestamp="1580321300000" />
+    <file path="C:\Users\rehab\Documents\WinterW\projectTest\.idea\workspace.xml" timestamp="1584996158327" />
+  </project-files>
+</conversion>
+

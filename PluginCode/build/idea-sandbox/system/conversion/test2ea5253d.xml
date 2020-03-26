@@ -8,10 +8,11 @@
     <converter id="kotlin-non-jvm-source-roots" />
   </applied-converters>
   <project-files>
-    <file path="C:\Users\elhajjm\IdeaProjects\test2\.idea\misc.xml" timestamp="1570427865428" />
+    <file path="C:\Users\elhajjm\IdeaProjects\test2\.idea\misc.xml" timestamp="1580080972430" />
     <file path="C:\Users\elhajjm\IdeaProjects\test2\.idea\modules.xml" timestamp="1570427865448" />
-    <file path="C:\Users\elhajjm\IdeaProjects\test2\.idea\workspace.xml" timestamp="1571621316494" />
-    <file path="C:\Users\elhajjm\IdeaProjects\test2\untitled\untitled.iml" timestamp="1570427865406" />
+    <file path="C:\Users\elhajjm\IdeaProjects\test2\.idea\uiDesigner.xml" timestamp="1580079951091" />
+    <file path="C:\Users\elhajjm\IdeaProjects\test2\.idea\workspace.xml" timestamp="1575261608128" />
+    <file path="C:\Users\elhajjm\IdeaProjects\test2\untitled\untitled.iml" timestamp="1575261608112" />
   </project-files>
 </conversion>
 
