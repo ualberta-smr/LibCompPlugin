@@ -29,10 +29,11 @@ public class DatabaseAccess {
         try {
             String sshHost = "smr.cs.ualberta.ca";
             String sshuser = "relhajj";
+            //I did not put my private key on github, I am just using it for my own testing purposes until the API's are set up
             String SshKeyFilepath = System.getenv("APPDATA")+"\\LibComp\\privateKey.ppk";
             //String SshKeyFilepath = PathManager.getPluginsPath()+"\\Library_Comparison\\lib\\privateKey.ppk";
-            String dbuserName = "relhajj";
-            String dbpassword = "Relhajj$123";
+            String dbuserName = "USERNAME";
+            String dbpassword = "PASSWORD";
             int localPort = 3306; // any free port can be used
             String localSSHUrl = "localhost";
 
