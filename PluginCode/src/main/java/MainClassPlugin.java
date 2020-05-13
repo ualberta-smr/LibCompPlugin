@@ -1,16 +1,19 @@
 import com.intellij.openapi.components.*;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import org.intellij.sdk.editor.EditorIllustrationAction;
-import org.intellij.sdk.editor.SelectRecords;
-import org.jetbrains.annotations.NotNull;
+import org.intellij.sdk.editor.ActionReplacement;
+import org.intellij.sdk.editor.DatabaseAccess;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
-public class MainClassPlugin implements ProjectComponent, PersistentStateComponent<MainClassPlugin> {
-    @Override
+/**
+ * Triggered on load
+ * Checks if data must be updated
+ */
 
+public class MainClassPlugin implements ProjectComponent {
+
+    @Override
     public void initComponent() {
         int x = 1;
     }
@@ -26,12 +29,14 @@ public class MainClassPlugin implements ProjectComponent, PersistentStateCompone
                 });
 
         // Check if new version of data exists
-        SelectRecords dataAccessObject = new SelectRecords();
+        DatabaseAccess dataAccessObject = new DatabaseAccess();
         dataAccessObject.updateVersionData();
 
         timer.setRepeats(false);
         timer.start();
-        JOptionPane.showMessageDialog(null, messageLabel, "Library Comparison", JOptionPane.NO_OPTION);
+
+        //String current = PathManager.getPluginsPath();
+        JOptionPane.showMessageDialog(null, messageLabel, "user.dir", JOptionPane.NO_OPTION);
     }
 
     @Override
@@ -40,22 +45,23 @@ public class MainClassPlugin implements ProjectComponent, PersistentStateCompone
         // creating timer task
         SwingUtilities.invokeLater(() -> {
             Loadingpopup();
-            EditorIllustrationAction actionPerformed;
-            actionPerformed = new EditorIllustrationAction();
+            ActionReplacement actionPerformed;
+            actionPerformed = new ActionReplacement();
             //Return later: actionPerformed.detectAllOpenEditors();
         });
     }
 
+    /*
     @Override
     public void loadState(@NotNull MainClassPlugin state) {
-         // JOptionPane.showMessageDialog(null, "State 1");
+        // JOptionPane.showMessageDialog(null, "State 1");
         XmlSerializerUtil.copyBean(state, this);
     }
 
     @Override
     public MainClassPlugin getState() {
         return this;
-    }
+    }*/
 }
 
 

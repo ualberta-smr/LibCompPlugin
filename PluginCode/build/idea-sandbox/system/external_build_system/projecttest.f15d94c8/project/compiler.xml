@@ -1,7 +1,0 @@
-<project>
-  <component name="ExternalCompilerConfiguration">
-    <bytecodeTargetLevel>
-      <module name="ProjectTest" target="1.5" />
-    </bytecodeTargetLevel>
-  </component>
-</project>
