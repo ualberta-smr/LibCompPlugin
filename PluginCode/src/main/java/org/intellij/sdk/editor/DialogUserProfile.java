@@ -88,7 +88,7 @@ public class DialogUserProfile extends JFrame {
         gbc.gridx = xlocation;
         gbc.gridy = ylocation;
         JLabel typeslbl = new JLabel();
-        typeslbl.setText("On which kind of projects did you regularly work over the last year?");
+        typeslbl.setText("On which kinds of projects did you regularly work over the last year?");
         typeslbl.setFont(titleFont);
         gbLayout.setConstraints(typeslbl, gbc);
         mainPanel.add(typeslbl, gbc);

@@ -79,7 +79,7 @@ public class DialogSendFeedback extends JFrame {
         lineltext3.setText(" of any replaced libraries. This data is stored locally on your computer unless you explicitly send it to us using this dialog.");
         lineltext4.setText(" If you have filled a user profile, then this data will also be associated with this user profile. We do not collect any ");
         lineltext5.setText(" other data. While the information we collect is not sensitive, please do NOT send us this data if information such as ");
-        lineltext6.setText(" class or project names in your code are confidential  ");
+        lineltext6.setText(" class or project names in your code are confidential.  ");
 
         lineltext1.setFont(mainFont);
         lineltext2.setFont(mainFont);
@@ -154,7 +154,7 @@ public class DialogSendFeedback extends JFrame {
         ylocation = ylocation + 1;
         gbc.gridx = xlocation;
         gbc.gridy = ylocation;
-        JCheckBox proj_Check2 = new JCheckBox("<html>Always send all LibComp interaction data. By checking this boc, LibComp will automatically send your interaction data <br> without  you having to come back to this dialog. You can always come back and change this setting.</html>");
+        JCheckBox proj_Check2 = new JCheckBox("<html>Always send all LibComp interaction data. By checking this box, LibComp will automatically send your interaction data <br> without  you having to come back to this dialog. You can always come back and change this setting.</html>");
 
         proj_Check2.setFont(mainFont);
         if (userRecord.getSendAllCloud().equals("1"))
