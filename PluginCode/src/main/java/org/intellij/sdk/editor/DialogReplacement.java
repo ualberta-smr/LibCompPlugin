@@ -81,6 +81,9 @@ public class DialogReplacement extends JFrame {
         DatabaseAccess dataAccessObject = new DatabaseAccess();
 
         libraryList = dataAccessObject.GetPerformanceValues(domainId, libID, year, month);
+
+
+
         columnLength = libraryList.size() + offsetBtnCols;
         columnHeaders = new String[columnLength];
         int current = offsetBtnCols;
