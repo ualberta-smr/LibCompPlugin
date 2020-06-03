@@ -2,14 +2,17 @@
     <id>my_Plugin.LibraryCompare</id>
     <name>LibraryComparison</name>
     <vendor email="relhajj@ualberta.ca" url="http://cs.ualberta.ca">Rehab el hajj</vendor>
-
+    <description>This plugin compare among Libraries and suggests new ones</description>
+    <!-- increment the version number with each publish -->
+    <version>1.0.4</version>
 
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
-    <!-- uncomment to enable plugin in all products
+
     <depends>com.intellij.modules.lang</depends>
-    -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
@@ -17,13 +20,41 @@
 
     <actions>
         <!-- Add your actions here -->
+
         <action id="EditorBasics.EditorIllustrationAction"
-                class="org.intellij.sdk.editor.EditorIllustrationAction"
+                class="org.intellij.sdk.editor.ActionReplacement"
+                popup="true"
                 text="Library Comparison"
                 description="Replaces selected text with suggested library."
-                >
+        >
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+
         </action>
+
+           <!-- Add your actions here -->
+            <group id="MyPlugin.test" text="LibComp"  popup="true">
+
+               <action id="EditorBasics.EditorIllustrationAct"
+                        class="org.intellij.sdk.editor.ActionUserProfile"
+                        popup="true"
+                        text="User Profile"
+                        description="Replaces selected text with suggested library."
+                >
+                    <keyboard-shortcut keymap="$default" first-keystroke="control alt C" second-keystroke="G"/>
+                </action>
+
+                <action id="EditorBasics.EditorIllustrationAct3"
+                        class="org.intellij.sdk.editor.ActionSendFeedback"
+                        popup="true"
+                        text="Send Us Your Feedback"
+                        description="Replaces selected text with suggested library."
+                >
+                    <keyboard-shortcut keymap="$default" first-keystroke="control alt G" second-keystroke="C"/>
+                </action>
+
+                <add-to-group group-id="ToolsMenu" anchor="first"  />
+            </group>
+
 
     </actions>
     <application-components>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_my_plugin" default="compile.module.my_plugin">
+  <dirname property="module.my_plugin.basedir" file="${ant.file.module_my_plugin}"/>
+  
+  <property name="module.jdk.home.my_plugin" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.my_plugin" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.my_plugin" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.my_plugin" value="-encoding UTF-8 -source 11 -target 11 ${compiler.args}"/>
+  
+  <property name="my_plugin.output.dir" value="${module.my_plugin.basedir}/../out/production/My_Plugin"/>
+  <property name="my_plugin.testoutput.dir" value="${module.my_plugin.basedir}/../out/test/My_Plugin"/>
+  
+  <path id="my_plugin.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="my_plugin.module.production.classpath">
+    <path refid="${module.jdk.classpath.my_plugin}"/>
+  </path>
+  
+  <path id="my_plugin.runtime.production.module.classpath">
+    <pathelement location="${my_plugin.output.dir}"/>
+  </path>
+  
+  <path id="my_plugin.module.classpath">
+    <path refid="${module.jdk.classpath.my_plugin}"/>
+    <pathelement location="${my_plugin.output.dir}"/>
+  </path>
+  
+  <path id="my_plugin.runtime.module.classpath">
+    <pathelement location="${my_plugin.testoutput.dir}"/>
+    <pathelement location="${my_plugin.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.my_plugin">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.my_plugin">
+    <patternset refid="excluded.from.module.my_plugin"/>
+  </patternset>
+  
+  
+  <target name="compile.module.my_plugin" depends="compile.module.my_plugin.production,compile.module.my_plugin.tests" description="Compile module My_Plugin"/>
+  
+  <target name="compile.module.my_plugin.production" depends="register.custom.compilers" description="Compile module My_Plugin; production classes"/>
+  
+  <target name="compile.module.my_plugin.tests" depends="register.custom.compilers,compile.module.my_plugin.production" description="compile module My_Plugin; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.my_plugin" description="cleanup module">
+    <delete dir="${my_plugin.output.dir}"/>
+    <delete dir="${my_plugin.testoutput.dir}"/>
+  </target>
+</project>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_library_comparison" default="compile.module.library_comparison">
+  <dirname property="module.library_comparison.basedir" file="${ant.file.module_library_comparison}"/>
+  
+  <property name="module.jdk.home.library_comparison" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.library_comparison" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.library_comparison" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.library_comparison" value="-encoding UTF-8 -source 11 -target 11 ${compiler.args}"/>
+  
+  <property name="library_comparison.output.dir" value="${module.library_comparison.basedir}/../../out/production/Library_Comparison"/>
+  <property name="library_comparison.testoutput.dir" value="${module.library_comparison.basedir}/../../out/test/Library_Comparison"/>
+  
+  <path id="library_comparison.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="library_comparison.module.production.classpath">
+    <path refid="${module.jdk.classpath.library_comparison}"/>
+  </path>
+  
+  <path id="library_comparison.runtime.production.module.classpath">
+    <pathelement location="${library_comparison.output.dir}"/>
+  </path>
+  
+  <path id="library_comparison.module.classpath">
+    <path refid="${module.jdk.classpath.library_comparison}"/>
+    <pathelement location="${library_comparison.output.dir}"/>
+  </path>
+  
+  <path id="library_comparison.runtime.module.classpath">
+    <pathelement location="${library_comparison.testoutput.dir}"/>
+    <pathelement location="${library_comparison.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.library_comparison">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.library_comparison">
+    <patternset refid="excluded.from.module.library_comparison"/>
+  </patternset>
+  
+  
+  <target name="compile.module.library_comparison" depends="compile.module.library_comparison.production,compile.module.library_comparison.tests" description="Compile module Library_Comparison"/>
+  
+  <target name="compile.module.library_comparison.production" depends="register.custom.compilers" description="Compile module Library_Comparison; production classes"/>
+  
+  <target name="compile.module.library_comparison.tests" depends="register.custom.compilers,compile.module.library_comparison.production" description="compile module Library_Comparison; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.library_comparison" description="cleanup module">
+    <delete dir="${library_comparison.output.dir}"/>
+    <delete dir="${library_comparison.testoutput.dir}"/>
+  </target>
+</project>
