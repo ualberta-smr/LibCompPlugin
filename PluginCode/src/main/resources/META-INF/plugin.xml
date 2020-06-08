@@ -1,8 +1,8 @@
 <idea-plugin>
     <id>my_Plugin.LibraryCompare</id>
     <name>LibraryComparison</name>
-    <vendor email="relhajj@ualberta.ca" url="http://cs.ualberta.ca">Rehab el hajj</vendor>
-    <description>This plugin compare among Libraries and suggests new ones</description>
+    <vendor email="relhajj@ualberta.ca" url="http://smr.cs.ualberta.ca">Rehab El-hajj</vendor>
+    <description>LibComp plugin provides a tool for metric comparison among Java libraries and suggests plausible replacements with different libraries belonging to the same domain.</description>
     <!-- increment the version number with each publish -->
     <version>1.0.7</version>
 
