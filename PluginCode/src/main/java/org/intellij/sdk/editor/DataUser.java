@@ -11,7 +11,6 @@ public class DataUser {
     }
 
     private String ID;
-
     private String userID;
     private String rate;
     private String optionalFeedback;

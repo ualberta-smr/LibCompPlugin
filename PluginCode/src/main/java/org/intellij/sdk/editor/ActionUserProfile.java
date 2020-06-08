@@ -14,6 +14,11 @@ public class ActionUserProfile extends AnAction {
     public ActionUserProfile() {
     }
 
+    public void update(@NotNull final AnActionEvent event) {
+        event.getPresentation().setVisible(true);
+        event.getPresentation().setEnabled(true);
+    }
+
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
         DialogUserProfile dialogUserProfile = new DialogUserProfile("User Profile");

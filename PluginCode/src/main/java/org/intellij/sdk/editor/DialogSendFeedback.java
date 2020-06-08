@@ -7,6 +7,8 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+
 import static java.awt.GridBagConstraints.LINE_START;
 
 
@@ -373,16 +375,17 @@ public class DialogSendFeedback extends JFrame {
                 if (proj_Check1.isSelected()) {proj_Check1txt = "1";}
                 if (proj_Check2.isSelected()) {proj_Check2txt = "1";}
 
-                DataUser userRecordFinal = new DataUser();
-                userRecordFinal.setUserID(userRecord.getUserID());
-                userRecordFinal.setRate(groupRatetxt);
-                userRecordFinal.setOptionalFeedback(optionalFeedback);
-
-                userRecordFinal.setCloudStore(proj_Check1txt);
-                userRecordFinal.setSendAllCloud(proj_Check2txt);
+                userRecord.setRate(groupRatetxt);
+                userRecord.setOptionalFeedback(optionalFeedback);
+                userRecord.setCloudStore(proj_Check1txt);
+                userRecord.setSendAllCloud(proj_Check2txt);
                 DatabaseAccess dataAccessObject = new DatabaseAccess();
 
-                int xyx = dataAccessObject.updateUserProfile2(userRecordFinal);
+                try {
+                    dataAccessObject.updateUserProfile(userRecord);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 dispose();
             }
         });

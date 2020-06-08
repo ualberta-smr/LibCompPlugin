@@ -13,7 +13,6 @@ public class DataImportStatement {
     public Integer importDomain;
     public Integer importLib;
     private String domainName;
-
     public DataImportStatement() {
     }
 

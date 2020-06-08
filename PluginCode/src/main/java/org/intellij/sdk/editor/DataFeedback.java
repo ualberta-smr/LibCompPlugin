@@ -7,39 +7,34 @@ import java.util.Date;
  */
 
 public class DataFeedback {
-    private String fromLibrary;
-    private String toLibrary;
-    private Date dateReplace;
-    private int location;
-    private String projectId;
-    private String classId;
-    private String allLibrary;
-    private String selectionLibrary;
-    private String UserID;
-    private int local;
 
-    public DataFeedback(String fromLibrary, String toLibrary, int location, String projectId, String classId, String allLibrary, String selectionLibrary, String UserID, int local) {
-        this.fromLibrary = fromLibrary;
-        this.toLibrary = toLibrary;
-        this.dateReplace = dateReplace;
-        this.location = location;
-        this.projectId = projectId;
-        this.classId = classId;
-        this.allLibrary = allLibrary;
-        this.selectionLibrary = selectionLibrary;
-        this.UserID = UserID;
-        this.local = local;
+    private int id;
+    private Date action_date;
+    private int line_num;
+    private String project_name;
+    private String class_name;
+    private String full_lib_list;
+    private int from_library_id;
+    private int to_library_id;
+
+    public int getId() { return id; }
+    public Date getAction_date() { return action_date; }
+    public int getLine_num() { return line_num; }
+    public String getProject_name() { return project_name; }
+    public String getClass_name() { return class_name; }
+    public String getFull_lib_list() { return full_lib_list;}
+    public int getFrom_library_id() {return from_library_id;}
+    public int getTo_library_id() { return to_library_id; }
+
+    public DataFeedback(int id, Date action_date, int line_num, String project_name, String class_name, String full_lib_list, int from_library_id, int to_library_id) {
+        this.id = id;
+        this.action_date = action_date;
+        this.line_num = line_num;
+        this.project_name = project_name;
+        this.class_name = class_name;
+        this.full_lib_list = full_lib_list;
+        this.from_library_id = from_library_id;
+        this.to_library_id = to_library_id;
     }
-
-    public String getFromLibrary() { return fromLibrary; }
-    public String getToLibrary() { return toLibrary; }
-    public String getProjectId() { return projectId; }
-    public String getClassId() { return classId; }
-    public String getAllLibrary() { return allLibrary; }
-    public String getSelectionLibrary() { return selectionLibrary; }
-    public String getUserID() { return UserID; }
-    public Date getDateReplace() { return dateReplace; }
-    public int getLocation() { return location; }
-    public int getLocal() { return local; }
 
 }

@@ -4,7 +4,7 @@
     <vendor email="relhajj@ualberta.ca" url="http://cs.ualberta.ca">Rehab el hajj</vendor>
     <description>This plugin compare among Libraries and suggests new ones</description>
     <!-- increment the version number with each publish -->
-    <version>1.0.4</version>
+    <version>1.0.7</version>
 
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
@@ -16,6 +16,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
+        <postStartupActivity implementation="PostStartupActivity"/>
     </extensions>
 
     <actions>
@@ -54,25 +55,5 @@
 
                 <add-to-group group-id="ToolsMenu" anchor="first"  />
             </group>
-
-
     </actions>
-    <application-components>
-        <component>
-            <implementation-class>MainClassPlugin</implementation-class>
-        </component>
-        <component>
-            <implementation-class>ModuleClassComponent</implementation-class>
-        </component>
-    </application-components>
-    <project-components>
-        <component>
-            <implementation-class>MainClassPlugin</implementation-class>
-        </component>
-    </project-components>
-    <module-components>
-        <component>
-            <implementation-class>ModuleClassComponent</implementation-class>
-        </component>
-    </module-components>
 </idea-plugin>

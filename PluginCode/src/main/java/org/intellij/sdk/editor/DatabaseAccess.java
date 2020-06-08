@@ -1,13 +1,26 @@
 package org.intellij.sdk.editor;
 
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
+import com.intellij.openapi.application.PathManager;
 import com.jcraft.jsch.Session;
-import com.mysql.cj.jdbc.MysqlDataSource;
+import org.apache.commons.io.FileUtils;
+
 import java.awt.*;
-import java.sql.*;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.UUID;
+
+import java.io.FileNotFoundException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.io.File;
+
+
+//import static com.mysql.cj.util.StringUtils.isNullOrEmpty;
 
 /**
  * The DatabaseAccess class is where all connections to the databases are made
@@ -16,698 +29,599 @@ import java.util.UUID;
 public class DatabaseAccess {
 
     private static Session session = null;
-    private int VersionNo;
-    private int VersionMonth;
-    private int VersionYear;
-
-    /**
-     * Until we figure out how to access the server DB using REST API, I am using my own acount information to connect
-     * I have changed all the sensitive information to placeholders so that I do not share my information on github
-     */
-    private Connection connectcloud(String dbName) throws ClassNotFoundException, SQLException {
-        Connection connection = null;
-        try {
-            String sshHost = "smr.cs.ualberta.ca";
-            String sshuser = "relhajj";
-            //I did not put my private key on github, I am just using it for my own testing purposes until the API's are set up
-            String SshKeyFilepath = System.getenv("APPDATA")+"\\LibComp\\privateKey.ppk";
-            //String SshKeyFilepath = PathManager.getPluginsPath()+"\\Library_Comparison\\lib\\privateKey.ppk";
-            String dbuserName = "USERNAME";
-            String dbpassword = "PASSWORD";
-            int localPort = 3306; // any free port can be used
-            String localSSHUrl = "localhost";
-
-            // Establish the SSH connection
-            java.util.Properties config = new java.util.Properties();
-            JSch jsch = new JSch();
-            session = jsch.getSession(sshuser, sshHost, 22);
-            jsch.addIdentity(SshKeyFilepath);
-            config.put("StrictHostKeyChecking", "no");
-            config.put("ConnectionAttempts", "3");
-            session.setConfig(config);
-            session.connect();
-
-            // Establish the DB connection
-            int forwardedPort = session.setPortForwardingL(0, localSSHUrl, localPort);
-            MysqlDataSource dataSource = new MysqlDataSource();
-            dataSource.setServerName(localSSHUrl);
-            dataSource.setPortNumber(forwardedPort);
-            dataSource.setUser(dbuserName);
-            dataSource.setAllowMultiQueries(true);
-            dataSource.setPassword(dbpassword);
-            dataSource.setDatabaseName(dbName);
-            dataSource.setServerTimezone("UTC");
-            connection = dataSource.getConnection();
-        }
-        catch (SQLException | JSchException e) {
-            System.out.println(e.getMessage());
-        }
-        return connection;
-    }
+    private int userid = 0;
+    private String filePath = PathManager.getPluginsPath()+"\\Library_Comparison\\lib";
+  //  private String filePath = System.getenv("APPDATA");
 
 
-    /**
-     *  I am keeping this function for now but have commented it out for the time being
-     */
-/*    private Connection connectcloud(String dbName) throws ClassNotFoundException, SQLException {
 
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        String url = "jdbc:mysql://35.238.166.65:3306/"+dbName;
-        String username = "root";
-        String password = "uofa_2000";
+    public ArrayList<String> selectJasonAllLibraries(String librarySelected) throws IOException {
 
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(url,username,password);
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return connection;
-    }*/
-
-
-    /**
-     *  connectLocal function connects to local database
-     *  There are 2 options for the "filepath" and one is commented out, one is for local testing while the other is for when the plugin is packages
-     */
-    private Connection connectLocal(String dbName) throws ClassNotFoundException, SQLException {
-        String filePath = System.getenv("APPDATA")+"\\LibComp";
-        //String filePath = PathManager.getPluginsPath()+"\\Library_Comparison\\lib";
-        String url = "jdbc:sqlite:" + filePath + dbName;
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(url);
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return connection;
-    }
-
-    /**
-     * The selectAllLibraries method will query the database with a given library to get all the other Libraries within the same domain
-     * @param librarySelected is the library selected by the user to be replaced with other similar libraries
-     * @return A list of all the possibly library replacements is returned
-     */
-    public ArrayList<String> selectAllLibraries(String librarySelected){
-
-        String sql = "select library_id, year, month, domain_id, librarycomparison_domain.name from librarycomparison_data, librarycomparison_domain where librarycomparison_data.domain_id = librarycomparison_domain.id and instr(Package,'" + librarySelected +"') > 0  order by year, month desc";
+        String filePath = this.filePath + "\\allLibraries.json";
         ArrayList<String> Terms;
         Terms = new ArrayList<String>();
+        long library_id = 0;
+        long domain_id =0 ;
+        String domain_name = "";
+        String Package = "";
 
-        try {
-            Connection connection = this.connectLocal("\\db.sqlite3");
-            Statement statement  = connection.createStatement();
-            ResultSet resultSet    = statement.executeQuery(sql);
+        File file = new File(filePath);
+        String content = FileUtils.readFileToString(file, "utf-8");
+        JSONObject obj = new JSONObject(content);
+        JSONArray jsonarr_1 = obj.getJSONArray("Libraries");
+        for(int i=0;i<jsonarr_1.length();i++)
+        {
+            JSONObject jsonObj = (JSONObject)jsonarr_1.get(i);
+            if(jsonObj.has("id"))
+                library_id = jsonObj.getLong("id");
+            if(jsonObj.has("domain"))
+                domain_id = jsonObj.getLong("domain");
+            if(jsonObj.has("domain_name"))
+                domain_name = jsonObj.getString("domain_name");
+            if(jsonObj.has("package"))
+                Package = jsonObj.getString("package");
 
-            while (resultSet.next()) {
-                Terms.add(resultSet.getString("library_id") );
-                Terms.add(resultSet.getString("domain_id") );
-                Terms.add(resultSet.getString("year") );
-                Terms.add(resultSet.getString("month") );
-                Terms.add(resultSet.getString("name") );
+            boolean isFound;
+         //   if(!isNullOrEmpty(Package))
+            {
+                isFound = Package.contains(librarySelected);
+                if (isFound) {
+                    Terms.add(Long.toString(library_id) );
+                    Terms.add(Long.toString(domain_id));
+                    Terms.add("0"); // for future use
+                    Terms.add("0"); // for future use
+                    Terms.add(domain_name);
+                }
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
         }
         return (Terms);
     }
 
-    public int updateVersionLocal(String sql) {
-        int localVer = 0;
-        try {
-            Connection connection = this.connectLocal("\\db.sqlite3");
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
 
-            while (resultSet.next()) {
-                localVer = resultSet.getInt("VersionNo");
+    public String VersionCloud() throws IOException  {
+        String cloudVer = "";
+        String linkURL = "http://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
+
+        HttpURLConnection connection = (HttpURLConnection) new URL(linkURL).openConnection();
+        connection.setRequestMethod("GET");
+
+        int responseCode = connection.getResponseCode();
+        if(responseCode == 200 || responseCode == 201) {
+            String line;
+            InputStream response = connection.getInputStream();
+            InputStream in = new BufferedInputStream(response);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            while ((line = reader.readLine()) != null) {
+                cloudVer = line;
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
         }
-        return (localVer);
+        int loc = cloudVer.indexOf(":");
+        cloudVer = cloudVer.substring(loc+2, cloudVer.length()-3);
+        return (cloudVer);
     }
 
-    public void updateVersionNumberLocal(int cloudVer,int year, int month) {
-        String sql = "UPDATE Properties SET VersionNo = " + cloudVer + " ,VersionYear = " + year + " ,VersionMonth = " + month + ";";
-        try {
-            Connection connection = this.connectLocal("\\db.sqlite3");
-            Statement statement = connection.createStatement();
-            int noOfRecords= statement.executeUpdate(sql);
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-    }
+    public String VersionLocal() throws IOException {
 
-    public void deleteLocalData() {
-        int localVer = 0;
-        String sqlData = "DELETE  from librarycomparison_data;";
-        String sqlCharts = "DELETE  from librarycomparison_charts;";
-        try {
-            Connection connection = this.connectLocal("\\db.sqlite3");
-            Statement statement = connection.createStatement();
-            localVer= statement.executeUpdate(sqlData);
-            localVer= statement.executeUpdate(sqlCharts);
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-    }
+        String filePath = this.filePath +"\\Version.json";
+        String datelocal = "NewUser";
+        File file = new File(filePath);
 
-    public int updateVersionCloud(String sql) {
-        try {
-            Connection connection = this.connectcloud("libcomp");
-            Statement statement  = connection.createStatement();
-            ResultSet resultSet    = statement.executeQuery(sql);
-
-            while (resultSet.next()) {
-                this.VersionNo = resultSet.getInt("VersionNo") ;
-                this.VersionMonth = resultSet.getInt("VersionMonth") ;
-                this.VersionYear = resultSet.getInt("VersionYear") ;
+        if (file.exists()) {
+            String content = FileUtils.readFileToString(file, "utf-8");
+            JSONObject obj = new JSONObject(content);
+            JSONArray jsonarr_1 = obj.getJSONArray("version");
+            int i = 0;
+            boolean found = false;
+            while (i < jsonarr_1.length() && !(found)) {
+                JSONObject jsonObj = (JSONObject) jsonarr_1.get(i);
+                if (jsonObj.has("created_on")) {
+                    datelocal = jsonObj.getString("created_on");
+                }
+                i++;
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
         }
-        return (this.VersionNo);
+        return (datelocal);
     }
 
-    public void updateNewChartRecord (DataCharts DataRecord) {
+    public void uploadJson(String linkURL, String filePath, String suffix) throws IOException {
 
-        String insetStatement = "INSERT INTO librarycomparison_charts (metric_DomainID, metric_line, Chart)VALUES (?,?,?);";
+        File myFile = new File(filePath);
+        FileOutputStream fOuts = new FileOutputStream(myFile);
+        myFile.createNewFile();
 
-        try {
-            Connection connection  = this.connectLocal("\\db.sqlite3");
-            PreparedStatement preparedStatement = connection.prepareStatement(insetStatement);
-            preparedStatement.setInt(1, DataRecord.getMetric_DomainID());
-            preparedStatement.setInt(2, DataRecord.getMetric_line());
-            preparedStatement.setBytes(3, DataRecord.getChart());
-            preparedStatement.executeUpdate();
-        }
-        catch (SQLException | ClassNotFoundException e) {
-            //System.out.println(e.getMessage());
-        }
-    }
+        StringBuilder result = new StringBuilder();
+        String line;
+        result.append(suffix);
+        HttpURLConnection connection = (HttpURLConnection) new URL(linkURL).openConnection();
+        connection.setRequestMethod("GET");
 
+        int responseCode = connection.getResponseCode();
+        if(responseCode == 200 || responseCode == 201){
 
-    public void updateNewDataRecord (DataLibrary DataRecord) {
-        String insetStatement = "INSERT INTO librarycomparison_data (id,name,repository,popularity,release_frequency,issue_closing_time,issue_response_time,domain_id,month,year,library_id,Package,performance,security)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
-
-        try {
-            Connection connection  = this.connectLocal("\\db.sqlite3");
-            PreparedStatement preparedStatement = connection.prepareStatement(insetStatement);
-            preparedStatement.setInt(1, DataRecord.getId());
-            preparedStatement.setString(2, DataRecord.getName());
-            preparedStatement.setString(3, DataRecord.getRepository());
-            preparedStatement.setInt(4, (int) DataRecord.getPopularity());
-            preparedStatement.setInt(5, (int) DataRecord.getRelease_frequency());
-            preparedStatement.setInt(6, (int) DataRecord.getIssue_closing_time());
-            preparedStatement.setInt(7, (int) DataRecord.getIssue_response_time());
-            preparedStatement.setInt(8, DataRecord.getDomain_id()); // domain_id
-            preparedStatement.setInt(9, DataRecord.getMonth()); // month
-            preparedStatement.setInt(10, DataRecord.getYear()); // year
-            preparedStatement.setInt(11, DataRecord.getLibrary_id()); // library_id
-            preparedStatement.setString(12, DataRecord.getPackage()); // Package
-            preparedStatement.setInt(13, 0); // performance
-            preparedStatement.setInt(14, 0); // security
-            preparedStatement.executeUpdate();
-        }
-        catch (SQLException | ClassNotFoundException e) {
-            //System.out.println(e.getMessage());
+            InputStream response = connection.getInputStream();
+            InputStream in = new BufferedInputStream(response);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            result.append("}");
+            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOuts);
+            myOutWriter.append(result);
+            myOutWriter.close();
         }
     }
 
-    public void UpdateNewChart(ArrayList <DataCharts> ChartList) {
-        for (int i = 0; i < ChartList.size(); i++) {
-            updateNewChartRecord(ChartList.get(i));
-        }
+
+    public void GetRestTestApi() throws IOException {
+        String suffixLocal = this.filePath + "\\";
+        String url = "http://smr.cs.ualberta.ca/comparelibraries/api/libraries/?format=json";
+        String filePath = suffixLocal + "allLibraries.json";
+        uploadJson(url, filePath, "{\"Libraries\":");
+
+        url = "http://smr.cs.ualberta.ca/comparelibraries/api/charts/?format=json";
+        filePath = suffixLocal + "allCharts.json";
+        uploadJson(url, filePath, "{\"Charts\":");
+
+        url = "http://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
+        filePath = suffixLocal + "Version.json";
+        uploadJson(url, filePath, "{\"version\":");
+
     }
 
-    public void UpdateNewData(ArrayList <DataLibrary> libraryList) {
-        for (int i = 0; i < libraryList.size(); i++) {
-            updateNewDataRecord(libraryList.get(i));
-        }
-    }
-
-    /**
-     * The updateVersionData function is for updating the data from the server to the local DB
-     * This is triggered if the version number on the server > the version number locally
-     */
-    public int updateVersionData() {
+    public int updateVersionData() throws IOException {
         int returnValue = 1;
-        int localVersion = 10;
-        int cloudVersion = 20;
+        String localVer = "";
+        String cloudVer = "";
 
-        //First Read Version Number from local DB, and Store in localVersion
-        String sql = "SELECT VersionNo, VersionMonth, VersionYear from Properties;";
+        try {
+            localVer= VersionLocal();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        cloudVer= VersionCloud();
 
-        //Then Read Version Number from cloud DB, and Store in cloudVersion
-        localVersion= updateVersionLocal(sql);
-        cloudVersion= updateVersionCloud(sql);
-
-        //Check if data must be updated, read data from Cloud, and store in local DB
-        if  (localVersion < cloudVersion) {
-            ArrayList <DataLibrary> libraryList = GetVersionPerformanceValues(this.VersionYear, this.VersionMonth);
-            ArrayList <DataCharts> ChartList = GetVersionChartValues(this.VersionYear, this.VersionMonth);
-
-            if (libraryList.size()>0) {
-                deleteLocalData();
-                UpdateNewData(libraryList);
-                UpdateNewChart(ChartList);
-                updateVersionNumberLocal(cloudVersion,this.VersionYear, this.VersionMonth );
-            }
+        // check now the if we need to upload
+        if  (!(localVer.equals(cloudVer)) )
+        {
+            GetRestTestApi();
         }
         return (returnValue);
     }
 
     public DataUser ReadUserProfile() {
+
+        String filePath = this.filePath + "\\user.json";
         DataUser userRecord = null;
-        String userID;
-        String  sql = "select  rate, optionalFeedback, CloudStore, SendAllCloud, Project1, Project2, Project3 , Project4 , Project5 , Occupation , Team1 , Team2 , Team3 , Team4 , Programming , JavaSkills, userID from userprofile";
 
-        try {
-            Connection connection  = this.connectLocal("\\library_feedback.sqlite3");
-            Statement statement  = connection.createStatement();
-            ResultSet resultSet    = statement.executeQuery(sql);
 
-            while (resultSet.next()) {
-                userRecord = new DataUser();
-                userID = resultSet.getString("userID");
-                if (userID.equals("NEWUSER"))
-                {
-                    UUID uuid = UUID.randomUUID();
-                    userID= uuid.toString();
-                }
-                userRecord.setUserID(userID);
-                userRecord.setProject1(resultSet.getString("Project1"));
-                userRecord.setProject2(resultSet.getString("Project2"));
-                userRecord.setProject3(resultSet.getString("Project3"));
-                userRecord.setProject4(resultSet.getString("Project4"));
-                userRecord.setProject5(resultSet.getString("Project5"));
-                userRecord.setOccupation(resultSet.getString("Occupation"));
-                userRecord.setTeam1(resultSet.getString("Team1"));
-                userRecord.setTeam2(resultSet.getString("Team2"));
-                userRecord.setTeam3(resultSet.getString("Team3"));
-                userRecord.setTeam4(resultSet.getString("Team4"));
-                userRecord.setProgramming(resultSet.getString("Programming"));
-                userRecord.setJavaSkills(resultSet.getString("JavaSkills"));
-                userRecord.setSendAllCloud(resultSet.getString("SendAllCloud"));
-                userRecord.setRate(resultSet.getString("rate"));
-                userRecord.setOptionalFeedback(resultSet.getString("optionalFeedback"));
-                userRecord.setCloudStore(resultSet.getString("CloudStore"));
+        File file = new File(filePath);
+
+        if (!file.exists()){
+            userRecord = new DataUser();
+            String tempShortUserName = UUID.randomUUID().toString().substring(0,14);
+       //     userRecord.setUserID(UUID.randomUUID().toString());
+            userRecord.setUserID(tempShortUserName);
+            userRecord.setProject1("1");
+            userRecord.setProject2("0");
+            userRecord.setProject3("0");
+            userRecord.setProject4("0");
+            userRecord.setProject5("0");
+            userRecord.setOccupation("0");
+            userRecord.setTeam1("1");
+            userRecord.setTeam2("0");
+            userRecord.setTeam3("0");
+            userRecord.setTeam4("0");
+            userRecord.setProgramming("0");
+            userRecord.setJavaSkills("0");
+            userRecord.setSendAllCloud("0");
+            userRecord.setRate("0");
+            userRecord.setOptionalFeedback("Enter your feedback");
+            userRecord.setCloudStore("0");
+            userRecord.setSendAllCloud("0");
+        }
+        else {
+            String content = null;
+            try {
+                content = FileUtils.readFileToString(file, "utf-8");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }
-        catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
+
+            JSONObject obj = new JSONObject(content);
+
+            userRecord = new DataUser();
+            userRecord.setUserID(obj.getString("username"));
+            userRecord.setProject1("0");
+            userRecord.setProject2("0");
+            userRecord.setProject3("0");
+            userRecord.setProject4("0");
+            userRecord.setProject5("0");
+            userRecord.setTeam1("0");
+            userRecord.setTeam2("0");
+            userRecord.setTeam3("0");
+            userRecord.setTeam4("0");
+
+            JSONArray projectsArray = obj.getJSONArray("projects");
+            for(int i=0;i<projectsArray.length();i++){
+                switch ((int) projectsArray.get(i)) {
+                    case 1:
+                        userRecord.setProject1("1");
+                        break;
+                    case 2:
+                        userRecord.setProject2("1");
+                        break;
+                    case 3:
+                        userRecord.setProject3("1");
+                        break;
+                    case 4:
+                        userRecord.setProject4("1");
+                        break;
+                    case 5:
+                        userRecord.setProject5("1");
+                        break;
+                }
+            }
+
+            JSONArray teamsArray = obj.getJSONArray("teams");
+            for(int i=0;i<teamsArray.length();i++){
+                switch ((int) teamsArray.get(i)) {
+                    case 1:
+                        userRecord.setTeam1("1");
+                        break;
+                    case 2:
+                        userRecord.setTeam2("1");
+                        break;
+                    case 3:
+                        userRecord.setTeam3("1");
+                        break;
+                    case 4:
+                        userRecord.setTeam4("1");
+                        break;
+                }
+            }
+            userRecord.setOccupation(obj.getString("occupation"));
+            userRecord.setProgramming(String.valueOf(obj.getLong("programming_skills")));
+            userRecord.setJavaSkills(String.valueOf(obj.getLong("java_skills")));
+            userRecord.setOptionalFeedback(obj.getString("optional_feedback"));
+            userRecord.setRate(String.valueOf(obj.getLong("plugin_rating")));
+            userRecord.setSendAllCloud(String.valueOf(obj.getLong("Send_Feedback")));
+            userRecord.setCloudStore(String.valueOf(obj.getLong("Accept")));
+
+        } // end new user
         return userRecord;
     }
 
-        public int updateUserProfile(DataUser userRecord){
 
-        String insetStatement = "UPDATE userprofile SET Project1 = ?, Project2 = ?, Project3 = ?, Project4 = ?, Project5 = ?, Occupation = ?, Team1 = ?, Team2 = ?, Team3 = ?, Team4 = ?, Programming = ?, JavaSkills = ?, CloudStore = ?, userID = ?";
+    public String getUserToken() throws IOException {
+        String tokenValue = "NoToken";
+        String filePath = this.filePath + "\\token.json";
+        File file = new File(filePath);
 
-        int returnValue = 1;
-        try {
-            Connection connection;
-                connection  = this.connectLocal("\\library_feedback.sqlite3");
+        if (file.exists()) {
+            String content = FileUtils.readFileToString(file, "utf-8");
+            JSONObject obj = new JSONObject(content);
 
-            PreparedStatement preparedStatement = connection.prepareStatement(insetStatement);
-            preparedStatement.setString(1, userRecord.getProject1());
-            preparedStatement.setString(2, userRecord.getProject2());
-            preparedStatement.setString(3, userRecord.getProject3());
-            preparedStatement.setString(4, userRecord.getProject4());
-            preparedStatement.setString(5, userRecord.getProject5());
-            preparedStatement.setString(6, userRecord.getOccupation());
-            preparedStatement.setString(7, userRecord.getTeam1());
-            preparedStatement.setString(8, userRecord.getTeam2());
-            preparedStatement.setString(9, userRecord.getTeam3());
-            preparedStatement.setString(10, userRecord.getTeam4());
-            preparedStatement.setString(11, userRecord.getProgramming());
-            preparedStatement.setString(12, userRecord.getJavaSkills());
-            preparedStatement.setString(13, userRecord.getCloudStore());
-            preparedStatement.setString(14, userRecord.getUserID());
-            preparedStatement.executeUpdate();
-            if (userRecord.getSendAllCloud().equals("1"))  {sendtoCloud();}
+            if (obj.has("token"))
+                tokenValue = "Token " + obj.getString("token");
+            if (obj.has("id"))
+                this.userid = obj.getInt("id");
         }
-        catch (SQLException | ClassNotFoundException e) {
-            //System.out.println(e.getMessage());
-            returnValue = 0;
-        }
-        return (returnValue);
+        return tokenValue;
     }
 
-    public int CloudUserRecord(DataUser userRecord) {
-        String insetStatement = "";
-        String updateStatement = "";
+    public String createLocalToken(String line) throws IOException {
+        String tokenValue;
+        int userID;
+        String filePath = this.filePath + "\\token.json";
+        JSONObject json = new JSONObject(line);
+        tokenValue = (String) json.get("token");
+        userID = (int) json.get("id");
+        File myFile = new File(filePath);
+        FileOutputStream fOuts = new FileOutputStream(myFile);
+        myFile.createNewFile();
+        JSONObject obj = new JSONObject();
+        obj.put("token", tokenValue);
+        obj.put("id", userID);
+        String result = obj.toString();
+        OutputStreamWriter myOutWriter = new OutputStreamWriter(fOuts);
+        myOutWriter.append(result);
+        myOutWriter.close();
+        return tokenValue;
+    }
 
-        int returnValue = 1;
-
+    public boolean createUser(String urlStr, String jsonBodyStr) throws IOException {
+        boolean returnValue = false;
+        URL url = new URL(urlStr);
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+        httpURLConnection.setDoOutput(true);
+        httpURLConnection.setRequestMethod("POST");
+        httpURLConnection.setRequestProperty("Content-Type", "application/json");  //; utf-8
+        httpURLConnection.setRequestProperty("Accept", "application/json");
+        try (OutputStream outputStream = httpURLConnection.getOutputStream()) {
+            outputStream.write(jsonBodyStr.getBytes());
+            outputStream.flush();
+        }
         try {
-            Connection connection2;
-            PreparedStatement preparedStatementInsert,preparedStatementUpdate;
-            insetStatement = "INSERT INTO library_feedback.userprofile(Project1, Project2, Project3 , Project4 , Project5 , Occupation , Team1 , Team2 , Team3 , Team4 , Programming , JavaSkills, rate, optionalFeedback, CloudStore, SendAllCloud,userID) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-            updateStatement = "UPDATE library_feedback.userprofile SET Project1=?, Project2=?, Project3=? , Project4=? , Project5=? , Occupation=? , Team1=? , Team2=? , Team3=? , Team4=? , Programming=? , JavaSkills=?, rate=?, optionalFeedback=?, CloudStore=?, SendAllCloud=? where userID=?";
-            connection2  = this.connectcloud("library_feedback");
+            if (httpURLConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()))) {
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        returnValue = true;
+                        String tokenValue = createLocalToken(line);
 
-            preparedStatementUpdate = connection2.prepareStatement(updateStatement);
+                    }
+                    // System.out.println(response.toString());
+                }
+            }
+        }  catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  returnValue;
+    }
 
-            preparedStatementUpdate.setString(1, userRecord.getProject1());
-            preparedStatementUpdate.setString(2, userRecord.getProject2());
-            preparedStatementUpdate.setString(3, userRecord.getProject3());
-            preparedStatementUpdate.setString(4, userRecord.getProject4());
-            preparedStatementUpdate.setString(5, userRecord.getProject5());
-            preparedStatementUpdate.setString(6, userRecord.getOccupation());
-            preparedStatementUpdate.setString(7, userRecord.getTeam1());
-            preparedStatementUpdate.setString(8, userRecord.getTeam2());
-            preparedStatementUpdate.setString(9, userRecord.getTeam3());
-            preparedStatementUpdate.setString(10, userRecord.getTeam4());
-            preparedStatementUpdate.setString(11, userRecord.getProgramming());
-            preparedStatementUpdate.setString(12, userRecord.getJavaSkills());
-            preparedStatementUpdate.setString(13, userRecord.getRate());
-            preparedStatementUpdate.setString(14, userRecord.getOptionalFeedback());
-            preparedStatementUpdate.setString(15, userRecord.getCloudStore());
-            preparedStatementUpdate.setString(16, userRecord.getSendAllCloud());
-            preparedStatementUpdate.setString(17, userRecord.getUserID());
+    public boolean updateUser(String urlStr, String jsonBodyStr, String tokenValue) throws IOException {
+        boolean returnValue = false;
+        URL url = new URL(urlStr);
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+        httpURLConnection.setDoOutput(true);
+        httpURLConnection.setRequestMethod("PUT");
+        httpURLConnection.setRequestProperty("Content-Type", "application/json");  //; utf-8
+        httpURLConnection.setRequestProperty("Accept", "application/json");
+        httpURLConnection.setRequestProperty("Authorization", tokenValue);
 
-            int noOfRecords = preparedStatementUpdate.executeUpdate();
-            if (noOfRecords < 1)
+        try (OutputStream outputStream = httpURLConnection.getOutputStream()) {
+            outputStream.write(jsonBodyStr.getBytes());
+            outputStream.flush();
+        }
+        try {
+            if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                returnValue = true;
+            }
+        }  catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnValue;
+    }
+
+    public boolean createFeedBack(String urlStr, String jsonBodyStr, String tokenValue) throws IOException {
+        boolean returnValue = false;
+        URL url = new URL(urlStr);
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+        httpURLConnection.setDoOutput(true);
+        httpURLConnection.setRequestMethod("POST");
+        httpURLConnection.setRequestProperty("Content-Type", "application/json");  //; utf-8
+        httpURLConnection.setRequestProperty("Accept", "application/json");
+        httpURLConnection.setRequestProperty("Authorization", tokenValue);
+
+        try (OutputStream outputStream = httpURLConnection.getOutputStream()) {
+            outputStream.write(jsonBodyStr.getBytes());
+            outputStream.flush();
+        }
+        try {
+            if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                returnValue = true;
+            }
+        }  catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  returnValue;
+    }
+
+
+
+    public void SendUser(String username, String jsonString) throws IOException {
+        String updateUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/" + username + "/";
+        String InsertUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/";
+        String tokenValue = getUserToken();
+
+        if (tokenValue.equals("NoToken")) {
+            if (createUser(InsertUrllink, jsonString)) {
+
+            }
+        }
+        else
+        {
+            if  (updateUser(updateUrllink, jsonString,tokenValue))
             {
-                preparedStatementInsert = connection2.prepareStatement(insetStatement);
 
-                preparedStatementInsert.setString(1, userRecord.getProject1());
-                preparedStatementInsert.setString(2, userRecord.getProject2());
-                preparedStatementInsert.setString(3, userRecord.getProject3());
-                preparedStatementInsert.setString(4, userRecord.getProject4());
-                preparedStatementInsert.setString(5, userRecord.getProject5());
-                preparedStatementInsert.setString(6, userRecord.getOccupation());
-                preparedStatementInsert.setString(7, userRecord.getTeam1());
-                preparedStatementInsert.setString(8, userRecord.getTeam2());
-                preparedStatementInsert.setString(9, userRecord.getTeam3());
-                preparedStatementInsert.setString(10, userRecord.getTeam4());
-                preparedStatementInsert.setString(11, userRecord.getProgramming());
-                preparedStatementInsert.setString(12, userRecord.getJavaSkills());
-                preparedStatementInsert.setString(13, userRecord.getRate());
-                preparedStatementInsert.setString(14, userRecord.getOptionalFeedback());
-                preparedStatementInsert.setString(15, userRecord.getCloudStore());
-                preparedStatementInsert.setString(16, userRecord.getSendAllCloud());
-                preparedStatementInsert.setString(17, userRecord.getUserID());
-                preparedStatementInsert.executeUpdate();
             }
-        }
-        catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-            returnValue = 0;
-        }
-        return (returnValue);
-    }
-    public int CloudFeedbackRecord(DataFeedback dataFeedback){
-        String insetStatement = "";
-        int returnValue = 1;
+        } // end of (tokenValue.equals("NoToken"))
 
-        try {
-            Connection connection2;
-            PreparedStatement preparedStatement;
-            insetStatement = "INSERT INTO library_feedback.feedback(fromLibrary,toLibrary,Location,projectID, classID,allLibrary,selectionLibrary, UserID) VALUES(?,?,?,?,?,?,?,?)";
-            connection2  = this.connectcloud("library_feedback");
-            preparedStatement = connection2.prepareStatement(insetStatement);
-            preparedStatement.setString(1, dataFeedback.getFromLibrary());
-            preparedStatement.setString(2, dataFeedback.getToLibrary());
-            preparedStatement.setInt(3, dataFeedback.getLocation());
-            preparedStatement.setString(4, dataFeedback.getProjectId());
-            preparedStatement.setString(5, dataFeedback.getClassId());
-            preparedStatement.setString(6, dataFeedback.getAllLibrary());
-            preparedStatement.setString(7, dataFeedback.getSelectionLibrary());
-            preparedStatement.setString(8, dataFeedback.getUserID());
-            preparedStatement.executeUpdate();
-        }
-        catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-            returnValue = 0;
-        }
-        return (returnValue);
     }
 
+    public void updateUserProfile(DataUser userRecord) throws IOException {
+        String filePath = this.filePath  + "\\user.json";
+        JSONObject obj = new JSONObject();
+        java.util.List<Integer> projects = new ArrayList<Integer>();
 
-    public void ResetCloudRecords() {
+        if (userRecord.getProject1().equals("1"))
+            projects.add(1);
+        if (userRecord.getProject2().equals("1"))
+            projects.add(2);
+        if (userRecord.getProject3().equals("1"))
+            projects.add(3);
+        if (userRecord.getProject4().equals("1"))
+            projects.add(4);
+        if (userRecord.getProject5().equals("1"))
+            projects.add(5);
 
-        String sql = "UPDATE feedback SET local = 1; ";
+        ArrayList<Integer> teams = new ArrayList<Integer>();
+        if (userRecord.getTeam1().equals("1"))
+            teams.add(1);
+        if (userRecord.getTeam2().equals("1"))
+            teams.add(2);
+        if (userRecord.getTeam3().equals("1"))
+            teams.add(3);
+        if (userRecord.getTeam4().equals("1"))
+            teams.add(4);
+
+        obj.put("username", userRecord.getUserID());
+        obj.put("occupation", userRecord.getOccupation());
+        obj.put("programming_skills", Integer.parseInt(userRecord.getProgramming()));
+        obj.put("java_skills", Integer.parseInt(userRecord.getJavaSkills()));
+        obj.put("plugin_rating", Integer.parseInt(userRecord.getRate()));
+        obj.put("optional_feedback", userRecord.getOptionalFeedback());
+        obj.put("Send_Feedback", Integer.parseInt(userRecord.getSendAllCloud()));
+        obj.put("Accept", Integer.parseInt(userRecord.getCloudStore()));
+        obj.put("projects", projects);
+        obj.put("teams", teams);
+
+        String line = obj.toString();
+        File myFile = new File(filePath);
+        FileOutputStream fOuts = null;
         try {
-            Connection connection  = this.connectLocal("\\library_feedback.sqlite3");
-            Statement statement = connection.createStatement();
-            int localVer= statement.executeUpdate(sql);
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
+            fOuts = new FileOutputStream(myFile);
+
+        } catch (FileNotFoundException fileNotFoundException) {
+            fileNotFoundException.printStackTrace();
         }
-    }
 
-    public void sendtoCloud() {
-        DataUser userRecord = null;
-        String sql = "select fromLibrary,toLibrary,Location,projectID, classID,allLibrary,selectionLibrary,Local, UserID from feedback where local = 0";
         try {
-            Connection connection  = this.connectLocal("\\library_feedback.sqlite3");
-            Statement statement  = connection.createStatement();
-            ResultSet resultSet    = statement.executeQuery(sql);
-            while (resultSet.next()) {
-                DataFeedback dataFeedbackPoint = new DataFeedback(resultSet.getString("fromLibrary"),resultSet.getString("toLibrary"), resultSet.getInt("Location"),resultSet.getString("projectID"),resultSet.getString("classID"),resultSet.getString("allLibrary"),resultSet.getString("selectionLibrary"),resultSet.getString("UserID"),resultSet.getInt("local") );
-                CloudFeedbackRecord(dataFeedbackPoint);
-            }
-            ResetCloudRecords();
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
+            myFile.createNewFile();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
+        StringBuilder result = new StringBuilder();
+        result.append(line);
+        OutputStreamWriter myOutWriter = new OutputStreamWriter(fOuts);
+        myOutWriter.append(result);
+        myOutWriter.close();
 
-        // send user record to DB
-        String sqlUser = "select  Project1, Project2, Project3 , Project4 , Project5 , Occupation , Team1 , Team2 , Team3 , Team4 , Programming , JavaSkills, userID, rate, optionalFeedback, CloudStore, SendAllCloud from userprofile";
-        try {
-            Connection connection  = this.connectLocal("\\library_feedback.sqlite3");
-            Statement statement  = connection.createStatement();
-            ResultSet resultSet    = statement.executeQuery(sqlUser);
-            while (resultSet.next()) {
-                userRecord = new DataUser();
-
-                userRecord.setUserID(resultSet.getString("userID"));
-                userRecord.setProject1(resultSet.getString("Project1"));
-                userRecord.setProject2(resultSet.getString("Project2"));
-                userRecord.setProject3(resultSet.getString("Project3"));
-                userRecord.setProject4(resultSet.getString("Project4"));
-                userRecord.setProject5(resultSet.getString("Project5"));
-                userRecord.setOccupation(resultSet.getString("Occupation"));
-                userRecord.setTeam1(resultSet.getString("Team1"));
-                userRecord.setTeam2(resultSet.getString("Team2"));
-                userRecord.setTeam3(resultSet.getString("Team3"));
-                userRecord.setTeam4(resultSet.getString("Team4"));
-                userRecord.setProgramming(resultSet.getString("Programming"));
-                userRecord.setJavaSkills(resultSet.getString("JavaSkills"));
-                userRecord.setRate(resultSet.getString("rate"));
-                userRecord.setOptionalFeedback(resultSet.getString("optionalFeedback"));
-                userRecord.setCloudStore(resultSet.getString("CloudStore"));
-                userRecord.setSendAllCloud(resultSet.getString("SendAllCloud"));
-                CloudUserRecord(userRecord);
-            }
-
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
+        if (Integer.parseInt(userRecord.getSendAllCloud()) == 1)
+        {
+            SendUser(userRecord.getUserID(), obj.toString());
         }
     }
 
-    public int updateUserProfile2(DataUser userRecord){
 
-        String insetStatement = "UPDATE userprofile SET rate = ?, optionalFeedback = ?, CloudStore = ?, SendAllCloud = ?, userID = ?";
-        int returnValue = 1;
-        try {
-            Connection connection;
-                connection  = this.connectLocal("\\library_feedback.sqlite3");
+    public void updateFeedback(DataFeedback dataFeedback) throws IOException {
+        String tokenValue = getUserToken();
+        JSONObject obj = new JSONObject();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-            PreparedStatement preparedStatement = connection.prepareStatement(insetStatement);
-            preparedStatement.setString(1, userRecord.getRate());
-            preparedStatement.setString(2, userRecord.getOptionalFeedback());
-            preparedStatement.setString(3, userRecord.getCloudStore());
-            preparedStatement.setString(4, userRecord.getSendAllCloud());
-            preparedStatement.setString(5, userRecord.getUserID());
-            preparedStatement.executeUpdate();
-            if (userRecord.getSendAllCloud().equals("1"))  {sendtoCloud();}
+        obj.put("user", this.userid);
+        obj.put("full_lib_list", dataFeedback.getFull_lib_list());
+        obj.put("to_library", dataFeedback.getTo_library_id());
+        obj.put("from_library", dataFeedback.getFrom_library_id());
+        obj.put("line_num", dataFeedback.getLine_num());
+        obj.put("project_name", dataFeedback.getProject_name());
+        obj.put("class_name", dataFeedback.getClass_name());
+        obj.put("action_date", df.format(dataFeedback.getAction_date()));
+
+        String JsonString = obj.toString();
+        String InsertUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginfeedback/";
+
+        if (createFeedBack(InsertUrllink,JsonString, tokenValue))
+        {
+            // later
         }
-        catch (SQLException | ClassNotFoundException e) {
-            //System.out.println(e.getMessage());
-            returnValue = 0;
-        }
-        return (returnValue);
+
     }
 
-    public int updateFeedback(DataFeedback dataFeedback){
-        String insetStatement = "";
-        int returnValue = 1;
-
-        try {
-            Connection connection;
-            Connection connection2;
-
-            PreparedStatement preparedStatement;
-
-            insetStatement = "INSERT INTO feedback(fromLibrary,toLibrary,Location,projectID, classID,allLibrary,selectionLibrary,Local,UserID) VALUES(?,?,?,?,?,?,?,?,?)";
-            connection  = this.connectLocal("\\library_feedback.sqlite3");
-            preparedStatement = connection.prepareStatement(insetStatement);
-            preparedStatement.setString(1, dataFeedback.getFromLibrary());
-            preparedStatement.setString(2, dataFeedback.getToLibrary());
-            preparedStatement.setInt(3, dataFeedback.getLocation());
-            preparedStatement.setString(4, dataFeedback.getProjectId());
-            preparedStatement.setString(5, dataFeedback.getClassId());
-            preparedStatement.setString(6, dataFeedback.getAllLibrary());
-            preparedStatement.setString(7, dataFeedback.getSelectionLibrary());
-            preparedStatement.setInt(8, dataFeedback.getLocal());
-            preparedStatement.setString(9, dataFeedback.getUserID());
-
-            preparedStatement.executeUpdate();
-
-            if (dataFeedback.getLocal() == 1){
-                insetStatement = "INSERT INTO library_feedback.feedback(fromLibrary,toLibrary,Location,projectID, classID,allLibrary,selectionLibrary,UserID) VALUES(?,?,?,?,?,?,?,?)";
-                connection2  = this.connectcloud("library_feedback");
-                preparedStatement = connection2.prepareStatement(insetStatement);
-                preparedStatement.setString(1, dataFeedback.getFromLibrary());
-                preparedStatement.setString(2, dataFeedback.getToLibrary());
-                preparedStatement.setInt(3, dataFeedback.getLocation());
-                preparedStatement.setString(4, dataFeedback.getProjectId());
-                preparedStatement.setString(5, dataFeedback.getClassId());
-                preparedStatement.setString(6, dataFeedback.getAllLibrary());
-                preparedStatement.setString(7, dataFeedback.getSelectionLibrary());
-                preparedStatement.setString(8, dataFeedback.getUserID());
-
-                preparedStatement.executeUpdate();
-            }
-        }
-        catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-            returnValue = 0;
-        }
-        return (returnValue);
-    }
-
-    public ArrayList <DataLibrary> GetPerformanceValues(int  metricDomain, int metricLibraryID, int metricyear, int metricmonth){
-
-        String  sql = "select id, domain_id, repository,library_id, name, year, month, Package, domain_id, popularity, release_frequency, issue_closing_time, issue_response_time, backwards_compatibility " +
-                " from librarycomparison_data where domain_id = "+metricDomain+" and year = "+metricyear+" and month = " + metricmonth;
-
+    public ArrayList <DataLibrary> GetJsonPerformanceValues(int  metricDomain,int metricLibraryID)
+    {
+        String filePath = this.filePath +"\\allLibraries.json";
+        int domain_id;
         DataLibrary libraryDataPoint;
         ArrayList <DataLibrary> libraryList = new ArrayList<DataLibrary> ();
 
+        File file = new File(filePath);
+        String content = null;
         try {
-            Connection connection = this.connectLocal("\\db.sqlite3");
-            Statement statement  = connection.createStatement();
-            ResultSet resultSet    = statement.executeQuery(sql);
+            content = FileUtils.readFileToString(file, "utf-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            while (resultSet.next()) {
-                libraryDataPoint = new DataLibrary();
-                libraryDataPoint.setId(resultSet.getInt("id"));
-                libraryDataPoint.setLibrary_id(resultSet.getInt("Library_ID"));
-                libraryDataPoint.setDomain_id(resultSet.getInt("domain_id"));
-                libraryDataPoint.setName(resultSet.getString("name"));
-                libraryDataPoint.setRepository(resultSet.getString("repository"));
-                libraryDataPoint.setYear(resultSet.getInt("year"));
-                libraryDataPoint.setMonth(resultSet.getInt("month"));
-                libraryDataPoint.setPackage(resultSet.getString("Package"));
-                libraryDataPoint.setPopularity(resultSet.getDouble("popularity"));
-                libraryDataPoint.setRelease_frequency(resultSet.getDouble("release_frequency"));
-                libraryDataPoint.setIssue_closing_time(resultSet.getDouble("issue_closing_time"));
-                libraryDataPoint.setIssue_response_time(resultSet.getDouble("issue_response_time"));
-                //libraryDataPoint.setPerformance(resultSet.getDouble("performance"));
-                //libraryDataPoint.setSecurity(resultSet.getDouble("security"));
-                libraryDataPoint.setBackwards_compatibility(resultSet.getDouble("backwards_compatibility"));
+        JSONObject obj = new JSONObject(content);
+        JSONArray jsonarr_1 = obj.getJSONArray("Libraries");
 
-                if (metricLibraryID == libraryDataPoint.getLibrary_id()) {
-                    libraryDataPoint.setName(libraryDataPoint.getName() + " \n(Current \n Library)");
-                    libraryList.add(0,libraryDataPoint);
-                }
-                else {
-                    libraryList.add(libraryDataPoint);
+        for(int i=0;i<jsonarr_1.length();i++)
+
+        {
+            JSONObject jsonObj = (JSONObject)jsonarr_1.get(i);
+            if(jsonObj.has("domain")) {
+                domain_id = jsonObj.getInt("domain");
+                if (domain_id == metricDomain) {
+                    libraryDataPoint = new DataLibrary();
+                    if(jsonObj.has("id"))
+                        libraryDataPoint.setId(jsonObj.getInt("id"));
+                    if(jsonObj.has("id"))
+                        libraryDataPoint.setLibrary_id(jsonObj.getInt("id"));
+                    if(jsonObj.has("domain"))
+                        libraryDataPoint.setDomain_id(jsonObj.getInt("domain"));
+                    if(jsonObj.has("name"))
+                        libraryDataPoint.setName(jsonObj.getString("name"));
+                    if(jsonObj.has("github_repo"))
+                        libraryDataPoint.setRepository(jsonObj.getString("github_repo"));
+                    if(jsonObj.has("package"))
+                        libraryDataPoint.setPackage(jsonObj.getString("package")); // Change tag to package
+                    if(jsonObj.has("popularity"))
+                        libraryDataPoint.setPopularity(jsonObj.getDouble("popularity"));
+                    if(jsonObj.has("release_frequency"))
+                        libraryDataPoint.setRelease_frequency(jsonObj.getDouble("release_frequency"));
+                    if(jsonObj.has("issue_closing_time"))
+                        libraryDataPoint.setIssue_closing_time(jsonObj.getDouble("issue_closing_time"));
+                    if(jsonObj.has("issue_response_time"))
+                        libraryDataPoint.setIssue_response_time(jsonObj.getDouble("issue_response_time"));
+                    if(jsonObj.has("performance"))
+                        libraryDataPoint.setPerformance(jsonObj.getDouble("performance") /100);
+                    if(jsonObj.has("security"))
+                        libraryDataPoint.setSecurity(jsonObj.getDouble("security") / 100);
+
+                    if(jsonObj.has("backwards_compatibility"))
+                        libraryDataPoint.setBackwards_compatibility(jsonObj.getDouble("backwards_compatibility"));
+                    if (metricLibraryID == libraryDataPoint.getLibrary_id()) {
+                        // at the first row for the selected one
+                        libraryDataPoint.setName(libraryDataPoint.getName() + " \n(Current \n Library)");
+                        libraryList.add(0, libraryDataPoint);
+                    } else {
+                        libraryList.add(libraryDataPoint);
+                    }
                 }
             }
         }
-        catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
+
         return (libraryList);
     }
 
-    public Image ReadCharts(int metric_year, int metric_month, int metric_DomainID, int metric_line){
-        Image img=null;
-        String sql = "select Chart from librarycomparison_charts where  metric_DomainID = " + metric_DomainID + " and metric_line = " + metric_line;
-        try {
-            Connection connection = this.connectLocal("\\db.sqlite3");
-            Statement statement  = connection.createStatement();
-            ResultSet resultSet    = statement.executeQuery(sql);
 
-            while (resultSet.next()) {
-                byte[] imgArr=resultSet.getBytes("Chart");
+    public Image ReadCharts(int metric_DomainID,int metric_line) throws IOException {
+        Image img=null;
+
+        String filePath = this.filePath +"\\allCharts.json";
+        long metric = 0;
+        long domain =0 ;
+        String chartfile = null;
+
+        File file = new File(filePath);
+        String content = FileUtils.readFileToString(file, "utf-8");
+        JSONObject obj = new JSONObject(content);
+        JSONArray jsonarr_1 = obj.getJSONArray("Charts");
+        int i = 0;
+        boolean found = false;
+        while (i<jsonarr_1.length() && !(found))
+        {
+            JSONObject jsonObj = (JSONObject)jsonarr_1.get(i);
+            if(jsonObj.has("metric"))
+                metric = jsonObj.getLong("metric");
+            if(jsonObj.has("domain"))
+                domain = jsonObj.getLong("domain");
+            if (metric_DomainID == domain && metric_line == metric )
+            {
+                if(jsonObj.has("chart"))
+                    chartfile = jsonObj.getString("chart");
+                byte[] imgArr = Base64.getDecoder().decode(chartfile);
+                found = true;
                 img= Toolkit.getDefaultToolkit().createImage(imgArr);
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
+            i++;
         }
         return (img);
     }
 
-    public ArrayList <DataCharts> GetVersionChartValues(int metric_year, int metric_month){
 
-        String sql = "select metric_year, metric_month, metric_DomainID, metric_line, Chart from librarycomparison_charts where metric_year = "+ metric_year + " and metric_month = "+metric_month ;
-        DataCharts dataChartsPoint;
-        ArrayList <DataCharts> libraryList = new ArrayList<DataCharts> ();
 
-        try {
-            Connection connection = this.connectcloud("libcomp");
-            Statement statement  = connection.createStatement();
-            ResultSet resultSet    = statement.executeQuery(sql);
 
-            while (resultSet.next()) {
-                dataChartsPoint = new DataCharts();
-                dataChartsPoint.setMetric_DomainID(resultSet.getInt("metric_DomainID"));
-                dataChartsPoint.setMetric_line(resultSet.getInt("metric_line"));
-                dataChartsPoint.setChart(resultSet.getBytes("Chart"));
-                libraryList.add(dataChartsPoint);
-            }
-        }
-        catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-        return (libraryList);
-    }
-
-    public ArrayList <DataLibrary> GetVersionPerformanceValues(int metric_year, int metric_month){
-
-        String  sql = "select id, domain_id, repository, library_id, name, year, month, Package, domain_id, popularity, release_frequency, issue_closing_time, issue_response_time, backwards_compatibility " +
-                " from librarycomparison_data where year = "+ metric_year + " and month = "+metric_month;
-
-        DataLibrary libraryDataPoint;
-        ArrayList <DataLibrary> libraryList = new ArrayList<DataLibrary> ();
-
-        try {
-            Connection connection = this.connectcloud("libcomp");
-            Statement statement  = connection.createStatement();
-            ResultSet resultSet    = statement.executeQuery(sql);
-
-            while (resultSet.next()) {
-                libraryDataPoint = new DataLibrary();
-                libraryDataPoint.setId(resultSet.getInt("id"));
-                libraryDataPoint.setLibrary_id(resultSet.getInt("library_ID"));
-                libraryDataPoint.setDomain_id(resultSet.getInt("domain_id"));
-                libraryDataPoint.setRepository(resultSet.getString("repository"));
-                libraryDataPoint.setName(resultSet.getString("name"));
-                libraryDataPoint.setYear(resultSet.getInt("year"));
-                libraryDataPoint.setMonth(resultSet.getInt("month"));
-                libraryDataPoint.setPackage(resultSet.getString("Package")); // Change tag to package
-                libraryDataPoint.setPopularity(resultSet.getDouble("popularity"));
-                libraryDataPoint.setRelease_frequency(resultSet.getDouble("release_frequency"));
-                libraryDataPoint.setIssue_closing_time(resultSet.getDouble("issue_closing_time"));
-                libraryDataPoint.setIssue_response_time(resultSet.getDouble("issue_response_time"));
-                libraryDataPoint.setBackwards_compatibility(resultSet.getDouble("backwards_compatibility"));
-                libraryList.add(libraryDataPoint);
-            }
-        }
-        catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-        //linear list of libraries with metric values
-        return (libraryList);
-    }
 }
 

@@ -5,6 +5,8 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+
 import static java.awt.GridBagConstraints.LINE_START;
 
 /**
@@ -487,23 +489,25 @@ public class DialogUserProfile extends JFrame {
                 if (team_Check4.isSelected()) {team_Check4txt = "1";}
 
 
-                DataUser finalUserRecord = new DataUser();
-                finalUserRecord.setUserID(profileString); // hard coded for now, will eventually randomly generate ID
-                finalUserRecord.setProject1(proj_Check1txt);
-                finalUserRecord.setProject2(proj_Check2txt);
-                finalUserRecord.setProject3(proj_Check3txt);
-                finalUserRecord.setProject4(proj_Check4txt);
-                finalUserRecord.setProject5(proj_Check5txt);
-                finalUserRecord.setTeam1(team_Check1txt);
-                finalUserRecord.setTeam2(team_Check2txt);
-                finalUserRecord.setTeam3(team_Check3txt);
-                finalUserRecord.setTeam4(team_Check4txt);
-                finalUserRecord.setProgramming(groupProgtxt);
-                finalUserRecord.setJavaSkills(groupJavatxt);
-                finalUserRecord.setOccupation(Occupationtxt);
-                finalUserRecord.setSendAllCloud(userRecord.getSendAllCloud());
-                finalUserRecord.setCloudStore(userRecord.getCloudStore());
-                DatabaseAccess dataAccessObject = new DatabaseAccess();
+              //  DataUser finalUserRecord = new DataUser();
+                userRecord.setProject1(proj_Check1txt);
+                userRecord.setProject2(proj_Check2txt);
+                userRecord.setProject3(proj_Check3txt);
+                userRecord.setProject4(proj_Check4txt);
+                userRecord.setProject5(proj_Check5txt);
+                userRecord.setTeam1(team_Check1txt);
+                userRecord.setTeam2(team_Check2txt);
+                userRecord.setTeam3(team_Check3txt);
+                userRecord.setTeam4(team_Check4txt);
+                userRecord.setProgramming(groupProgtxt);
+                userRecord.setJavaSkills(groupJavatxt);
+                userRecord.setOccupation(Occupationtxt);
+                try {
+                    DatabaseAccess dataAccessObject = new DatabaseAccess();
+                    dataAccessObject.updateUserProfile(userRecord);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 dispose();
             }
         });

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -24,10 +25,10 @@ import java.util.Vector;
 
 public class DialogReplacement extends JFrame {
 
-    private String termSelected;
     private String LibraryReturned = "None";
-    private int month;
-    private int year;
+    private String full_lib_list = "";
+    private int to_library;
+
     private int libID;
     private int domainID;
     private int columnLength = 0;
@@ -35,7 +36,6 @@ public class DialogReplacement extends JFrame {
     private int offsetBtnCols = 4;
     private int currentLibrary = 4;
     private int rowLength;
-    private String selectionLibrary = " ";
     private double[][] dataDouble;
     private JTable table;
     private String[] columnHeaders;
@@ -45,8 +45,10 @@ public class DialogReplacement extends JFrame {
     private DecimalFormat reposf;
     private DecimalFormat percentf;
     private DecimalFormat changef;
-    private Color colorBackGround = new Color(128, 128, 128);
+    private Color colorBackGround = new Color(64, 64, 64);
     private Color colorForGround = new Color(255, 255, 255);
+    private Color colorForGroundDis = new Color(0, 0, 0);
+
     private Color colorAlternateLine = new Color(230, 230, 230);
     private Color cololrSelectColumn = Color.lightGray;
     private Color cololrCurrentLibrary = new Color(210, 210, 210);
@@ -64,25 +66,44 @@ public class DialogReplacement extends JFrame {
             "Approximation of the percentage of security related issues of a library", //security
             "Average number of code breaking changes per release"}; //backwards compatibility
 
-    public String getSelectionLibrary() { return selectionLibrary; }
-    public String getLibraryReturned() {
-        return LibraryReturned;
-    }
+    public String getSelectionLibrary() { return full_lib_list; }
+    public String getLibraryReturned() { return LibraryReturned; }
+    public int getto_library() { return to_library; }
 
-    public DialogReplacement(String domainName, int domainId, int libID, int year, int month) throws HeadlessException {
-        this.termSelected = termSelected;
+public int getMapping(int original){
+        int returnValue = 0;
+
+        switch (original)
+        {
+            case 0: { returnValue = 1; break;}
+            case 1: { returnValue = 2; break;}
+            case 2: { returnValue = 3; break;}
+            case 3: { returnValue = 4; break;}
+            case 4: { returnValue = 6; break;}
+            case 5: { returnValue = 9; break;}
+            case 6: { returnValue = 10; break;}
+        }
+
+        return returnValue;
+}
+
+    public DialogReplacement(String domainName, int domainId, int libID) throws HeadlessException {
         this.libID = libID;
-        this.year = year;
-        this.month = month;
         this.domainID = domainId;
         Border border = BorderFactory.createLineBorder(Color.black, 1);
+
+        int indPopularity = 0;
+        int indRelease = 1;
+        int indIssueClosing = 2;
+        int indIssueResponse = 3;
+        int indPerformance =4 ;
+        int indSecurity = 5;
+        int indBackward = 6;
 
         this.setTitle(domainName);
         DatabaseAccess dataAccessObject = new DatabaseAccess();
 
-        libraryList = dataAccessObject.GetPerformanceValues(domainId, libID, year, month);
-
-
+        libraryList = dataAccessObject.GetJsonPerformanceValues(domainId, libID);
 
         columnLength = libraryList.size() + offsetBtnCols;
         columnHeaders = new String[columnLength];
@@ -112,35 +133,48 @@ public class DialogReplacement extends JFrame {
         intf = new DecimalFormat("# Repos");
         daysf = new DecimalFormat("# Days");
         reposf = new DecimalFormat("# Repos");
-        percentf = new DecimalFormat("# %");
+        percentf = new DecimalFormat("0.00 %");
         changef = new DecimalFormat("# Changes");
 
-        data[0][offsetBtnCols - 1] = "Popularity (Repos)";
-        data[1][offsetBtnCols - 1] = "Release Frequency (Days)";
-        data[2][offsetBtnCols - 1] = "Issue Closing Time (Days)";
-        data[3][offsetBtnCols - 1] = "Issue Response Time (Repos)";
-        data[4][offsetBtnCols - 1] = "Performance (Percent)";
-        data[5][offsetBtnCols - 1] = "Security (Percent)";
-        data[6][offsetBtnCols - 1] = "Backwards Compatibility";
+
+        indPopularity = 0;
+        indRelease = 1;
+        indIssueClosing = 2;
+        indIssueResponse = 3;
+        indBackward = 4;
+        indSecurity = 5;
+        indPerformance =6 ;
+
+
+        data[indPopularity][offsetBtnCols - 1] = "Popularity (Repos)";
+        data[indRelease][offsetBtnCols - 1] = "Release Frequency (Days)";
+        data[indIssueClosing][offsetBtnCols - 1] = "Issue Closing Time (Days)";
+        data[indIssueResponse][offsetBtnCols - 1] = "Issue Response Time (Repos)";
+        data[indPerformance][offsetBtnCols - 1] = "Performance (Percent)";
+        data[indSecurity][offsetBtnCols - 1] = "Security (Percent)";
+        data[indBackward][offsetBtnCols - 1] = "Backwards Compatibility";
 
         while (current < columnLength - offsetBtnCols) {
-            dataDouble[0][current + offsetBtnCols] = (libraryList.get(current).getPopularity());
-            dataDouble[1][current + offsetBtnCols] = (libraryList.get(current).getRelease_frequency());
-            dataDouble[2][current + offsetBtnCols] = (libraryList.get(current).getIssue_closing_time());
-            dataDouble[3][current + offsetBtnCols] = (libraryList.get(current).getIssue_response_time());
-            dataDouble[4][current + offsetBtnCols] = (libraryList.get(current).getPerformance());
-            dataDouble[5][current + offsetBtnCols] = (libraryList.get(current).getSecurity());
-            dataDouble[6][current + offsetBtnCols] = (libraryList.get(current).getBackwards_compatibility());
+            dataDouble[indPopularity][current + offsetBtnCols] = (libraryList.get(current).getPopularity());
+            dataDouble[indRelease][current + offsetBtnCols] = (libraryList.get(current).getRelease_frequency());
+            dataDouble[indIssueClosing][current + offsetBtnCols] = (libraryList.get(current).getIssue_closing_time());
+            dataDouble[indIssueResponse][current + offsetBtnCols] = (libraryList.get(current).getIssue_response_time());
+            dataDouble[indPerformance][current + offsetBtnCols] = (libraryList.get(current).getPerformance());
+            dataDouble[indSecurity][current + offsetBtnCols] = (libraryList.get(current).getSecurity());
+            dataDouble[indBackward][current + offsetBtnCols] = (libraryList.get(current).getBackwards_compatibility());
 
-            data[0][current + offsetBtnCols] = intf.format(libraryList.get(current).getPopularity());
-            data[1][current + offsetBtnCols] = daysf.format(libraryList.get(current).getRelease_frequency());
-            data[2][current + offsetBtnCols] = daysf.format(libraryList.get(current).getIssue_closing_time());
-            data[3][current + offsetBtnCols] = reposf.format(libraryList.get(current).getIssue_response_time());
-            data[4][current + offsetBtnCols] = percentf.format(libraryList.get(current).getPerformance());
-            data[5][current + offsetBtnCols] = percentf.format(libraryList.get(current).getSecurity());
-            data[6][current + offsetBtnCols] = changef.format(libraryList.get(current).getBackwards_compatibility());
+            data[indPopularity][current + offsetBtnCols] = intf.format(libraryList.get(current).getPopularity());
+            data[indRelease][current + offsetBtnCols] = daysf.format(libraryList.get(current).getRelease_frequency());
+            data[indIssueClosing][current + offsetBtnCols] = daysf.format(libraryList.get(current).getIssue_closing_time());
+            data[indIssueResponse][current + offsetBtnCols] = reposf.format(libraryList.get(current).getIssue_response_time());
+            data[indPerformance][current + offsetBtnCols] = percentf.format(libraryList.get(current).getPerformance());
+            data[indSecurity][current + offsetBtnCols] = percentf.format(libraryList.get(current).getSecurity());
+            data[indBackward][current + offsetBtnCols] = changef.format(libraryList.get(current).getBackwards_compatibility());
 
-            selectionLibrary = selectionLibrary + ";" + libraryList.get(current).getPackage();
+            if (full_lib_list.length() < 1)
+                full_lib_list = "" + libraryList.get(current).getLibrary_id();
+            else
+                 full_lib_list = full_lib_list + "," + libraryList.get(current).getLibrary_id();
             current = current + 1;
         }
 
@@ -258,7 +292,7 @@ public class DialogReplacement extends JFrame {
         bConfirm.setBackground(colorBackGround);
         bConfirm.setForeground(colorForGround);
         bCancel.setBackground(colorBackGround);
-        bCancel.setForeground(colorForGround);
+        bCancel.setForeground(colorForGroundDis);
 
         getContentPane().add(bConfirm);
         getContentPane().add(bCancel);
@@ -270,6 +304,7 @@ public class DialogReplacement extends JFrame {
                 int column = table.getSelectedColumn();
                 if ((column >= 4)) {
                     LibraryReturned = libraryList.get(column - offsetBtnCols).getPackage();
+                    to_library = libraryList.get(column - offsetBtnCols).getLibrary_id();
                     dispose(); //force close
                 }
             }
@@ -288,20 +323,26 @@ public class DialogReplacement extends JFrame {
                 int columnM = table.getSelectedColumn();
                 if ((columnM > offsetBtnCols - 1) && (columnM != currentLibrary)) {
                     bConfirm.setEnabled(true);
+                    bConfirm.setForeground(colorForGroundDis);
 
                     String message = "Replace " + libraryList.get(0).getPackage() + " Package with " + libraryList.get(columnM - offsetBtnCols).getPackage();
                     bConfirm.setText(message);
                 }
                 if ((columnM < 4) || (columnM == currentLibrary)) {
                     bConfirm.setEnabled(false);
+                    bConfirm.setForeground(colorForGround);
                 }
 
                 //How to add image:
                 if ((columnM == 0)) {
                     String message = " "+ data[rowM][3];
-                //    String filePath = System.getenv("APPDATA")+"\\LibComp";
-                //    String imagepath = filePath + "\\Image-" + year + "-" + month + "-" + domainID + "-" + (rowM + 1) + ".png";
-                    Image img = dataAccessObject.ReadCharts(year, month, domainID, rowM + 1);
+                    Image img = null;
+                    try {
+                        int metricValue = getMapping(rowM);
+                        img = dataAccessObject.ReadCharts(domainID, metricValue);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
                     new DialogChart(message,img);
                 }
                 if (columnM == 1) {
@@ -321,7 +362,6 @@ public class DialogReplacement extends JFrame {
         pane.setBounds(0, 0, ColumnWidth, frameHeight);
         getContentPane().add(pane);
         setSize(ColumnWidth, frameHeight + 50);
-
         setSize(ColumnWidth, frameHeight + 10);
         setUndecorated(true);
 
@@ -413,6 +453,11 @@ public class DialogReplacement extends JFrame {
     class ImageRenderer extends DefaultTableCellRenderer {
         JLabel lbl = new JLabel();
 
+        private Image getImage(String image64){
+            byte[] imgArr = Base64.getDecoder().decode(image64);
+            Image img= Toolkit.getDefaultToolkit().createImage(imgArr);
+            return img;
+        }
         public ImageRenderer() {
             setOpaque(true);
             Border border = BorderFactory.createLineBorder(Color.black,0);
@@ -423,15 +468,25 @@ public class DialogReplacement extends JFrame {
                                                        boolean hasFocus, int row, int column) {
 
             Icon warnIcon = null;
-            String filePath = System.getenv("APPDATA")+"\\LibComp";
-           // String filePath = PathManager.getPluginsPath()+"\\Library_Comparison\\lib";
 
             switch (column) {
-                case 0:  { warnIcon = new ImageIcon(filePath+"\\chart4.png"); }
+                case 0:  {
+                    // image for chars
+                    String imageStr = "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAIAAAC0Ujn1AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAMfSURBVEhL7ZbbK6RhHMeF/0JyLcWluHElbk1qL4glNazZFdY4JELtjXJh4mIaUpQxjrHjMBI5zTjkELkhx2Scs8i6YPcz83tfzdjNTju2dmu/F9P7/N7f83l/8xy+zxPwzT89PDxcXl5eqbq9vZ2fn3c4HHNzc/6iHx8f7+7uvqriS+vr62tra/z6i765uenq6vqsanR0tKioqKCgoLCw0F/04eFhYmLiG1WZmZkBT1JSfldOp1Oj0UAU6XS6wMDAvx59dHSUlJT0VlVubq5PaFZVb29vTExMXFwc02K325UXHqLq1NTUd6r0en1QUNCv0cfHx3V1dZIWHR3d19envPAQORT7QVVZWZlP6JOTk/r6ekmj8IGBAeWFh0Cnp6e/V1VaWuoT+vT01GAwSBpoq9WqvPAQOf6iExIS2BFNTU1tbW1ZWVlErq+vt7a2FhYWmDq2iai6utqnafwR3d7e3tPTA4II+3t3d3dpaYnZ+6iqqqrKC833v6jCYugj6LOzs4aGBkkDPTg4aDabWTNP6L29PdDPqvYaEKPRWFNT88ktHpqbm2dnZycmJjY2NniWNHbz0NBQR0cH64QVRgQz2t/fX15eBk1EBDo4OFi6uNChoaFKw62QkBBGMzk5GYrFYpGgoDs7O/v7+4uLi4nc39+DXllZeQkdHh6uNNyiyQpNS0tjtb0yOioqqry8HDcYGRlhBCT4auiKioq8vDybzfZH0IzJf7ToX0b7skIODg5As0wVsF7PZn4JHRkZiaNTCyxMQ4JiTz/1kOzsbG4HosrKSi8PeYaOiIjAw9jr7EasToLx8fF4XmtrK/szPz+fCDeQ7e1tTDUjI4PCRSUlJV7OFxYWpjTcoolPpqSkdHd3t7S0SDA2NpaSTSYT9JycHCJ45ObmJkYm1w8RMyT5LoGura1lZDlYEQ+NjY38zenp6YuLi52dHa1Wy/EB8fz8nAsNp9rk5CTfpiNixKemprjkiVZXVxlxRgZUABRuU9gFk4Z4GBsbm5mZoQNHOEUx4sPDw+Pj4/SkSRA03r24uMidkSCZ1CEiAYKLZrN9B804HE4lSFu2AAAAAElFTkSuQmCC";
+                    warnIcon = new ImageIcon(getImage(imageStr));
+                }
                 break;
-                case 1:  { warnIcon = new ImageIcon(filePath+"\\SortDown.png"); }
+                case 1:  {
+                    // image for downward
+                    String imageStr = "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAZCAYAAAAmNZ4aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAK7SURBVEhL1ZbNSypRFMCPn5SmlBW40GUtElomEa4EF67ClUt3/QEtA/+B/ggF8Q9wLwjpTgjapCCICwmTykj8wK/pnvPOjE4zk/PsvQfvB4e5954z59577rkfFkkATK/XA5/PB1arFRaLBVxcXEClUmGtmmazCbPZjGzNIHezt7cHBwcHoOq43W5DMBjkGsDZ2RmUSiVwuVzc8ouXlxe4urqCp6cncDgc3Po92M10OoV4PA7pdJoaFDqdDg5CkXA4LAlj1i6p1WrS4eGhytasxGIx8rE2TsKGS0swVDj6TXA6nfRVhfr5+Rn8fj/XAMSMoVwua8KJvxQKBfj4+ACbzcat34P/YN4cHR3B+fk5NSjohXoymbD2z2IuJXUYDocwGo1gPB4bCurRDrNfAw+AMDtj4VDa3d0lG7GdJIvFoiuyn+vra/5zyUYzbrVasLW1RWVcN+FHV2Tq9TqXlmzUMXa6vb1NZUw8I7Hb7SQ7Oztku8pGWY3rd3t7C+/v7+TYCHnmmMWJRIJbGexY5r/I6p+yUagREQnI5XJ06K+4IObzOZ3vGOL9/X1u/QJ2LPM7oW40GmQjHGvE4/FIp6enkrhg2FrL2lCL/cglNW9vb/R9fX3VSL/fh263S18jVB1jiFbBPWp0Gaxen3qISdEyGKFa48FgoNpz0WgUisUi17Tk83kQ16OyxvjFweIRiXsd11iEnXRfsdzf3+MRSAZijUHcl6wCEOsEmUyGwo2vk0AgAMfHx6z9OUoyrZNUKoUBIsRANHpxRbJ2PZTVyWRS42RVRNgkEVb6QaZarWrs8FWi92LRQ9lO2WxW4whFhFZ6fHxkqyUPDw+kl7eQ1+uVQqGQ6ZNOlVziLQUnJydcA4hEInB3d8c1Lbj+4nqkpMId4Xa76TFnCuz4K5eXl9LNzQ3X/g6qGf87AD4Bv/EzfaBJlCsAAAAASUVORK5CYII=";
+                    warnIcon = new ImageIcon(getImage(imageStr));
+                }
                 break;
-                case 2:   { warnIcon = new ImageIcon(filePath+"\\SortUp.png"); }
+                case 2:   {
+                    // image for upward
+                    String imageStr = "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAZCAYAAAAmNZ4aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAJASURBVEhL1Za9rylBFMCPb/ERIjQUiEQkCgk9jcZf4E/QqkU0WqLV6BVqPdEIDZ0oiERCgSCRiI99M7Nn332z1n17XXkv95ec7DlzZuac+diZ0QgE+A88BL7f79DtdsHv90MwGMRSnn6/D+v1GnQ6HZao53a7gcvlAqCBJXa7nZBOp2kigt1uF9rtNnp4qP/bgn0Js9lMIKN8qFCr1bDGB/I6rwib6vF4DLFYjNjK5HI5qNfraAFUKhVoNBpgsViwRD3n8xmy2SxAtVpVzEguXq9XuFwubMTvQGM2mwWHw8E2Cs1ms9mQOCI2mw2cTidcr1c4Ho8wHA4hEomg93uwqV4sFmA0GmE6nUIymUQXQKFQgHw+zxIiCYLb7WblNDmahMFgYPZnkO5Br9dDKpXCEoQGlqAbjBZJQtYSPTw+n4/5tVqtKiGBhclkgq1FtKSD3+z3e9RETqcTajzL5ZJ96T+vRuhSrVYr1kaCC6zRaFATkdsSgUAANfUkEgnURLjAaiFLwtbuK2K1WrG1yEuB38HPCkwvD7r+n0mz2cTayrwUeD6fo/acXq+HmjIvBSb/MfvS005JKH874bj7WH5ZlMtlKBaLaH2w3W5hMBg8PbnoSZfJZNB6Ag0sMRqNuJOLBEbP+/lZu5rex3QN4/E4k3A4DK1WC70qwZEzyI3DTXWpVEIPz591JCGPAvSqgxsxeWeh9nU8Hg9q6uB2NVU7nQ4cDgcwmUxsGpU6lL8y6csxFApBNBplthoenrf/BoBfAtu19PKdgHYAAAAASUVORK5CYII=";
+                    warnIcon = new ImageIcon(getImage(imageStr));
+                }
                 break;
             }
             lbl.setIcon(warnIcon);
@@ -494,6 +549,7 @@ class DialogChart extends JFrame {
         super(title);
 
         pack();
+        Color colorForGroundDis = new Color(0, 0, 0);
 
         Container container = getContentPane();
         container.setLayout(new FlowLayout());
@@ -508,6 +564,7 @@ class DialogChart extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         bConfirm.setEnabled(true);
+        bConfirm.setForeground(colorForGroundDis);
         bConfirm.setOpaque(true);
 
         bConfirm.addActionListener(new ActionListener() {
