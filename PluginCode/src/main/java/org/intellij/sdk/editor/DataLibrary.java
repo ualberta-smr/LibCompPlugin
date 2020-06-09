@@ -22,8 +22,6 @@ public class DataLibrary {
     public DataLibrary() {
     }
 
-
-
     public int getId() {
         return id;
     }
@@ -33,9 +31,7 @@ public class DataLibrary {
     public int getDomain_id() {
         return domain_id;
     }
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
     public String getRepository() {
         return repository;
     }

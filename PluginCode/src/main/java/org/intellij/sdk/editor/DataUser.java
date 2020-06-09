@@ -133,25 +133,5 @@ public class DataUser {
     public String getCloudStore() { return CloudStore; }
     public String getSendAllCloud() { return SendAllCloud; }
 
-
-    public DataUser(String ID, String userID, String rate, String optionalFeedback, String project1, String project2, String project3, String project4, String project5, String occupation, String team1, String team2, String team3, String team4, String programming, String javaSkills, String SendAllCloud) {
-        this.ID = ID;
-        this.userID = userID;
-        this.rate = rate;
-        this.optionalFeedback = optionalFeedback;
-        Project1 = project1;
-        Project2 = project2;
-        Project3 = project3;
-        Project4 = project4;
-        Project5 = project5;
-        Occupation = occupation;
-        Team1 = team1;
-        Team2 = team2;
-        Team3 = team3;
-        Team4 = team4;
-        Programming = programming;
-        JavaSkills = javaSkills;
-        SendAllCloud = SendAllCloud;
-    }
 }
 

@@ -39,10 +39,11 @@ public class ActionReplacement extends AnAction {
 
     private int to_library;
     private String full_lib_list;
+    private String libraryName;
     private int sendToCloud = 1;
     public ActionReplacement() {
-        ImportListObjects = new ArrayList<>();
-        DependListObjects = new ArrayList<>();
+    ImportListObjects = new ArrayList<>();
+    DependListObjects = new ArrayList<>();
     }
 
     /**
@@ -52,44 +53,30 @@ public class ActionReplacement extends AnAction {
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
        //Returned later: detectAllOpenEditors();
-
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
         if (psiFile != null)
         {
             FileType fileType = psiFile.getFileType();
             if (fileType.getDefaultExtension().equalsIgnoreCase("java")) {
-
                 replaceRequestedImport(event);
                 try {
                     detectImportStatements(event);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
             }
             else
             {
-
                 replaceRequestedDependence(event);
                 try {
                     detectionDependencies(event);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
                             }
-
             event.getPresentation().setVisible(true);
             event.getPresentation().setEnabled(true);
-
         }
-
-
-
-
-
-
 
     }
 
@@ -371,9 +358,11 @@ public class ActionReplacement extends AnAction {
                         String finalChoice = bc.getLibraryReturned();
                         to_library = bc.getto_library();
                         full_lib_list = bc.getSelectionLibrary();
+                        libraryName = bc.getLibraryname();
 
                         if (finalChoice.equals("None") == false) {
-                            finalChoice = "    compile \'" + finalChoice + "'";
+
+                            finalChoice = "    compile group: \'"+ finalChoice + "', name: \'"+ libraryName + "\',  version: \'please select version\'";
                             String finalChoice1 = finalChoice;
                             WriteCommandAction.runWriteCommandAction(project, () ->
                                     document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport, finalChoice1));
@@ -398,9 +387,10 @@ public class ActionReplacement extends AnAction {
                         String finalChoice = bc.getLibraryReturned();
                         to_library = bc.getto_library();
                         full_lib_list = bc.getSelectionLibrary();
+                        libraryName = bc.getLibraryname();
 
                         if (finalChoice.equals("None") == false) {
-                            finalChoice = "    compile \'" + finalChoice + "'";
+                            finalChoice = "    compile group: \'"+ finalChoice + "', name: \'"+ libraryName + "\',  version: \'please select version\'";
                             String finalChoice1 = finalChoice;
                             WriteCommandAction.runWriteCommandAction(project, () ->
                                     document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport, finalChoice1));
@@ -476,7 +466,6 @@ public class ActionReplacement extends AnAction {
                 String TermSelected = importStatementObject.getImportReference().getReferenceName();
                 locationLastWord = importStatementObject.getImportReference().getTextOffset();
                 importLineNumber = document.getLineNumber(locationLastWord);
-
 
                 //check database
                 DatabaseAccess dataAccessObject = new DatabaseAccess();

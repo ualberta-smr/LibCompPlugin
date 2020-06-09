@@ -3,7 +3,6 @@ package org.intellij.sdk.editor;
 import com.intellij.openapi.application.PathManager;
 import com.jcraft.jsch.Session;
 import org.apache.commons.io.FileUtils;
-
 import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -19,9 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.File;
 
-
-//import static com.mysql.cj.util.StringUtils.isNullOrEmpty;
-
 /**
  * The DatabaseAccess class is where all connections to the databases are made
  */
@@ -31,12 +27,9 @@ public class DatabaseAccess {
     private static Session session = null;
     private int userid = 0;
     private String filePath = PathManager.getPluginsPath()+"\\Library_Comparison\\lib";
-  //  private String filePath = System.getenv("APPDATA");
 
-
-
-    public ArrayList<String> selectJasonAllLibraries(String librarySelected) throws IOException {
-
+    public ArrayList<String> selectJasonAllLibraries(String librarySelected) throws IOException
+    {
         String filePath = this.filePath + "\\allLibraries.json";
         ArrayList<String> Terms;
         Terms = new ArrayList<String>();
@@ -46,33 +39,37 @@ public class DatabaseAccess {
         String Package = "";
 
         File file = new File(filePath);
-        String content = FileUtils.readFileToString(file, "utf-8");
-        JSONObject obj = new JSONObject(content);
-        JSONArray jsonarr_1 = obj.getJSONArray("Libraries");
-        for(int i=0;i<jsonarr_1.length();i++)
+        if (file.exists())
         {
-            JSONObject jsonObj = (JSONObject)jsonarr_1.get(i);
-            if(jsonObj.has("id"))
-                library_id = jsonObj.getLong("id");
-            if(jsonObj.has("domain"))
-                domain_id = jsonObj.getLong("domain");
-            if(jsonObj.has("domain_name"))
-                domain_name = jsonObj.getString("domain_name");
-            if(jsonObj.has("package"))
-                Package = jsonObj.getString("package");
-
-            boolean isFound;
-         //   if(!isNullOrEmpty(Package))
+            String content = FileUtils.readFileToString(file, "utf-8");
+            JSONObject obj = new JSONObject(content);
+            JSONArray jsonarr_1 = obj.getJSONArray("Libraries");
+            for (int i = 0; i < jsonarr_1.length(); i++)
             {
-                isFound = Package.contains(librarySelected);
-                if (isFound) {
-                    Terms.add(Long.toString(library_id) );
-                    Terms.add(Long.toString(domain_id));
-                    Terms.add("0"); // for future use
-                    Terms.add("0"); // for future use
-                    Terms.add(domain_name);
+                JSONObject jsonObj = (JSONObject) jsonarr_1.get(i);
+                if (jsonObj.has("id"))
+                    library_id = jsonObj.getLong("id");
+                if (jsonObj.has("domain"))
+                    domain_id = jsonObj.getLong("domain");
+                if (jsonObj.has("domain_name"))
+                    domain_name = jsonObj.getString("domain_name");
+                if (jsonObj.has("package"))
+                    Package = jsonObj.getString("package");
+
+                boolean isFound;
+                //   if(!isNullOrEmpty(Package))
+                {
+                    isFound = Package.contains(librarySelected);
+                    if (isFound) {
+                        Terms.add(Long.toString(library_id));
+                        Terms.add(Long.toString(domain_id));
+                        Terms.add("0"); // for future use
+                        Terms.add("0"); // for future use
+                        Terms.add(domain_name);
+                    }
                 }
             }
+
         }
         return (Terms);
     }
@@ -165,7 +162,6 @@ public class DatabaseAccess {
         url = "http://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
         filePath = suffixLocal + "Version.json";
         uploadJson(url, filePath, "{\"version\":");
-
     }
 
     public int updateVersionData() throws IOException {
@@ -179,7 +175,6 @@ public class DatabaseAccess {
             e.printStackTrace();
         }
         cloudVer= VersionCloud();
-
         // check now the if we need to upload
         if  (!(localVer.equals(cloudVer)) )
         {
@@ -192,10 +187,7 @@ public class DatabaseAccess {
 
         String filePath = this.filePath + "\\user.json";
         DataUser userRecord = null;
-
-
         File file = new File(filePath);
-
         if (!file.exists()){
             userRecord = new DataUser();
             String tempShortUserName = UUID.randomUUID().toString().substring(0,14);
@@ -317,15 +309,18 @@ public class DatabaseAccess {
         tokenValue = (String) json.get("token");
         userID = (int) json.get("id");
         File myFile = new File(filePath);
-        FileOutputStream fOuts = new FileOutputStream(myFile);
-        myFile.createNewFile();
-        JSONObject obj = new JSONObject();
-        obj.put("token", tokenValue);
-        obj.put("id", userID);
-        String result = obj.toString();
-        OutputStreamWriter myOutWriter = new OutputStreamWriter(fOuts);
-        myOutWriter.append(result);
-        myOutWriter.close();
+
+            FileOutputStream fOuts = new FileOutputStream(myFile);
+            myFile.createNewFile();
+            JSONObject obj = new JSONObject();
+            obj.put("token", tokenValue);
+            obj.put("id", userID);
+            String result = obj.toString();
+            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOuts);
+            myOutWriter.append(result);
+            myOutWriter.close();
+
+
         return tokenValue;
     }
 
@@ -350,7 +345,6 @@ public class DatabaseAccess {
                         String tokenValue = createLocalToken(line);
 
                     }
-                    // System.out.println(response.toString());
                 }
             }
         }  catch (IOException e) {
@@ -526,62 +520,61 @@ public class DatabaseAccess {
         ArrayList <DataLibrary> libraryList = new ArrayList<DataLibrary> ();
 
         File file = new File(filePath);
-        String content = null;
-        try {
-            content = FileUtils.readFileToString(file, "utf-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        if (file.exists()) {
+            String content = null;
+            try {
+                content = FileUtils.readFileToString(file, "utf-8");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        JSONObject obj = new JSONObject(content);
-        JSONArray jsonarr_1 = obj.getJSONArray("Libraries");
+            JSONObject obj = new JSONObject(content);
+            JSONArray jsonarr_1 = obj.getJSONArray("Libraries");
 
-        for(int i=0;i<jsonarr_1.length();i++)
+            for (int i = 0; i < jsonarr_1.length(); i++) {
+                JSONObject jsonObj = (JSONObject) jsonarr_1.get(i);
+                if (jsonObj.has("domain")) {
+                    domain_id = jsonObj.getInt("domain");
+                    if (domain_id == metricDomain) {
+                        libraryDataPoint = new DataLibrary();
+                        if (jsonObj.has("id"))
+                            libraryDataPoint.setId(jsonObj.getInt("id"));
+                        if (jsonObj.has("id"))
+                            libraryDataPoint.setLibrary_id(jsonObj.getInt("id"));
+                        if (jsonObj.has("domain"))
+                            libraryDataPoint.setDomain_id(jsonObj.getInt("domain"));
+                        if (jsonObj.has("name"))
+                            libraryDataPoint.setName(jsonObj.getString("name"));
+                        if (jsonObj.has("github_repo"))
+                            libraryDataPoint.setRepository(jsonObj.getString("github_repo"));
+                        if (jsonObj.has("package"))
+                            libraryDataPoint.setPackage(jsonObj.getString("package")); // Change tag to package
+                        if (jsonObj.has("popularity"))
+                            libraryDataPoint.setPopularity(jsonObj.getDouble("popularity"));
+                        if (jsonObj.has("release_frequency"))
+                            libraryDataPoint.setRelease_frequency(jsonObj.getDouble("release_frequency"));
+                        if (jsonObj.has("issue_closing_time"))
+                            libraryDataPoint.setIssue_closing_time(jsonObj.getDouble("issue_closing_time"));
+                        if (jsonObj.has("issue_response_time"))
+                            libraryDataPoint.setIssue_response_time(jsonObj.getDouble("issue_response_time"));
+                        if (jsonObj.has("performance"))
+                            libraryDataPoint.setPerformance(jsonObj.getDouble("performance") / 100);
+                        if (jsonObj.has("security"))
+                            libraryDataPoint.setSecurity(jsonObj.getDouble("security") / 100);
 
-        {
-            JSONObject jsonObj = (JSONObject)jsonarr_1.get(i);
-            if(jsonObj.has("domain")) {
-                domain_id = jsonObj.getInt("domain");
-                if (domain_id == metricDomain) {
-                    libraryDataPoint = new DataLibrary();
-                    if(jsonObj.has("id"))
-                        libraryDataPoint.setId(jsonObj.getInt("id"));
-                    if(jsonObj.has("id"))
-                        libraryDataPoint.setLibrary_id(jsonObj.getInt("id"));
-                    if(jsonObj.has("domain"))
-                        libraryDataPoint.setDomain_id(jsonObj.getInt("domain"));
-                    if(jsonObj.has("name"))
-                        libraryDataPoint.setName(jsonObj.getString("name"));
-                    if(jsonObj.has("github_repo"))
-                        libraryDataPoint.setRepository(jsonObj.getString("github_repo"));
-                    if(jsonObj.has("package"))
-                        libraryDataPoint.setPackage(jsonObj.getString("package")); // Change tag to package
-                    if(jsonObj.has("popularity"))
-                        libraryDataPoint.setPopularity(jsonObj.getDouble("popularity"));
-                    if(jsonObj.has("release_frequency"))
-                        libraryDataPoint.setRelease_frequency(jsonObj.getDouble("release_frequency"));
-                    if(jsonObj.has("issue_closing_time"))
-                        libraryDataPoint.setIssue_closing_time(jsonObj.getDouble("issue_closing_time"));
-                    if(jsonObj.has("issue_response_time"))
-                        libraryDataPoint.setIssue_response_time(jsonObj.getDouble("issue_response_time"));
-                    if(jsonObj.has("performance"))
-                        libraryDataPoint.setPerformance(jsonObj.getDouble("performance") /100);
-                    if(jsonObj.has("security"))
-                        libraryDataPoint.setSecurity(jsonObj.getDouble("security") / 100);
-
-                    if(jsonObj.has("backwards_compatibility"))
-                        libraryDataPoint.setBackwards_compatibility(jsonObj.getDouble("backwards_compatibility"));
-                    if (metricLibraryID == libraryDataPoint.getLibrary_id()) {
-                        // at the first row for the selected one
-                        libraryDataPoint.setName(libraryDataPoint.getName() + " \n(Current \n Library)");
-                        libraryList.add(0, libraryDataPoint);
-                    } else {
-                        libraryList.add(libraryDataPoint);
+                        if (jsonObj.has("backwards_compatibility"))
+                            libraryDataPoint.setBackwards_compatibility(jsonObj.getDouble("backwards_compatibility"));
+                        if (metricLibraryID == libraryDataPoint.getLibrary_id()) {
+                            // at the first row for the selected one
+                            libraryDataPoint.setName(libraryDataPoint.getName() + " \n(Current \n Library)");
+                            libraryList.add(0, libraryDataPoint);
+                        } else {
+                            libraryList.add(libraryDataPoint);
+                        }
                     }
                 }
             }
         }
-
         return (libraryList);
     }
 
@@ -619,9 +612,5 @@ public class DatabaseAccess {
         }
         return (img);
     }
-
-
-
-
 }
 

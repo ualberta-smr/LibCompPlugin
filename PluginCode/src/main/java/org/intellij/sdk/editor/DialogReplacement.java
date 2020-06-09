@@ -26,6 +26,8 @@ import java.util.Vector;
 public class DialogReplacement extends JFrame {
 
     private String LibraryReturned = "None";
+    private String LibraryName = "None";
+
     private String full_lib_list = "";
     private int to_library;
 
@@ -62,13 +64,16 @@ public class DialogReplacement extends JFrame {
             "Average time in days between two consecutive releases of a library", //release frequency
             "Average time in days to close issues in the issue tracking system of a library", //issue closing time
             "Average time in days to get the first response on issues in the issue tracking system of a library", //issue response time
-            "Approximation of the percentage of performance related issues of a library", //performance
-            "Approximation of the percentage of security related issues of a library", //security
-            "Average number of code breaking changes per release"}; //backwards compatibility
+            "Average number of code breaking changes per release", //backwards compatibility
+            "Approximation of the percentage of security related issues of a library",//security
+            "Approximation of the percentage of performance related issues of a library" //performance
+            };
 
     public String getSelectionLibrary() { return full_lib_list; }
     public String getLibraryReturned() { return LibraryReturned; }
+    public String getLibraryname() { return LibraryName; }
     public int getto_library() { return to_library; }
+
 
 public int getMapping(int original){
         int returnValue = 0;
@@ -159,17 +164,17 @@ public int getMapping(int original){
             dataDouble[indRelease][current + offsetBtnCols] = (libraryList.get(current).getRelease_frequency());
             dataDouble[indIssueClosing][current + offsetBtnCols] = (libraryList.get(current).getIssue_closing_time());
             dataDouble[indIssueResponse][current + offsetBtnCols] = (libraryList.get(current).getIssue_response_time());
-            dataDouble[indPerformance][current + offsetBtnCols] = (libraryList.get(current).getPerformance());
-            dataDouble[indSecurity][current + offsetBtnCols] = (libraryList.get(current).getSecurity());
             dataDouble[indBackward][current + offsetBtnCols] = (libraryList.get(current).getBackwards_compatibility());
+            dataDouble[indSecurity][current + offsetBtnCols] = (libraryList.get(current).getSecurity());
+            dataDouble[indPerformance][current + offsetBtnCols] = (libraryList.get(current).getPerformance());
 
             data[indPopularity][current + offsetBtnCols] = intf.format(libraryList.get(current).getPopularity());
             data[indRelease][current + offsetBtnCols] = daysf.format(libraryList.get(current).getRelease_frequency());
             data[indIssueClosing][current + offsetBtnCols] = daysf.format(libraryList.get(current).getIssue_closing_time());
             data[indIssueResponse][current + offsetBtnCols] = reposf.format(libraryList.get(current).getIssue_response_time());
-            data[indPerformance][current + offsetBtnCols] = percentf.format(libraryList.get(current).getPerformance());
-            data[indSecurity][current + offsetBtnCols] = percentf.format(libraryList.get(current).getSecurity());
             data[indBackward][current + offsetBtnCols] = changef.format(libraryList.get(current).getBackwards_compatibility());
+            data[indSecurity][current + offsetBtnCols] = percentf.format(libraryList.get(current).getSecurity());
+            data[indPerformance][current + offsetBtnCols] = percentf.format(libraryList.get(current).getPerformance());
 
             if (full_lib_list.length() < 1)
                 full_lib_list = "" + libraryList.get(current).getLibrary_id();
@@ -305,6 +310,7 @@ public int getMapping(int original){
                 if ((column >= 4)) {
                     LibraryReturned = libraryList.get(column - offsetBtnCols).getPackage();
                     to_library = libraryList.get(column - offsetBtnCols).getLibrary_id();
+                    LibraryName = libraryList.get(column - offsetBtnCols).getName();
                     dispose(); //force close
                 }
             }
@@ -375,6 +381,7 @@ public int getMapping(int original){
         double tempValue;
         String tempHeader;
         DataLibrary tempData;
+
         for (i = startingSort; i < columnLength - 1; i++) {
             largest = i;
 
@@ -420,35 +427,33 @@ public int getMapping(int original){
             for (rowIndex = 0; rowIndex < rowLength; rowIndex++) {
 
                 switch (rowIndex) {
-                    case 0:
+                    case 0: // indPopularity
                         table.getModel().setValueAt(intf.format(dataDouble[rowIndex][i]), rowIndex, i);
                         break;
-                    case 1:
+                    case 1: // indRelease
                         table.getModel().setValueAt(daysf.format(dataDouble[rowIndex][i]), rowIndex, i);
                         break;
-                    case 2:
+                    case 2: //indIssueClosing
                         table.getModel().setValueAt(daysf.format(dataDouble[rowIndex][i]), rowIndex, i);
                         break;
-                    case 3:
+                    case 3: // indIssueResponse
                         table.getModel().setValueAt(reposf.format(dataDouble[rowIndex][i]), rowIndex, i);
                         break;
-                    case 4:
-                        table.getModel().setValueAt(percentf.format(dataDouble[rowIndex][i]), rowIndex, i);
-                        break;
-                    case 5:
-                        table.getModel().setValueAt(percentf.format(dataDouble[rowIndex][i]), rowIndex, i);
-                        break;
-                    case 6:
+                    case 4: //indBackward
                         table.getModel().setValueAt(changef.format(dataDouble[rowIndex][i]), rowIndex, i);
                         break;
-                    default:
-                        table.getModel().setValueAt(df.format(dataDouble[rowIndex][i]), rowIndex, i);
+                    case 5: // indSecurity
+                        table.getModel().setValueAt(percentf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        break;
+                    case 6: // indPerformance
+                        table.getModel().setValueAt(percentf.format(dataDouble[rowIndex][i]), rowIndex, i);
                         break;
                 }
             }
         }
     }
 }
+
 
     class ImageRenderer extends DefaultTableCellRenderer {
         JLabel lbl = new JLabel();
@@ -554,12 +559,16 @@ class DialogChart extends JFrame {
         Container container = getContentPane();
         container.setLayout(new FlowLayout());
         JPanel r = new JPanel(new BorderLayout());
-        r.add(new JLabel(new ImageIcon(img)));
+
+        JLabel jLabel = new JLabel();
+        jLabel.setIcon(new ImageIcon(new javax.swing.ImageIcon(img).getImage().getScaledInstance(650, 300, Image.SCALE_SMOOTH)));
+        r.add(jLabel);
+
         JButton bConfirm=new JButton("Okay");
         r.add(bConfirm, BorderLayout.SOUTH);
         container.add(r);
         setVisible(true);
-        setSize(800,400);
+        setSize(680,380);
         setVisible(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);

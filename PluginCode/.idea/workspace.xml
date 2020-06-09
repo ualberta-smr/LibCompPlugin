@@ -4,39 +4,21 @@
     <list default="true" id="b9000c08-9d3a-4449-b947-0c3f74a18055" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileContent/fileContent.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileContent/fileContent.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/mysql_mysql_connector_java_8_0_19.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/mysql_mysql_connector_java_8_0_19.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/db.sqlite3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/library_feedback.sqlite3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/mysql-connector-java-8.0.19-sources.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/mysql-connector-java-8.0.19.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/mysql-connector-java-8.0.191.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/MainClassPlugin.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ModuleClassComponent.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionSendFeedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionSendFeedback.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionUserProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionUserProfile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataCharts.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataFeedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataFeedback.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataImportStatement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataImportStatement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataLibrary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataLibrary.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataUser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DatabaseAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DatabaseAccess.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogReplacement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogReplacement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogSendFeedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogSendFeedback.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogUserProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogUserProfile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/db.sqlite3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/library_feedback.sqlite3" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +38,22 @@
         </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Library_Comparison" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Library_Comparison" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Library_Comparison" type="f1a62948:ProjectNode" />
+                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -100,14 +97,16 @@
     <property name="Repository.Attach.Annotations" value="false" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../TestCodePlugin/pluginPhase1/My_Plugin" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.27530748" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
@@ -239,8 +238,8 @@
       <list>
         <item itemvalue="Gradle.PluginCode [clean]" />
         <item itemvalue="Gradle.PluginCode [build]" />
-        <item itemvalue="Gradle.PluginCode [buildPlugin]" />
         <item itemvalue="Gradle.PluginCode [publishPlugin]" />
+        <item itemvalue="Gradle.PluginCode [buildPlugin]" />
       </list>
     </recent_temporary>
   </component>
@@ -312,26 +311,26 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="592" y="297" key="DetectedRootsChooserDialog/0.0.1536.824@0.0.1536.824" timestamp="1591084574222" />
-    <state x="501" y="153" key="FileChooserDialogImpl" timestamp="1591549606137">
+    <state x="501" y="153" key="FileChooserDialogImpl" timestamp="1591667721129">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="501" y="153" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1591549606137" />
-    <state width="1493" height="207" key="GridCell.Tab.0.bottom" timestamp="1591648280984">
+    <state x="501" y="153" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1591667721129" />
+    <state width="1493" height="144" key="GridCell.Tab.0.bottom" timestamp="1591721816254">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="207" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591648280984" />
-    <state width="1493" height="207" key="GridCell.Tab.0.center" timestamp="1591648280984">
+    <state width="1493" height="144" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591721816254" />
+    <state width="1493" height="144" key="GridCell.Tab.0.center" timestamp="1591721816253">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="207" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591648280984" />
-    <state width="1493" height="207" key="GridCell.Tab.0.left" timestamp="1591648280984">
+    <state width="1493" height="144" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591721816253" />
+    <state width="1493" height="144" key="GridCell.Tab.0.left" timestamp="1591721816253">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="207" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591648280984" />
-    <state width="1493" height="207" key="GridCell.Tab.0.right" timestamp="1591648280984">
+    <state width="1493" height="144" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591721816253" />
+    <state width="1493" height="144" key="GridCell.Tab.0.right" timestamp="1591721816254">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="207" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591648280984" />
+    <state width="1493" height="144" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591721816254" />
     <state width="1537" height="261" key="GridCell.Tab.1.bottom" timestamp="1591647438006">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -348,10 +347,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1537" height="261" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1591647438006" />
-    <state x="277" y="0" width="1181" height="824" key="SettingsEditor" timestamp="1591566679288">
+    <state x="277" y="0" width="1181" height="824" key="SettingsEditor" timestamp="1591665784692">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="277" y="0" width="1181" height="824" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1591566679288" />
+    <state x="277" y="0" width="1181" height="824" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1591665784692" />
     <state width="776" height="420" key="XDebugger.FullValuePopup" timestamp="1591585361122">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -360,10 +359,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="289" y="160" key="caller.chooser.dialog/0.0.1536.824@0.0.1536.824" timestamp="1591332655610" />
-    <state x="477" y="145" width="581" height="534" key="find.popup" timestamp="1591565191296">
+    <state x="477" y="145" width="581" height="534" key="find.popup" timestamp="1591681707800">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="477" y="145" width="581" height="534" key="find.popup/0.0.1536.824@0.0.1536.824" timestamp="1591565191296" />
+    <state x="477" y="145" width="581" height="534" key="find.popup/0.0.1536.824@0.0.1536.824" timestamp="1591681707800" />
     <state x="425" y="187" key="run.anything.popup" timestamp="1591330753031">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -378,62 +377,57 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java</url>
-          <line>53</line>
+          <line>54</line>
           <option name="timeStamp" value="55" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DatabaseAccess.java</url>
-          <line>414</line>
+          <line>408</line>
           <option name="timeStamp" value="59" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DatabaseAccess.java</url>
-          <line>491</line>
-          <option name="timeStamp" value="61" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java</url>
-          <line>285</line>
+          <line>272</line>
           <option name="timeStamp" value="64" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DatabaseAccess.java</url>
-          <line>364</line>
+          <line>358</line>
           <option name="timeStamp" value="70" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java</url>
-          <line>308</line>
+          <line>295</line>
           <option name="timeStamp" value="73" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DatabaseAccess.java</url>
-          <line>332</line>
+          <line>327</line>
           <option name="timeStamp" value="82" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DatabaseAccess.java</url>
-          <line>432</line>
+          <line>426</line>
           <option name="timeStamp" value="83" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java</url>
-          <line>327</line>
+          <line>314</line>
           <option name="timeStamp" value="102" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java</url>
-          <line>73</line>
+          <line>69</line>
           <option name="timeStamp" value="103" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogReplacement.java</url>
-          <line>345</line>
+          <line>351</line>
           <option name="timeStamp" value="107" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogReplacement.java</url>
-          <line>337</line>
+          <line>343</line>
           <option name="timeStamp" value="108" />
         </line-breakpoint>
       </breakpoints>
