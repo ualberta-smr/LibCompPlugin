@@ -2,7 +2,7 @@
 
 ## Installing LibComp:
 
-1. Download the file `Library_Comparison-1.0.9.zip`, copy the path to the location where you saved this file onto your clipboard 
+1. Download the file `Library_Comparison-1.0.10.zip`, copy the path to the location where you saved this file onto your clipboard 
 
 2. Open your IntelliJ IDE and click `File > settings` (make sure your IDE version is updated to 2020)
 
