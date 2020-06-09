@@ -41,7 +41,6 @@ public class Replacement extends AnAction {
     
     public ArrayList<ImportStatement> ImportListObjects;
     public ArrayList<DependencyStatement> DependListObjects;
-
     private int to_library;
     private String full_lib_list;
     private String libraryName;
@@ -57,32 +56,30 @@ public class Replacement extends AnAction {
      */
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
-       //Returned later: detectAllOpenEditors();
+
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
-        if (psiFile != null)
-        {
+        if (psiFile != null) {
             FileType fileType = psiFile.getFileType();
             if (fileType.getDefaultExtension().equalsIgnoreCase("java")) {
                 replaceRequestedImport(event);
                 try {
                     detectImportStatements(event);
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            else
-            {
+            else {
                 replaceRequestedDependence(event);
                 try {
                     detectDependencies(event);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                            }
+            }
             event.getPresentation().setVisible(true);
             event.getPresentation().setEnabled(true);
         }
-
     }
 
     public void detectAllOpenEditors() {
@@ -101,6 +98,7 @@ public class Replacement extends AnAction {
     }
 
     public void detectDependencies(@NotNull final AnActionEvent event) throws IOException {
+
         final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
@@ -111,7 +109,6 @@ public class Replacement extends AnAction {
         String lineText;
         String TermSelected;
 
-        //Replace the selection with a string
         DependListObjects.clear();
         editorModel.removeAllHighlighters();
 
@@ -124,9 +121,7 @@ public class Replacement extends AnAction {
 
             if (Searchmode) {
                 String[] valuesInQuotes = StringUtils.substringsBetween(lineText, "\'", "\'");
-                //if (valuesInQuotes.length > 0)
-                if (valuesInQuotes!=null)
-                {
+                if (valuesInQuotes!=null) {
                     TermSelected = valuesInQuotes[0];
                     DatabaseAccess dataAccessObject = new DatabaseAccess();
                     ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(TermSelected);
@@ -162,29 +157,26 @@ public class Replacement extends AnAction {
      */
     @Override
     public void update(@NotNull final AnActionEvent event) {
-//       final Project project = event.getProject();
 
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
-        if (psiFile != null)
-        {
+        if (psiFile != null) {
             FileType fileType = psiFile.getFileType();
             if (fileType.getDefaultExtension().equalsIgnoreCase("java")) {
                 try {
                     detectImportStatements(event);
                 } catch (IOException e) {e.printStackTrace(); }
             }
-            else
-            {
-            try {
-               detectDependencies(event);
-                event.getPresentation().setEnabledAndVisible(true);
-            } catch (IOException e) { e.printStackTrace(); }
+            else {
+                try {
+                    detectDependencies(event);
+                    event.getPresentation().setEnabledAndVisible(true);
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-
              event.getPresentation().setVisible(true);
              event.getPresentation().setEnabled(true);
-            //detectAllOpenEditors();
-
         }
     }
 
@@ -213,6 +205,7 @@ public class Replacement extends AnAction {
 
         //Work off of the primary caret to get the selection info
         Caret primaryCaret = editor.getCaretModel().getPrimaryCaret();
+
         //Get the location of the mouse click, get the caret offset, then from the offset get the line number
         int mouseClickLocation = primaryCaret.getOffset();
         int clickedLineNumber = document.getLineNumber(mouseClickLocation);
@@ -222,6 +215,7 @@ public class Replacement extends AnAction {
 
         while (currentLine < ImportListObjects.size()) {
             if (ImportListObjects.get(currentLine).getImportLocation() == clickedLineNumber) {
+
                 //found a replaceable import statement
                 String importStatementFull;
                 String importStatementLastWord; //this importStatementObject the last library of the import statement (i.e. last word at the end)
@@ -240,15 +234,15 @@ public class Replacement extends AnAction {
                 int locationStartOfImport = offsetLastWord - (importStatementFull.length() - importStatementLastWord.length());
                 int locationEndOfImport = document.getLineEndOffset(line_num) - 1;
 
-                smr.cs.ualberta.libcomp.dialog.Replacement bc=new smr.cs.ualberta.libcomp.dialog.Replacement(ImportListObjects.get(currentLine).getDomainName(), ImportListObjects.get(currentLine).getImportDomain(),ImportListObjects.get(currentLine).getImportLib());
+                smr.cs.ualberta.libcomp.dialog.Replacement replacement=new smr.cs.ualberta.libcomp.dialog.Replacement(ImportListObjects.get(currentLine).getDomainName(), ImportListObjects.get(currentLine).getImportDomain(),ImportListObjects.get(currentLine).getImportLib());
 
                 WindowAdapter adapter = new WindowAdapter() {
 
                     @Override
                     public void windowLostFocus(WindowEvent e) {
-                        String finalChoice = bc.getLibraryReturned();
-                        to_library = bc.getto_library();
-                        full_lib_list = bc.getSelectionLibrary();
+                        String finalChoice = replacement.getLibraryReturned();
+                        to_library = replacement.getto_library();
+                        full_lib_list = replacement.getSelectionLibrary();
 
                         if (finalChoice.equals("None") == false) {
                             finalChoice = finalChoice + ".*";
@@ -257,25 +251,24 @@ public class Replacement extends AnAction {
                                     document.replaceString(locationStartOfImport, locationEndOfImport, finalChoice1));
                         }
 
-
                         try {
-                            if (sendToCloud == 1)
-                            {
+                            if (sendToCloud == 1) {
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
                                 Feedback feedbackPoint = new Feedback(0, action_date, line_num, project_name, class_name, full_lib_list, finalFrom_library, to_library);
                                 dataAccessObject.updateFeedback(feedbackPoint);
                             }
 
-                        } catch (IOException ioException) {
+                        }
+                        catch (IOException ioException) {
                             ioException.printStackTrace();
                         }
                     }
 
                     @Override
                     public void windowClosing(WindowEvent e) {
-                        String finalChoice = bc.getLibraryReturned();
-                        to_library = bc.getto_library();
-                        full_lib_list = bc.getSelectionLibrary();
+                        String finalChoice = replacement.getLibraryReturned();
+                        to_library = replacement.getto_library();
+                        full_lib_list = replacement.getSelectionLibrary();
 
                         if (finalChoice.equals("None") == false) {
                             finalChoice = finalChoice + ".*";
@@ -283,38 +276,38 @@ public class Replacement extends AnAction {
                             WriteCommandAction.runWriteCommandAction(project, () ->
                                     document.replaceString(locationStartOfImport, locationEndOfImport, finalChoice1));
                             try {
-                                if (sendToCloud == 1)
-                                {
+                                if (sendToCloud == 1) {
                                     DatabaseAccess dataAccessObject = new DatabaseAccess();
                                     Feedback feedbackPoint = new Feedback(0, action_date, line_num, project_name, class_name, full_lib_list, finalFrom_library, to_library);
                                     dataAccessObject.updateFeedback(feedbackPoint);
                                 }
-                            } catch (IOException ioException) {
+                            }
+                            catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
                         }
                         try {
-                            if (sendToCloud == 1)
-                            {
+                            if (sendToCloud == 1) {
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
                                 Feedback feedbackPoint = new Feedback(0, action_date, line_num, project_name, class_name, full_lib_list, finalFrom_library, to_library);
                                 dataAccessObject.updateFeedback(feedbackPoint);
                             }
-                        } catch (IOException ioException) {
+                        }
+                        catch (IOException ioException) {
                             ioException.printStackTrace();
                         }
                     }
                 };
-               bc.addWindowListener(adapter);
-               bc.addWindowFocusListener(adapter);
-               bc.setVisible(true);
+               replacement.addWindowListener(adapter);
+               replacement.addWindowFocusListener(adapter);
+               replacement.setVisible(true);
             }
             currentLine = currentLine + 1;
         }
     }
 
-
     public void replaceRequestedDependence(@NotNull final AnActionEvent event) {
+
         final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
         final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
         final Document document = editor.getDocument();
@@ -331,6 +324,7 @@ public class Replacement extends AnAction {
 
         //Work off of the primary caret to get the selection info
         Caret primaryCaret = editor.getCaretModel().getPrimaryCaret();
+
         //Get the location of the mouse click, get the caret offset, then from the offset get the line number
         int mouseClickLocation = primaryCaret.getOffset();
         int clickedLineNumber = document.getLineNumber(mouseClickLocation);
@@ -342,15 +336,12 @@ public class Replacement extends AnAction {
 
         while (currentLine < DependListObjects.size()) {
             if (DependListObjects.get(currentLine).getImportLocation() == clickedLineNumber) {
-                //found a replaceable import statement
-
                 from_library = DependListObjects.get(currentLine).getImportLib();
                 locationStartOfImport = DependListObjects.get(currentLine).getFromlocation();
                 locationEndOfImport = DependListObjects.get(currentLine).getTolocation();
                 int finalFrom_library = from_library;
 
-
-                smr.cs.ualberta.libcomp.dialog.Replacement bc=new smr.cs.ualberta.libcomp.dialog.Replacement(DependListObjects.get(currentLine).getDomainName(), DependListObjects.get(currentLine).getImportDomain(),DependListObjects.get(currentLine).getImportLib());
+                smr.cs.ualberta.libcomp.dialog.Replacement replacement=new smr.cs.ualberta.libcomp.dialog.Replacement(DependListObjects.get(currentLine).getDomainName(), DependListObjects.get(currentLine).getImportDomain(),DependListObjects.get(currentLine).getImportLib());
 
                 int finalLocationStartOfImport = locationStartOfImport;
                 int finalLocationEndOfImport = locationEndOfImport;
@@ -358,39 +349,36 @@ public class Replacement extends AnAction {
 
                     @Override
                     public void windowLostFocus(WindowEvent e) {
-                        String finalChoice = bc.getLibraryReturned();
-                        to_library = bc.getto_library();
-                        full_lib_list = bc.getSelectionLibrary();
-                        libraryName = bc.getLibraryname();
+                        String finalChoice = replacement.getLibraryReturned();
+                        to_library = replacement.getto_library();
+                        full_lib_list = replacement.getSelectionLibrary();
+                        libraryName = replacement.getLibraryname();
 
                         if (finalChoice.equals("None") == false) {
-
                             finalChoice = "    compile group: \'"+ finalChoice + "', name: \'"+ libraryName + "\',  version: \'please select version\'";
                             String finalChoice1 = finalChoice;
                             WriteCommandAction.runWriteCommandAction(project, () ->
                                     document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport, finalChoice1));
                         }
 
-
                         try {
-                            if (sendToCloud == 1)
-                            {
+                            if (sendToCloud == 1) {
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
                                 Feedback feedbackPoint = new Feedback(0, action_date, clickedLineNumber, project_name, class_name, full_lib_list, finalFrom_library, to_library);
                                 dataAccessObject.updateFeedback(feedbackPoint);
                             }
-
-                        } catch (IOException ioException) {
+                        }
+                        catch (IOException ioException) {
                             ioException.printStackTrace();
                         }
                     }
 
                     @Override
                     public void windowClosing(WindowEvent e) {
-                        String finalChoice = bc.getLibraryReturned();
-                        to_library = bc.getto_library();
-                        full_lib_list = bc.getSelectionLibrary();
-                        libraryName = bc.getLibraryname();
+                        String finalChoice = replacement.getLibraryReturned();
+                        to_library = replacement.getto_library();
+                        full_lib_list = replacement.getSelectionLibrary();
+                        libraryName = replacement.getLibraryname();
 
                         if (finalChoice.equals("None") == false) {
                             finalChoice = "    compile group: \'"+ finalChoice + "', name: \'"+ libraryName + "\',  version: \'please select version\'";
@@ -398,31 +386,31 @@ public class Replacement extends AnAction {
                             WriteCommandAction.runWriteCommandAction(project, () ->
                                     document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport, finalChoice1));
                             try {
-                                if (sendToCloud == 1)
-                                {
+                                if (sendToCloud == 1) {
                                     DatabaseAccess dataAccessObject = new DatabaseAccess();
                                     Feedback feedbackPoint = new Feedback(0, action_date, clickedLineNumber, project_name, class_name, full_lib_list, finalFrom_library, to_library);
                                     dataAccessObject.updateFeedback(feedbackPoint);
                                 }
-                            } catch (IOException ioException) {
+                            }
+                            catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
                         }
                         try {
-                            if (sendToCloud == 1)
-                            {
+                            if (sendToCloud == 1) {
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
                                 Feedback feedbackPoint = new Feedback(0, action_date, clickedLineNumber, project_name, class_name, full_lib_list, finalFrom_library, to_library);
                                 dataAccessObject.updateFeedback(feedbackPoint);
                             }
-                        } catch (IOException ioException) {
+                        }
+                        catch (IOException ioException) {
                             ioException.printStackTrace();
                         }
                     }
                 };
-                bc.addWindowListener(adapter);
-                bc.addWindowFocusListener(adapter);
-                bc.setVisible(true);
+                replacement.addWindowListener(adapter);
+                replacement.addWindowFocusListener(adapter);
+                replacement.setVisible(true);
             }
             currentLine = currentLine + 1;
         }
@@ -435,14 +423,12 @@ public class Replacement extends AnAction {
      * ex. for my.import.statement.rehab, the term queried against in the database is "rehab"
      */
     public void detectImports(@NotNull final PsiFile psiFile, @NotNull final Editor editor ) {
-        //Work off of the primary caret to get the selection info
+
         try {
-            //Block of code to try
             final MarkupModel editorModel = editor.getMarkupModel();
             final Document document = editor.getDocument();
             final PsiJavaFile javaFile = (PsiJavaFile)psiFile;
 
-            //Prepare the color for the the highlighted lines
             TextAttributes attributes =
                     EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
             TextAttributes softerAttributes = attributes.clone();
@@ -457,8 +443,7 @@ public class Replacement extends AnAction {
 
             int locationLastWord = 0;
             int importLineNumber;
-       //     ResetAllLibrary("");
-            //iterate through import statements, if the "last term" is in the database, highlight that line
+
             for (PsiImportStatementBase importStatementObject : importList.getAllImportStatements()){
 
                 //get location of import statement
@@ -469,9 +454,8 @@ public class Replacement extends AnAction {
                 //check database
                 DatabaseAccess dataAccessObject = new DatabaseAccess();
                 ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(TermSelected);
+
                 if (choicesArray.size()>0){
-           //         setAllLibrary(choicesArray.get(0));
-                    //Prepare the object for the PSI, location, library, and domain
                     ImportStatement impObj = new ImportStatement();
                     impObj.setImportListBase(importStatementObject);
                     impObj.setImportLocation(importLineNumber);
@@ -480,7 +464,6 @@ public class Replacement extends AnAction {
                     impObj.setDomainName(choicesArray.get(4));
                     ImportListObjects.add(impObj);
 
-
                     //highlight the line
                     editorModel.addLineHighlighter(importLineNumber,
                             DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1,softerAttributes);
@@ -488,7 +471,7 @@ public class Replacement extends AnAction {
             }
         }
         catch(Exception e) {
-            //Block of code to handle errors
+            //catch errors
         }
     }
 
@@ -502,7 +485,7 @@ public class Replacement extends AnAction {
              detectImports(psiFile, editor);
          }
          catch(Exception e) {
-             //detectionDependencies(psiFile, editor);
+             //catch errors
          }
     }
 }

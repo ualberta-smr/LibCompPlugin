@@ -2,7 +2,6 @@ package smr.cs.ualberta.libcomp.dialog;
 
 import smr.cs.ualberta.libcomp.DatabaseAccess;
 import smr.cs.ualberta.libcomp.data.User;
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
@@ -11,9 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-
 import static java.awt.GridBagConstraints.LINE_START;
-
 
 /**
  * The DialogSendFeedback class contains the details of the SendFeedback dialog
@@ -21,6 +18,7 @@ import static java.awt.GridBagConstraints.LINE_START;
  */
 
 public class SendFeedback extends JFrame {
+
     public SendFeedback(String title) {
         super(title);
     }
@@ -31,7 +29,6 @@ public class SendFeedback extends JFrame {
     private GridBagLayout gbLayout = new GridBagLayout();
     private Font mainFont = new Font("SansSerif", Font.PLAIN, 12);
     private Font titleFont = new Font("SansSerif", Font.BOLD | Font.ITALIC, 12);
-
 
     public void init() {
         mainPanel = new JPanel();
@@ -124,7 +121,6 @@ public class SendFeedback extends JFrame {
         gbLayout.setConstraints(lineltext6, gbc);
         mainPanel.add(lineltext6, gbc);
 
-
         gbc.gridwidth = 1;
         xlocation = 0;
         ylocation = ylocation + 1;
@@ -133,7 +129,6 @@ public class SendFeedback extends JFrame {
         JPanel fillerLine10 = new JPanel();
         gbLayout.setConstraints(fillerLine10, gbc);
         mainPanel.add(fillerLine10, gbc);
-
 
         // Checkbox to send data to server
         gbc.gridwidth = 7;
@@ -154,7 +149,6 @@ public class SendFeedback extends JFrame {
         JPanel fillerLineLine02 = new JPanel();
         gbLayout.setConstraints(fillerLineLine02, gbc);
         mainPanel.add(fillerLineLine02, gbc);
-
 
         ylocation = ylocation + 1;
         gbc.gridx = xlocation;
@@ -177,7 +171,6 @@ public class SendFeedback extends JFrame {
         mainPanel.add(fillerLine11, gbc);
 
         // Enter optional feedback
-
         xlocation = 0;
         ylocation = ylocation + 1;
         gbc.gridx = xlocation;
@@ -188,7 +181,6 @@ public class SendFeedback extends JFrame {
         gbLayout.setConstraints(optionaltext2, gbc);
         mainPanel.add(optionaltext2, gbc);
 
-
         xlocation = 0;
         ylocation = ylocation + 1;
         gbc.gridx = xlocation;
@@ -196,7 +188,6 @@ public class SendFeedback extends JFrame {
         JPanel fillerLine2 = new JPanel();
         gbLayout.setConstraints(fillerLine2, gbc);
         mainPanel.add(fillerLine2, gbc);
-
 
         xlocation = 0;
         ylocation = ylocation + 1;
@@ -208,7 +199,6 @@ public class SendFeedback extends JFrame {
         gbLayout.setConstraints(optionaltext01, gbc);
         mainPanel.add(optionaltext01, gbc);
 
-
         xlocation = 0;
         ylocation = ylocation + 1;
         gbc.gridx = xlocation;
@@ -216,7 +206,6 @@ public class SendFeedback extends JFrame {
         JPanel fillerLine3 = new JPanel();
         gbLayout.setConstraints(fillerLine3, gbc);
         mainPanel.add(fillerLine3, gbc);
-
 
         ylocation = ylocation +1;
         gbc.gridx = xlocation;
@@ -348,26 +337,24 @@ public class SendFeedback extends JFrame {
         gbc.gridx = xlocation;
         gbc.gridy = ylocation;
         gbc.gridwidth = 5;
-        JButton bUpdate=new JButton("   Send current LibComp interaction data     ");
-        gbLayout.setConstraints(bUpdate, gbc);
-        mainPanel.add(bUpdate, gbc);
-
+        JButton buttonUpdate=new JButton("   Send current LibComp interaction data     ");
+        gbLayout.setConstraints(buttonUpdate, gbc);
+        mainPanel.add(buttonUpdate, gbc);
 
         proj_Check1.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
                 if  (proj_Check1.isSelected())
                 {
-                    bUpdate.setEnabled(true);
+                    buttonUpdate.setEnabled(true);
                 } else
                 {
-                    bUpdate.setEnabled(false);
+                    buttonUpdate.setEnabled(false);
                 }
             }
         });
 
-
-        bUpdate.addActionListener(new ActionListener() {
+        buttonUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 String groupRatetxt = Rategroup.getSelection().getActionCommand();

@@ -2,21 +2,18 @@ package smr.cs.ualberta.libcomp.dialog;
 
 import smr.cs.ualberta.libcomp.DatabaseAccess;
 import smr.cs.ualberta.libcomp.data.User;
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-
 import static java.awt.GridBagConstraints.LINE_START;
 
 /**
  * The DialogUserProfile class contains the details of the user profile dialog
  * This dialog is accessable via the Tools menu
  */
-
 
 public class UserProfile extends JFrame {
 
@@ -310,7 +307,6 @@ public class UserProfile extends JFrame {
         if (userRecord.getProgramming().equals("5"))
             Programming5.setSelected(true);
 
-
         // Question 5: java programming skills
 
         xlocation = 0;
@@ -391,7 +387,6 @@ public class UserProfile extends JFrame {
         groupJava.add(Java4);
         groupJava.add(Java5);
 
-
         if (userRecord.getJavaSkills().equals("0"))
             Java0.setSelected(true);
         if (userRecord.getJavaSkills().equals("1"))
@@ -459,7 +454,6 @@ public class UserProfile extends JFrame {
         gbLayout.setConstraints(bUpdate, gbc);
         mainPanel.add(bUpdate, gbc);
 
-
         bUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -491,7 +485,6 @@ public class UserProfile extends JFrame {
                 if (team_Check3.isSelected()) {team_Check3txt = "1";}
                 if (team_Check4.isSelected()) {team_Check4txt = "1";}
 
-
               //  DataUser finalUserRecord = new DataUser();
                 userRecord.setProject1(proj_Check1txt);
                 userRecord.setProject2(proj_Check2txt);
@@ -508,7 +501,8 @@ public class UserProfile extends JFrame {
                 try {
                     DatabaseAccess dataAccessObject = new DatabaseAccess();
                     dataAccessObject.updateUserProfile(userRecord);
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                     e.printStackTrace();
                 }
                 dispose();

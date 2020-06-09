@@ -3,7 +3,6 @@ package smr.cs.ualberta.libcomp.dialog;
 import com.intellij.ui.components.JBScrollPane;
 import smr.cs.ualberta.libcomp.DatabaseAccess;
 import smr.cs.ualberta.libcomp.data.Library;
-
 import javax.swing.*;
 import java.awt.Component;
 import javax.swing.border.Border;
@@ -30,14 +29,12 @@ public class Replacement extends JFrame {
 
     private String LibraryReturned = "None";
     private String LibraryName = "None";
-
     private String full_lib_list = "";
     private int to_library;
-
     private int libID;
     private int domainID;
     private int columnLength = 0;
-    private int startingSort = 4; // after current Library
+    private int startingSort = 4;
     private int offsetBtnCols = 4;
     private int currentLibrary = 4;
     private int rowLength;
@@ -53,7 +50,6 @@ public class Replacement extends JFrame {
     private Color colorBackGround = new Color(64, 64, 64);
     private Color colorForGround = new Color(255, 255, 255);
     private Color colorForGroundDis = new Color(0, 0, 0);
-
     private Color colorAlternateLine = new Color(230, 230, 230);
     private Color cololrSelectColumn = Color.lightGray;
     private Color cololrCurrentLibrary = new Color(210, 210, 210);
@@ -77,12 +73,11 @@ public class Replacement extends JFrame {
     public String getLibraryname() { return LibraryName; }
     public int getto_library() { return to_library; }
 
-
 public int getMapping(int original){
+
         int returnValue = 0;
 
-        switch (original)
-        {
+        switch (original) {
             case 0: { returnValue = 1; break;}
             case 1: { returnValue = 2; break;}
             case 2: { returnValue = 3; break;}
@@ -91,22 +86,22 @@ public int getMapping(int original){
             case 5: { returnValue = 9; break;}
             case 6: { returnValue = 10; break;}
         }
-
         return returnValue;
 }
 
     public Replacement(String domainName, int domainId, int libID) throws HeadlessException {
+
         this.libID = libID;
         this.domainID = domainId;
         Border border = BorderFactory.createLineBorder(Color.black, 1);
 
-        int indPopularity = 0;
-        int indRelease = 1;
-        int indIssueClosing = 2;
-        int indIssueResponse = 3;
-        int indPerformance =4 ;
-        int indSecurity = 5;
-        int indBackward = 6;
+        int indexPopularity = 0;
+        int indexRelease = 1;
+        int indexIssueClosing = 2;
+        int indexIssueResponse = 3;
+        int indexPerformance =4 ;
+        int indexSecurity = 5;
+        int indexBackwardCompatibility = 6;
 
         this.setTitle(domainName);
         DatabaseAccess dataAccessObject = new DatabaseAccess();
@@ -145,39 +140,38 @@ public int getMapping(int original){
         changef = new DecimalFormat("# Changes");
 
 
-        indPopularity = 0;
-        indRelease = 1;
-        indIssueClosing = 2;
-        indIssueResponse = 3;
-        indBackward = 4;
-        indSecurity = 5;
-        indPerformance =6 ;
+        indexPopularity = 0;
+        indexRelease = 1;
+        indexIssueClosing = 2;
+        indexIssueResponse = 3;
+        indexBackwardCompatibility = 4;
+        indexSecurity = 5;
+        indexPerformance =6 ;
 
-
-        data[indPopularity][offsetBtnCols - 1] = "Popularity (Repos)";
-        data[indRelease][offsetBtnCols - 1] = "Release Frequency (Days)";
-        data[indIssueClosing][offsetBtnCols - 1] = "Issue Closing Time (Days)";
-        data[indIssueResponse][offsetBtnCols - 1] = "Issue Response Time (Repos)";
-        data[indPerformance][offsetBtnCols - 1] = "Performance (Percent)";
-        data[indSecurity][offsetBtnCols - 1] = "Security (Percent)";
-        data[indBackward][offsetBtnCols - 1] = "Backwards Compatibility";
+        data[indexPopularity][offsetBtnCols - 1] = "Popularity (Repos)";
+        data[indexRelease][offsetBtnCols - 1] = "Release Frequency (Days)";
+        data[indexIssueClosing][offsetBtnCols - 1] = "Issue Closing Time (Days)";
+        data[indexIssueResponse][offsetBtnCols - 1] = "Issue Response Time (Repos)";
+        data[indexPerformance][offsetBtnCols - 1] = "Performance (Percent)";
+        data[indexSecurity][offsetBtnCols - 1] = "Security (Percent)";
+        data[indexBackwardCompatibility][offsetBtnCols - 1] = "Backwards Compatibility";
 
         while (current < columnLength - offsetBtnCols) {
-            dataDouble[indPopularity][current + offsetBtnCols] = (libraryList.get(current).getPopularity());
-            dataDouble[indRelease][current + offsetBtnCols] = (libraryList.get(current).getRelease_frequency());
-            dataDouble[indIssueClosing][current + offsetBtnCols] = (libraryList.get(current).getIssue_closing_time());
-            dataDouble[indIssueResponse][current + offsetBtnCols] = (libraryList.get(current).getIssue_response_time());
-            dataDouble[indBackward][current + offsetBtnCols] = (libraryList.get(current).getBackwards_compatibility());
-            dataDouble[indSecurity][current + offsetBtnCols] = (libraryList.get(current).getSecurity());
-            dataDouble[indPerformance][current + offsetBtnCols] = (libraryList.get(current).getPerformance());
+            dataDouble[indexPopularity][current + offsetBtnCols] = (libraryList.get(current).getPopularity());
+            dataDouble[indexRelease][current + offsetBtnCols] = (libraryList.get(current).getRelease_frequency());
+            dataDouble[indexIssueClosing][current + offsetBtnCols] = (libraryList.get(current).getIssue_closing_time());
+            dataDouble[indexIssueResponse][current + offsetBtnCols] = (libraryList.get(current).getIssue_response_time());
+            dataDouble[indexBackwardCompatibility][current + offsetBtnCols] = (libraryList.get(current).getBackwards_compatibility());
+            dataDouble[indexSecurity][current + offsetBtnCols] = (libraryList.get(current).getSecurity());
+            dataDouble[indexPerformance][current + offsetBtnCols] = (libraryList.get(current).getPerformance());
 
-            data[indPopularity][current + offsetBtnCols] = intf.format(libraryList.get(current).getPopularity());
-            data[indRelease][current + offsetBtnCols] = daysf.format(libraryList.get(current).getRelease_frequency());
-            data[indIssueClosing][current + offsetBtnCols] = daysf.format(libraryList.get(current).getIssue_closing_time());
-            data[indIssueResponse][current + offsetBtnCols] = reposf.format(libraryList.get(current).getIssue_response_time());
-            data[indBackward][current + offsetBtnCols] = changef.format(libraryList.get(current).getBackwards_compatibility());
-            data[indSecurity][current + offsetBtnCols] = percentf.format(libraryList.get(current).getSecurity());
-            data[indPerformance][current + offsetBtnCols] = percentf.format(libraryList.get(current).getPerformance());
+            data[indexPopularity][current + offsetBtnCols] = intf.format(libraryList.get(current).getPopularity());
+            data[indexRelease][current + offsetBtnCols] = daysf.format(libraryList.get(current).getRelease_frequency());
+            data[indexIssueClosing][current + offsetBtnCols] = daysf.format(libraryList.get(current).getIssue_closing_time());
+            data[indexIssueResponse][current + offsetBtnCols] = reposf.format(libraryList.get(current).getIssue_response_time());
+            data[indexBackwardCompatibility][current + offsetBtnCols] = changef.format(libraryList.get(current).getBackwards_compatibility());
+            data[indexSecurity][current + offsetBtnCols] = percentf.format(libraryList.get(current).getSecurity());
+            data[indexPerformance][current + offsetBtnCols] = percentf.format(libraryList.get(current).getPerformance());
 
             if (full_lib_list.length() < 1)
                 full_lib_list = "" + libraryList.get(current).getLibrary_id();
@@ -189,10 +183,8 @@ public int getMapping(int original){
         int frameHeight = 30;
         frameHeight = 110 + (frameHeight * 7);
 
-        //ensure that only the first 3 columns buttons are editable (opening graphs and sorting)
         table = new JTable(data, columnHeaders) {
             public boolean isCellEditable(int row, int column) {
-                //column of buttons
                 return column <= 2;
             }
 
@@ -206,13 +198,12 @@ public int getMapping(int original){
                 int realRowIndex = convertRowIndexToModel(rowIndex);
 
                 try {
-
                     tip = columnToolTips[realRowIndex + offsetBtnCols];
                     if (realColumnIndex < offsetBtnCols - 1)
                         tip = columnToolTips[realColumnIndex] + " : " + columnToolTips[realRowIndex + offsetBtnCols];
                 }
                 catch (RuntimeException e1) {
-                    //catch null pointer exception if mouse is over an empty line
+                    //catch error
                 }
                 return tip;
             }
@@ -478,19 +469,19 @@ public int getMapping(int original){
 
             switch (column) {
                 case 0:  {
-                    // image for chars
+                    // image for charts
                     String imageStr = "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAIAAAC0Ujn1AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAMfSURBVEhL7ZbbK6RhHMeF/0JyLcWluHElbk1qL4glNazZFdY4JELtjXJh4mIaUpQxjrHjMBI5zTjkELkhx2Scs8i6YPcz83tfzdjNTju2dmu/F9P7/N7f83l/8xy+zxPwzT89PDxcXl5eqbq9vZ2fn3c4HHNzc/6iHx8f7+7uvqriS+vr62tra/z6i765uenq6vqsanR0tKioqKCgoLCw0F/04eFhYmLiG1WZmZkBT1JSfldOp1Oj0UAU6XS6wMDAvx59dHSUlJT0VlVubq5PaFZVb29vTExMXFwc02K325UXHqLq1NTUd6r0en1QUNCv0cfHx3V1dZIWHR3d19envPAQORT7QVVZWZlP6JOTk/r6ekmj8IGBAeWFh0Cnp6e/V1VaWuoT+vT01GAwSBpoq9WqvPAQOf6iExIS2BFNTU1tbW1ZWVlErq+vt7a2FhYWmDq2iai6utqnafwR3d7e3tPTA4II+3t3d3dpaYnZ+6iqqqrKC833v6jCYugj6LOzs4aGBkkDPTg4aDabWTNP6L29PdDPqvYaEKPRWFNT88ktHpqbm2dnZycmJjY2NniWNHbz0NBQR0cH64QVRgQz2t/fX15eBk1EBDo4OFi6uNChoaFKw62QkBBGMzk5GYrFYpGgoDs7O/v7+4uLi4nc39+DXllZeQkdHh6uNNyiyQpNS0tjtb0yOioqqry8HDcYGRlhBCT4auiKioq8vDybzfZH0IzJf7ToX0b7skIODg5As0wVsF7PZn4JHRkZiaNTCyxMQ4JiTz/1kOzsbG4HosrKSi8PeYaOiIjAw9jr7EasToLx8fF4XmtrK/szPz+fCDeQ7e1tTDUjI4PCRSUlJV7OFxYWpjTcoolPpqSkdHd3t7S0SDA2NpaSTSYT9JycHCJ45ObmJkYm1w8RMyT5LoGura1lZDlYEQ+NjY38zenp6YuLi52dHa1Wy/EB8fz8nAsNp9rk5CTfpiNixKemprjkiVZXVxlxRgZUABRuU9gFk4Z4GBsbm5mZoQNHOEUx4sPDw+Pj4/SkSRA03r24uMidkSCZ1CEiAYKLZrN9B804HE4lSFu2AAAAAElFTkSuQmCC";
                     warnIcon = new ImageIcon(getImage(imageStr));
                 }
                 break;
                 case 1:  {
-                    // image for downward
+                    // image for descending sort
                     String imageStr = "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAZCAYAAAAmNZ4aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAK7SURBVEhL1ZbNSypRFMCPn5SmlBW40GUtElomEa4EF67ClUt3/QEtA/+B/ggF8Q9wLwjpTgjapCCICwmTykj8wK/pnvPOjE4zk/PsvQfvB4e5954z59577rkfFkkATK/XA5/PB1arFRaLBVxcXEClUmGtmmazCbPZjGzNIHezt7cHBwcHoOq43W5DMBjkGsDZ2RmUSiVwuVzc8ouXlxe4urqCp6cncDgc3Po92M10OoV4PA7pdJoaFDqdDg5CkXA4LAlj1i6p1WrS4eGhytasxGIx8rE2TsKGS0swVDj6TXA6nfRVhfr5+Rn8fj/XAMSMoVwua8KJvxQKBfj4+ACbzcat34P/YN4cHR3B+fk5NSjohXoymbD2z2IuJXUYDocwGo1gPB4bCurRDrNfAw+AMDtj4VDa3d0lG7GdJIvFoiuyn+vra/5zyUYzbrVasLW1RWVcN+FHV2Tq9TqXlmzUMXa6vb1NZUw8I7Hb7SQ7Oztku8pGWY3rd3t7C+/v7+TYCHnmmMWJRIJbGexY5r/I6p+yUagREQnI5XJ06K+4IObzOZ3vGOL9/X1u/QJ2LPM7oW40GmQjHGvE4/FIp6enkrhg2FrL2lCL/cglNW9vb/R9fX3VSL/fh263S18jVB1jiFbBPWp0Gaxen3qISdEyGKFa48FgoNpz0WgUisUi17Tk83kQ16OyxvjFweIRiXsd11iEnXRfsdzf3+MRSAZijUHcl6wCEOsEmUyGwo2vk0AgAMfHx6z9OUoyrZNUKoUBIsRANHpxRbJ2PZTVyWRS42RVRNgkEVb6QaZarWrs8FWi92LRQ9lO2WxW4whFhFZ6fHxkqyUPDw+kl7eQ1+uVQqGQ6ZNOlVziLQUnJydcA4hEInB3d8c1Lbj+4nqkpMId4Xa76TFnCuz4K5eXl9LNzQ3X/g6qGf87AD4Bv/EzfaBJlCsAAAAASUVORK5CYII=";
                     warnIcon = new ImageIcon(getImage(imageStr));
                 }
                 break;
                 case 2:   {
-                    // image for upward
+                    // image for ascending sort
                     String imageStr = "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAZCAYAAAAmNZ4aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAJASURBVEhL1Za9rylBFMCPb/ERIjQUiEQkCgk9jcZf4E/QqkU0WqLV6BVqPdEIDZ0oiERCgSCRiI99M7Nn332z1n17XXkv95ec7DlzZuac+diZ0QgE+A88BL7f79DtdsHv90MwGMRSnn6/D+v1GnQ6HZao53a7gcvlAqCBJXa7nZBOp2kigt1uF9rtNnp4qP/bgn0Js9lMIKN8qFCr1bDGB/I6rwib6vF4DLFYjNjK5HI5qNfraAFUKhVoNBpgsViwRD3n8xmy2SxAtVpVzEguXq9XuFwubMTvQGM2mwWHw8E2Cs1ms9mQOCI2mw2cTidcr1c4Ho8wHA4hEomg93uwqV4sFmA0GmE6nUIymUQXQKFQgHw+zxIiCYLb7WblNDmahMFgYPZnkO5Br9dDKpXCEoQGlqAbjBZJQtYSPTw+n4/5tVqtKiGBhclkgq1FtKSD3+z3e9RETqcTajzL5ZJ96T+vRuhSrVYr1kaCC6zRaFATkdsSgUAANfUkEgnURLjAaiFLwtbuK2K1WrG1yEuB38HPCkwvD7r+n0mz2cTayrwUeD6fo/acXq+HmjIvBSb/MfvS005JKH874bj7WH5ZlMtlKBaLaH2w3W5hMBg8PbnoSZfJZNB6Ag0sMRqNuJOLBEbP+/lZu5rex3QN4/E4k3A4DK1WC70qwZEzyI3DTXWpVEIPz591JCGPAvSqgxsxeWeh9nU8Hg9q6uB2NVU7nQ4cDgcwmUxsGpU6lL8y6csxFApBNBplthoenrf/BoBfAtu19PKdgHYAAAAASUVORK5CYII=";
                     warnIcon = new ImageIcon(getImage(imageStr));
                 }
@@ -548,7 +539,6 @@ public int getMapping(int original){
             return this;
         }
     }
-
 
 class Chart extends JFrame {
 

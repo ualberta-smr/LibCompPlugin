@@ -41,13 +41,12 @@ public class DatabaseAccess {
         String Package = "";
 
         File file = new File(filePath);
-        if (file.exists())
-        {
+        if (file.exists()) {
             String content = FileUtils.readFileToString(file, "utf-8");
             JSONObject obj = new JSONObject(content);
             JSONArray jsonarr_1 = obj.getJSONArray("Libraries");
-            for (int i = 0; i < jsonarr_1.length(); i++)
-            {
+
+            for (int i = 0; i < jsonarr_1.length(); i++) {
                 JSONObject jsonObj = (JSONObject) jsonarr_1.get(i);
                 if (jsonObj.has("id"))
                     library_id = jsonObj.getLong("id");
@@ -59,7 +58,7 @@ public class DatabaseAccess {
                     Package = jsonObj.getString("package");
 
                 boolean isFound;
-                //   if(!isNullOrEmpty(Package))
+
                 {
                     isFound = Package.contains(librarySelected);
                     if (isFound) {
@@ -71,7 +70,6 @@ public class DatabaseAccess {
                     }
                 }
             }
-
         }
         return (Terms);
     }
@@ -149,7 +147,6 @@ public class DatabaseAccess {
         }
     }
 
-
     public void getDataRestApi() throws IOException {
         String suffixLocal = this.filePath + "\\";
         String url = "http://smr.cs.ualberta.ca/comparelibraries/api/libraries/?format=json";
@@ -167,18 +164,19 @@ public class DatabaseAccess {
 
     public int updateVersionData() throws IOException {
         int returnValue = 1;
-        String localVer = "";
-        String cloudVer = "";
+        String localVersion = "";
+        String smrServerVersion = "";
 
         try {
-            localVer= checkLocalVersion();
-        } catch (IOException e) {
+            localVersion= checkLocalVersion();
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
-        cloudVer= getLatestVersion();
-        // check now the if we need to upload
-        if  (!(localVer.equals(cloudVer)) )
-        {
+
+        smrServerVersion= getLatestVersion();
+
+        if  (!(localVersion.equals(smrServerVersion)) ) {
             getDataRestApi();
         }
         return (returnValue);
@@ -189,10 +187,10 @@ public class DatabaseAccess {
         String filePath = this.filePath + "\\user.json";
         User userRecord = null;
         File file = new File(filePath);
+
         if (!file.exists()){
             userRecord = new User();
             String tempShortUserName = UUID.randomUUID().toString().substring(0,14);
-       //     userRecord.setUserID(UUID.randomUUID().toString());
             userRecord.setUserID(tempShortUserName);
             userRecord.setProject1("1");
             userRecord.setProject2("0");
@@ -216,7 +214,8 @@ public class DatabaseAccess {
             String content = null;
             try {
                 content = FileUtils.readFileToString(file, "utf-8");
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
 
@@ -280,7 +279,7 @@ public class DatabaseAccess {
             userRecord.setSendAllCloud(String.valueOf(obj.getLong("Send_Feedback")));
             userRecord.setCloudStore(String.valueOf(obj.getLong("Accept")));
 
-        } // end new user
+        }
         return userRecord;
     }
 
@@ -303,6 +302,7 @@ public class DatabaseAccess {
     }
 
     public String createLocalToken(String line) throws IOException {
+
         String tokenValue;
         int userID;
         String filePath = this.filePath + "\\token.json";
@@ -321,7 +321,6 @@ public class DatabaseAccess {
             myOutWriter.append(result);
             myOutWriter.close();
 
-
         return tokenValue;
     }
 
@@ -333,10 +332,12 @@ public class DatabaseAccess {
         httpURLConnection.setRequestMethod("POST");
         httpURLConnection.setRequestProperty("Content-Type", "application/json");  //; utf-8
         httpURLConnection.setRequestProperty("Accept", "application/json");
+
         try (OutputStream outputStream = httpURLConnection.getOutputStream()) {
             outputStream.write(jsonBodyStr.getBytes());
             outputStream.flush();
         }
+
         try {
             if (httpURLConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()))) {
@@ -348,13 +349,15 @@ public class DatabaseAccess {
                     }
                 }
             }
-        }  catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         return  returnValue;
     }
 
     public boolean updateUser(String urlStr, String jsonBodyStr, String tokenValue) throws IOException {
+
         boolean returnValue = false;
         URL url = new URL(urlStr);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -368,17 +371,20 @@ public class DatabaseAccess {
             outputStream.write(jsonBodyStr.getBytes());
             outputStream.flush();
         }
+
         try {
             if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 returnValue = true;
             }
-        }  catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         return returnValue;
     }
 
     public boolean createFeedBack(String urlStr, String jsonBodyStr, String tokenValue) throws IOException {
+
         boolean returnValue = false;
         URL url = new URL(urlStr);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -392,34 +398,30 @@ public class DatabaseAccess {
             outputStream.write(jsonBodyStr.getBytes());
             outputStream.flush();
         }
+
         try {
             if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 returnValue = true;
             }
-        }  catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         return  returnValue;
     }
 
     public void sendUser(String username, String jsonString) throws IOException {
+
         String updateUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/" + username + "/";
         String InsertUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/";
         String tokenValue = getUserToken();
 
         if (tokenValue.equals("NoToken")) {
-            if (createUser(InsertUrllink, jsonString)) {
-
-            }
+            if (createUser(InsertUrllink, jsonString)) {}
         }
-        else
-        {
-            if  (updateUser(updateUrllink, jsonString,tokenValue))
-            {
-
-            }
-        } // end of (tokenValue.equals("NoToken"))
-
+        else {
+            if  (updateUser(updateUrllink, jsonString,tokenValue)) {}
+        }
     }
 
     public void updateUserProfile(User userRecord) throws IOException {
@@ -465,28 +467,31 @@ public class DatabaseAccess {
         try {
             fOuts = new FileOutputStream(myFile);
 
-        } catch (FileNotFoundException fileNotFoundException) {
+        }
+        catch (FileNotFoundException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
         }
 
         try {
             myFile.createNewFile();
-        } catch (IOException ioException) {
+        }
+        catch (IOException ioException) {
             ioException.printStackTrace();
         }
+
         StringBuilder result = new StringBuilder();
         result.append(line);
         OutputStreamWriter myOutWriter = new OutputStreamWriter(fOuts);
         myOutWriter.append(result);
         myOutWriter.close();
 
-        if (Integer.parseInt(userRecord.getSendAllCloud()) == 1)
-        {
+        if (Integer.parseInt(userRecord.getSendAllCloud()) == 1) {
             sendUser(userRecord.getUserID(), obj.toString());
         }
     }
 
     public void updateFeedback(Feedback feedback) throws IOException {
+
         String tokenValue = getUserToken();
         JSONObject obj = new JSONObject();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -503,15 +508,11 @@ public class DatabaseAccess {
         String JsonString = obj.toString();
         String InsertUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginfeedback/";
 
-        if (createFeedBack(InsertUrllink,JsonString, tokenValue))
-        {
-            // later
-        }
-
+        if (createFeedBack(InsertUrllink,JsonString, tokenValue)) {}
     }
 
-    public ArrayList <Library> getJsonData(int  metricDomain, int metricLibraryID)
-    {
+    public ArrayList <Library> getJsonData(int  metricDomain, int metricLibraryID) {
+
         String filePath = this.filePath +"\\allLibraries.json";
         int domain_id;
         Library libraryDataPoint;
@@ -522,7 +523,8 @@ public class DatabaseAccess {
             String content = null;
             try {
                 content = FileUtils.readFileToString(file, "utf-8");
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
 
@@ -578,8 +580,8 @@ public class DatabaseAccess {
 
 
     public Image readCharts(int metric_DomainID, int metric_line) throws IOException {
-        Image img=null;
 
+        Image img=null;
         String filePath = this.filePath +"\\allCharts.json";
         long metric = 0;
         long domain =0 ;
@@ -591,8 +593,8 @@ public class DatabaseAccess {
         JSONArray jsonarr_1 = obj.getJSONArray("Charts");
         int i = 0;
         boolean found = false;
-        while (i<jsonarr_1.length() && !(found))
-        {
+
+        while (i<jsonarr_1.length() && !(found)) {
             JSONObject jsonObj = (JSONObject)jsonarr_1.get(i);
             if(jsonObj.has("metric"))
                 metric = jsonObj.getLong("metric");
