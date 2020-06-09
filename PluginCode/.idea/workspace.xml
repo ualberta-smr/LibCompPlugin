@@ -9,15 +9,20 @@
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionSendFeedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionSendFeedback.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataLibrary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataLibrary.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DatabaseAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DatabaseAccess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogReplacement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogReplacement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/PostStartupActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/PostStartupActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/Replacement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionSendFeedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/SendFeedback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionUserProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/UserProfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataDependenciesStatement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/data/DependencyStatement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataFeedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/data/Feedback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataImportStatement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/data/ImportStatement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataLibrary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/data/Library.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DataUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/data/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DatabaseAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/DatabaseAccess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogReplacement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/Replacement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogSendFeedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/SendFeedback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogUserProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/UserProfile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -109,14 +114,21 @@
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="org.intellij.sdk.editor" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\elhajjm\Documents\GitHub\CMPUT499plugin\libmetricplugin\pluginPhase1\My_Plugin\build\libs" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="smr.cs.ualberta.libcomp.dialog" />
+      <recent name="smr.cs.ualberta.libcomp.data" />
+      <recent name="smr.cs.ualberta.libcomp.action" />
+      <recent name="smr.cs.ualberta.libcomp" />
+      <recent name="org.intellij.sdk.editor.action" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="org.intellij.sdk.editor" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\elhajjm\Documents\GitHub\CMPUT499plugin\libmetricplugin\pluginPhase1\My_Plugin\build\libs" />
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="org.intellij.sdk.editor" />
     </key>
   </component>
   <component name="RunManager" selected="Gradle.PluginCode [clean]">
@@ -291,14 +303,18 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="449" y="148" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1536.824@0.0.1536.824" timestamp="1591509445628" />
-    <state x="551" y="306" width="433" height="217" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1591592668700">
+    <state x="551" y="306" width="433" height="220" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1591724329670">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="551" y="306" width="433" height="217" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1536.824@0.0.1536.824" timestamp="1591592668700" />
-    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1589279071830">
+    <state x="551" y="306" width="433" height="220" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1536.824@0.0.1536.824" timestamp="1591724329670" />
+    <state x="619" y="315" width="336" height="193" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.packages" timestamp="1591724292728">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1589279071830" />
+    <state x="619" y="315" width="336" height="193" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.packages/0.0.1536.824@0.0.1536.824" timestamp="1591724292728" />
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1591725110156">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1591725110156" />
     <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1589276240054">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -315,22 +331,22 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="501" y="153" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1591667721129" />
-    <state width="1493" height="144" key="GridCell.Tab.0.bottom" timestamp="1591721816254">
+    <state width="1493" height="144" key="GridCell.Tab.0.bottom" timestamp="1591725383810">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="144" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591721816254" />
-    <state width="1493" height="144" key="GridCell.Tab.0.center" timestamp="1591721816253">
+    <state width="1493" height="144" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591725383810" />
+    <state width="1493" height="144" key="GridCell.Tab.0.center" timestamp="1591725383809">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="144" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591721816253" />
-    <state width="1493" height="144" key="GridCell.Tab.0.left" timestamp="1591721816253">
+    <state width="1493" height="144" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591725383809" />
+    <state width="1493" height="144" key="GridCell.Tab.0.left" timestamp="1591725383809">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="144" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591721816253" />
-    <state width="1493" height="144" key="GridCell.Tab.0.right" timestamp="1591721816254">
+    <state width="1493" height="144" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591725383809" />
+    <state width="1493" height="144" key="GridCell.Tab.0.right" timestamp="1591725383810">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="144" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591721816254" />
+    <state width="1493" height="144" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591725383810" />
     <state width="1537" height="261" key="GridCell.Tab.1.bottom" timestamp="1591647438006">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -376,57 +392,47 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java</url>
-          <line>54</line>
-          <option name="timeStamp" value="55" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DatabaseAccess.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/DatabaseAccess.java</url>
           <line>408</line>
           <option name="timeStamp" value="59" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/Replacement.java</url>
           <line>272</line>
           <option name="timeStamp" value="64" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DatabaseAccess.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/DatabaseAccess.java</url>
           <line>358</line>
           <option name="timeStamp" value="70" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/Replacement.java</url>
           <line>295</line>
           <option name="timeStamp" value="73" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DatabaseAccess.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/DatabaseAccess.java</url>
           <line>327</line>
           <option name="timeStamp" value="82" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DatabaseAccess.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/DatabaseAccess.java</url>
           <line>426</line>
           <option name="timeStamp" value="83" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/Replacement.java</url>
           <line>314</line>
           <option name="timeStamp" value="102" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/ActionReplacement.java</url>
-          <line>69</line>
-          <option name="timeStamp" value="103" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogReplacement.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/Replacement.java</url>
           <line>351</line>
           <option name="timeStamp" value="107" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/intellij/sdk/editor/DialogReplacement.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/Replacement.java</url>
           <line>343</line>
           <option name="timeStamp" value="108" />
         </line-breakpoint>

@@ -1,13 +1,13 @@
-package org.intellij.sdk.editor;
+package smr.cs.ualberta.libcomp.data;
 
 /**
  * The DataUser class is an object to store information on a user profile
  * This is based on the questions asked in the user profile dialog accessable via the Tools menu
  */
 
-public class DataUser {
+public class User {
 
-    public DataUser() {
+    public User() {
     }
 
     private String ID;

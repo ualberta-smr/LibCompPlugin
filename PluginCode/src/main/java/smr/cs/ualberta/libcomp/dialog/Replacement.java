@@ -1,6 +1,9 @@
-package org.intellij.sdk.editor;
+package smr.cs.ualberta.libcomp.dialog;
 
 import com.intellij.ui.components.JBScrollPane;
+import smr.cs.ualberta.libcomp.DatabaseAccess;
+import smr.cs.ualberta.libcomp.data.Library;
+
 import javax.swing.*;
 import java.awt.Component;
 import javax.swing.border.Border;
@@ -23,7 +26,7 @@ import java.util.Vector;
  * This file contains the details of the main plugin dialog, its formatting, and displaying the information related to it
  */
 
-public class DialogReplacement extends JFrame {
+public class Replacement extends JFrame {
 
     private String LibraryReturned = "None";
     private String LibraryName = "None";
@@ -54,7 +57,7 @@ public class DialogReplacement extends JFrame {
     private Color colorAlternateLine = new Color(230, 230, 230);
     private Color cololrSelectColumn = Color.lightGray;
     private Color cololrCurrentLibrary = new Color(210, 210, 210);
-    private ArrayList<DataLibrary> libraryList;
+    private ArrayList<Library> libraryList;
 
     String[] columnToolTips = {"Column 1 Chart", // chart
             "Column 2 Sort Descending",
@@ -92,7 +95,7 @@ public int getMapping(int original){
         return returnValue;
 }
 
-    public DialogReplacement(String domainName, int domainId, int libID) throws HeadlessException {
+    public Replacement(String domainName, int domainId, int libID) throws HeadlessException {
         this.libID = libID;
         this.domainID = domainId;
         Border border = BorderFactory.createLineBorder(Color.black, 1);
@@ -349,7 +352,7 @@ public int getMapping(int original){
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
-                    new DialogChart(message,img);
+                    new Chart(message,img);
                 }
                 if (columnM == 1) {
                     int typeofSort = 1;
@@ -380,7 +383,7 @@ public int getMapping(int original){
         int i, j, largest, rowIndex;
         double tempValue;
         String tempHeader;
-        DataLibrary tempData;
+        Library tempData;
 
         for (i = startingSort; i < columnLength - 1; i++) {
             largest = i;
@@ -548,9 +551,9 @@ public int getMapping(int original){
     }
 
 
-class DialogChart extends JFrame {
+class Chart extends JFrame {
 
-    public DialogChart(String title, Image img) throws HeadlessException {
+    public Chart(String title, Image img) throws HeadlessException {
         super(title);
 
         pack();

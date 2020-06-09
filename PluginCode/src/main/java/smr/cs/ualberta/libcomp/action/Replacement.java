@@ -1,4 +1,4 @@
-package org.intellij.sdk.editor;
+package smr.cs.ualberta.libcomp.action;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -20,7 +20,14 @@ import com.intellij.psi.*;
 import com.intellij.psi.PsiImportList;
 import com.intellij.psi.PsiFile;
 import org.apache.commons.lang.StringUtils;
+//import org.intellij.sdk.libcomp.*;
 import org.jetbrains.annotations.NotNull;
+import smr.cs.ualberta.libcomp.*;
+import smr.cs.ualberta.libcomp.data.DependencyStatement;
+import smr.cs.ualberta.libcomp.data.Feedback;
+import smr.cs.ualberta.libcomp.data.ImportStatement;
+import smr.cs.ualberta.libcomp.data.User;
+
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -32,16 +39,16 @@ import java.util.Date;
  * This is triggered by the replacement button on the main plugin dialog
  */
 
-public class ActionReplacement extends AnAction {
+public class Replacement extends AnAction {
     
-    public ArrayList<DataImportStatement> ImportListObjects;
-    public ArrayList<DataDependenciesStatement> DependListObjects;
+    public ArrayList<ImportStatement> ImportListObjects;
+    public ArrayList<DependencyStatement> DependListObjects;
 
     private int to_library;
     private String full_lib_list;
     private String libraryName;
     private int sendToCloud = 1;
-    public ActionReplacement() {
+    public Replacement() {
     ImportListObjects = new ArrayList<>();
     DependListObjects = new ArrayList<>();
     }
@@ -129,7 +136,7 @@ public class ActionReplacement extends AnAction {
                     ArrayList<String> choicesArray = dataAccessObject.selectJasonAllLibraries(TermSelected);
                     if (choicesArray.size() > 0) {
 
-                        DataDependenciesStatement depObj = new DataDependenciesStatement();
+                        DependencyStatement depObj = new DependencyStatement();
                         depObj.setImportLocation(i);
                         depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
                         depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
@@ -203,7 +210,7 @@ public class ActionReplacement extends AnAction {
          Date action_date = new Date();
          int from_library;
 
-        DataUser userRecord = new DataUser();
+        User userRecord = new User();
         DatabaseAccess dataAccessObject = new DatabaseAccess();
         userRecord = dataAccessObject.ReadUserProfile();
         sendToCloud = Integer.parseInt(userRecord.getSendAllCloud());
@@ -237,7 +244,7 @@ public class ActionReplacement extends AnAction {
                 int locationStartOfImport = offsetLastWord - (importStatementFull.length() - importStatementLastWord.length());
                 int locationEndOfImport = document.getLineEndOffset(line_num) - 1;
 
-                DialogReplacement bc=new DialogReplacement(ImportListObjects.get(currentLine).getDomainName(), ImportListObjects.get(currentLine).getImportDomain(),ImportListObjects.get(currentLine).getImportLib());
+                smr.cs.ualberta.libcomp.dialog.Replacement bc=new smr.cs.ualberta.libcomp.dialog.Replacement(ImportListObjects.get(currentLine).getDomainName(), ImportListObjects.get(currentLine).getImportDomain(),ImportListObjects.get(currentLine).getImportLib());
 
                 WindowAdapter adapter = new WindowAdapter() {
 
@@ -259,8 +266,8 @@ public class ActionReplacement extends AnAction {
                             if (sendToCloud == 1)
                             {
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                DataFeedback dataFeedbackPoint = new DataFeedback(0, action_date, line_num, project_name, class_name, full_lib_list, finalFrom_library, to_library);
-                                dataAccessObject.updateFeedback(dataFeedbackPoint);
+                                Feedback feedbackPoint = new Feedback(0, action_date, line_num, project_name, class_name, full_lib_list, finalFrom_library, to_library);
+                                dataAccessObject.updateFeedback(feedbackPoint);
                             }
 
                         } catch (IOException ioException) {
@@ -283,8 +290,8 @@ public class ActionReplacement extends AnAction {
                                 if (sendToCloud == 1)
                                 {
                                     DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                    DataFeedback dataFeedbackPoint = new DataFeedback(0, action_date, line_num, project_name, class_name, full_lib_list, finalFrom_library, to_library);
-                                    dataAccessObject.updateFeedback(dataFeedbackPoint);
+                                    Feedback feedbackPoint = new Feedback(0, action_date, line_num, project_name, class_name, full_lib_list, finalFrom_library, to_library);
+                                    dataAccessObject.updateFeedback(feedbackPoint);
                                 }
                             } catch (IOException ioException) {
                                 ioException.printStackTrace();
@@ -294,8 +301,8 @@ public class ActionReplacement extends AnAction {
                             if (sendToCloud == 1)
                             {
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                DataFeedback dataFeedbackPoint = new DataFeedback(0, action_date, line_num, project_name, class_name, full_lib_list, finalFrom_library, to_library);
-                                dataAccessObject.updateFeedback(dataFeedbackPoint);
+                                Feedback feedbackPoint = new Feedback(0, action_date, line_num, project_name, class_name, full_lib_list, finalFrom_library, to_library);
+                                dataAccessObject.updateFeedback(feedbackPoint);
                             }
                         } catch (IOException ioException) {
                             ioException.printStackTrace();
@@ -321,7 +328,7 @@ public class ActionReplacement extends AnAction {
         Date action_date = new Date();
         int from_library;
 
-        DataUser userRecord = new DataUser();
+        User userRecord = new User();
         DatabaseAccess dataAccessObject = new DatabaseAccess();
         userRecord = dataAccessObject.ReadUserProfile();
         sendToCloud = Integer.parseInt(userRecord.getSendAllCloud());
@@ -347,7 +354,7 @@ public class ActionReplacement extends AnAction {
                 int finalFrom_library = from_library;
 
 
-                DialogReplacement bc=new DialogReplacement(DependListObjects.get(currentLine).getDomainName(), DependListObjects.get(currentLine).getImportDomain(),DependListObjects.get(currentLine).getImportLib());
+                smr.cs.ualberta.libcomp.dialog.Replacement bc=new smr.cs.ualberta.libcomp.dialog.Replacement(DependListObjects.get(currentLine).getDomainName(), DependListObjects.get(currentLine).getImportDomain(),DependListObjects.get(currentLine).getImportLib());
 
                 int finalLocationStartOfImport = locationStartOfImport;
                 int finalLocationEndOfImport = locationEndOfImport;
@@ -373,8 +380,8 @@ public class ActionReplacement extends AnAction {
                             if (sendToCloud == 1)
                             {
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                DataFeedback dataFeedbackPoint = new DataFeedback(0, action_date, clickedLineNumber, project_name, class_name, full_lib_list, finalFrom_library, to_library);
-                                dataAccessObject.updateFeedback(dataFeedbackPoint);
+                                Feedback feedbackPoint = new Feedback(0, action_date, clickedLineNumber, project_name, class_name, full_lib_list, finalFrom_library, to_library);
+                                dataAccessObject.updateFeedback(feedbackPoint);
                             }
 
                         } catch (IOException ioException) {
@@ -398,8 +405,8 @@ public class ActionReplacement extends AnAction {
                                 if (sendToCloud == 1)
                                 {
                                     DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                    DataFeedback dataFeedbackPoint = new DataFeedback(0, action_date, clickedLineNumber, project_name, class_name, full_lib_list, finalFrom_library, to_library);
-                                    dataAccessObject.updateFeedback(dataFeedbackPoint);
+                                    Feedback feedbackPoint = new Feedback(0, action_date, clickedLineNumber, project_name, class_name, full_lib_list, finalFrom_library, to_library);
+                                    dataAccessObject.updateFeedback(feedbackPoint);
                                 }
                             } catch (IOException ioException) {
                                 ioException.printStackTrace();
@@ -409,8 +416,8 @@ public class ActionReplacement extends AnAction {
                             if (sendToCloud == 1)
                             {
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                DataFeedback dataFeedbackPoint = new DataFeedback(0, action_date, clickedLineNumber, project_name, class_name, full_lib_list, finalFrom_library, to_library);
-                                dataAccessObject.updateFeedback(dataFeedbackPoint);
+                                Feedback feedbackPoint = new Feedback(0, action_date, clickedLineNumber, project_name, class_name, full_lib_list, finalFrom_library, to_library);
+                                dataAccessObject.updateFeedback(feedbackPoint);
                             }
                         } catch (IOException ioException) {
                             ioException.printStackTrace();
@@ -473,7 +480,7 @@ public class ActionReplacement extends AnAction {
                 if (choicesArray.size()>0){
            //         setAllLibrary(choicesArray.get(0));
                     //Prepare the object for the PSI, location, library, and domain
-                    DataImportStatement impObj = new DataImportStatement();
+                    ImportStatement impObj = new ImportStatement();
                     impObj.setImportListBase(importStatementObject);
                     impObj.setImportLocation(importLineNumber);
                     impObj.setImportLib(Integer.parseInt(choicesArray.get(0)));

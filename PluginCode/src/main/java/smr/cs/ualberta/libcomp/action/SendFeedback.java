@@ -1,4 +1,4 @@
-package org.intellij.sdk.editor;
+package smr.cs.ualberta.libcomp.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -9,9 +9,9 @@ import org.jetbrains.annotations.NotNull;
  * This is triggered by the user opening the send feedback dialog via the Tools menu
  */
 
-public class ActionSendFeedback extends AnAction {
+public class SendFeedback extends AnAction {
 
-    public ActionSendFeedback() {
+    public SendFeedback() {
     }
 
     public void update(@NotNull final AnActionEvent event) {
@@ -21,7 +21,7 @@ public class ActionSendFeedback extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
-        DialogSendFeedback dialogSendFeedback = new DialogSendFeedback("User Profile");
-        dialogSendFeedback.init();
+        smr.cs.ualberta.libcomp.dialog.SendFeedback sendFeedback = new smr.cs.ualberta.libcomp.dialog.SendFeedback("User Profile");
+        sendFeedback.init();
     }
 }

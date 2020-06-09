@@ -1,10 +1,10 @@
-package org.intellij.sdk.editor;
+package smr.cs.ualberta.libcomp.data;
 
 /**
  * The DataLibrary class is an object to store information on an library such as the metric data
  */
 
-public class DataLibrary {
+public class Library {
     private int id;
     private int library_id;
     private int domain_id;
@@ -19,7 +19,7 @@ public class DataLibrary {
     private double security;
     private double backwards_compatibility;
 
-    public DataLibrary() {
+    public Library() {
     }
 
     public int getId() {

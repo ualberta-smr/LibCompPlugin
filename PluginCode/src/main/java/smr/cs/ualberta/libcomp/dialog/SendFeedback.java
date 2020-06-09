@@ -1,4 +1,7 @@
-package org.intellij.sdk.editor;
+package smr.cs.ualberta.libcomp.dialog;
+
+import smr.cs.ualberta.libcomp.DatabaseAccess;
+import smr.cs.ualberta.libcomp.data.User;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -17,20 +20,20 @@ import static java.awt.GridBagConstraints.LINE_START;
  * This dialog is accessable via the Tools menu
  */
 
-public class DialogSendFeedback extends JFrame {
-    DialogSendFeedback(String title) {
+public class SendFeedback extends JFrame {
+    public SendFeedback(String title) {
         super(title);
     }
 
     private JPanel mainPanel;
-    private DataUser userRecord;
+    private User userRecord;
     private GridBagConstraints gbc = new GridBagConstraints();
     private GridBagLayout gbLayout = new GridBagLayout();
     private Font mainFont = new Font("SansSerif", Font.PLAIN, 12);
     private Font titleFont = new Font("SansSerif", Font.BOLD | Font.ITALIC, 12);
 
 
-    void init() {
+    public void init() {
         mainPanel = new JPanel();
         mainPanel.setLayout(gbLayout);
         this.setTitle("Send Current LibComp Interaction Data ");
@@ -38,7 +41,7 @@ public class DialogSendFeedback extends JFrame {
         int xlocation = 0;
         int ylocation = 1;
 
-        userRecord = new DataUser();
+        userRecord = new User();
         DatabaseAccess dataAccessObject = new DatabaseAccess();
         userRecord = dataAccessObject.ReadUserProfile();
 

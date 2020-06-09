@@ -1,7 +1,7 @@
-package org.intellij.sdk.editor;
+package smr.cs.ualberta.libcomp.data;
 
-public class DataDependenciesStatement {
-    public DataDependenciesStatement() {}
+public class DependencyStatement {
+    public DependencyStatement() {}
 
     public Integer importLocation;
     public Integer importDomain;

@@ -1,4 +1,4 @@
-package org.intellij.sdk.editor;
+package smr.cs.ualberta.libcomp.data;
 
 import com.intellij.psi.PsiImportStatementBase;
 
@@ -6,14 +6,14 @@ import com.intellij.psi.PsiImportStatementBase;
  * The DataImportStatement class is an object to store information on an import statement
  */
 
-public class DataImportStatement {
+public class ImportStatement {
 
     public PsiImportStatementBase importListBase;
     public Integer importLocation;
     public Integer importDomain;
     public Integer importLib;
     private String domainName;
-    public DataImportStatement() {
+    public ImportStatement() {
     }
 
     public PsiImportStatementBase getImportListBase() { return importListBase; }

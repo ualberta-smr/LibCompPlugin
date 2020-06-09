@@ -1,4 +1,4 @@
-package org.intellij.sdk.editor;
+package smr.cs.ualberta.libcomp.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -9,9 +9,9 @@ import org.jetbrains.annotations.NotNull;
  * This is triggered by the user opening the user profile dialog via the Tools menu
  */
 
-public class ActionUserProfile extends AnAction {
+public class UserProfile extends AnAction {
 
-    public ActionUserProfile() {
+    public UserProfile() {
     }
 
     public void update(@NotNull final AnActionEvent event) {
@@ -21,8 +21,8 @@ public class ActionUserProfile extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
-        DialogUserProfile dialogUserProfile = new DialogUserProfile("User Profile");
-        dialogUserProfile.init();
+        smr.cs.ualberta.libcomp.dialog.UserProfile userProfile = new smr.cs.ualberta.libcomp.dialog.UserProfile("User Profile");
+        userProfile.init();
 
     }
 }

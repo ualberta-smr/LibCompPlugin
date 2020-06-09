@@ -1,4 +1,7 @@
-package org.intellij.sdk.editor;
+package smr.cs.ualberta.libcomp.dialog;
+
+import smr.cs.ualberta.libcomp.DatabaseAccess;
+import smr.cs.ualberta.libcomp.data.User;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -15,26 +18,26 @@ import static java.awt.GridBagConstraints.LINE_START;
  */
 
 
-public class DialogUserProfile extends JFrame {
+public class UserProfile extends JFrame {
 
-    DialogUserProfile(String title) {
+    public UserProfile(String title) {
         super(title);
     }
 
     private JTextArea profileID;
-    private DataUser userRecord;
+    private User userRecord;
     private JPanel mainPanel;
     private GridBagConstraints gbc = new GridBagConstraints();
     private GridBagLayout gbLayout = new GridBagLayout();
     private Font mainFont = new Font("SansSerif", Font.PLAIN, 12);
     private Font titleFont = new Font("SansSerif", Font.BOLD | Font.ITALIC, 12);
 
-    void init() {
+    public void init() {
         mainPanel = new JPanel();
         mainPanel.setLayout(gbLayout);
         this.setTitle("LibComp User Profile");
 
-        userRecord = new DataUser();
+        userRecord = new User();
         DatabaseAccess dataAccessObject = new DatabaseAccess();
         userRecord = dataAccessObject.ReadUserProfile();
 

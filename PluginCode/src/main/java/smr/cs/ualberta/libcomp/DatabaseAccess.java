@@ -1,4 +1,4 @@
-package org.intellij.sdk.editor;
+package smr.cs.ualberta.libcomp;
 
 import com.intellij.openapi.application.PathManager;
 import com.jcraft.jsch.Session;
@@ -16,6 +16,10 @@ import java.util.UUID;
 import java.io.FileNotFoundException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import smr.cs.ualberta.libcomp.data.Feedback;
+import smr.cs.ualberta.libcomp.data.Library;
+import smr.cs.ualberta.libcomp.data.User;
+
 import java.io.File;
 
 /**
@@ -183,13 +187,13 @@ public class DatabaseAccess {
         return (returnValue);
     }
 
-    public DataUser ReadUserProfile() {
+    public User ReadUserProfile() {
 
         String filePath = this.filePath + "\\user.json";
-        DataUser userRecord = null;
+        User userRecord = null;
         File file = new File(filePath);
         if (!file.exists()){
-            userRecord = new DataUser();
+            userRecord = new User();
             String tempShortUserName = UUID.randomUUID().toString().substring(0,14);
        //     userRecord.setUserID(UUID.randomUUID().toString());
             userRecord.setUserID(tempShortUserName);
@@ -221,7 +225,7 @@ public class DatabaseAccess {
 
             JSONObject obj = new JSONObject(content);
 
-            userRecord = new DataUser();
+            userRecord = new User();
             userRecord.setUserID(obj.getString("username"));
             userRecord.setProject1("0");
             userRecord.setProject2("0");
@@ -423,7 +427,7 @@ public class DatabaseAccess {
 
     }
 
-    public void updateUserProfile(DataUser userRecord) throws IOException {
+    public void updateUserProfile(User userRecord) throws IOException {
         String filePath = this.filePath  + "\\user.json";
         JSONObject obj = new JSONObject();
         java.util.List<Integer> projects = new ArrayList<Integer>();
@@ -488,19 +492,19 @@ public class DatabaseAccess {
     }
 
 
-    public void updateFeedback(DataFeedback dataFeedback) throws IOException {
+    public void updateFeedback(Feedback feedback) throws IOException {
         String tokenValue = getUserToken();
         JSONObject obj = new JSONObject();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
         obj.put("user", this.userid);
-        obj.put("full_lib_list", dataFeedback.getFull_lib_list());
-        obj.put("to_library", dataFeedback.getTo_library_id());
-        obj.put("from_library", dataFeedback.getFrom_library_id());
-        obj.put("line_num", dataFeedback.getLine_num());
-        obj.put("project_name", dataFeedback.getProject_name());
-        obj.put("class_name", dataFeedback.getClass_name());
-        obj.put("action_date", df.format(dataFeedback.getAction_date()));
+        obj.put("full_lib_list", feedback.getFull_lib_list());
+        obj.put("to_library", feedback.getTo_library_id());
+        obj.put("from_library", feedback.getFrom_library_id());
+        obj.put("line_num", feedback.getLine_num());
+        obj.put("project_name", feedback.getProject_name());
+        obj.put("class_name", feedback.getClass_name());
+        obj.put("action_date", df.format(feedback.getAction_date()));
 
         String JsonString = obj.toString();
         String InsertUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginfeedback/";
@@ -512,12 +516,12 @@ public class DatabaseAccess {
 
     }
 
-    public ArrayList <DataLibrary> GetJsonPerformanceValues(int  metricDomain,int metricLibraryID)
+    public ArrayList <Library> GetJsonPerformanceValues(int  metricDomain, int metricLibraryID)
     {
         String filePath = this.filePath +"\\allLibraries.json";
         int domain_id;
-        DataLibrary libraryDataPoint;
-        ArrayList <DataLibrary> libraryList = new ArrayList<DataLibrary> ();
+        Library libraryDataPoint;
+        ArrayList <Library> libraryList = new ArrayList<Library> ();
 
         File file = new File(filePath);
         if (file.exists()) {
@@ -536,7 +540,7 @@ public class DatabaseAccess {
                 if (jsonObj.has("domain")) {
                     domain_id = jsonObj.getInt("domain");
                     if (domain_id == metricDomain) {
-                        libraryDataPoint = new DataLibrary();
+                        libraryDataPoint = new Library();
                         if (jsonObj.has("id"))
                             libraryDataPoint.setId(jsonObj.getInt("id"));
                         if (jsonObj.has("id"))
