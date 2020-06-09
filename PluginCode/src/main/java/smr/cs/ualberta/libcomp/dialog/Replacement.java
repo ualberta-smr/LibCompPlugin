@@ -111,7 +111,7 @@ public int getMapping(int original){
         this.setTitle(domainName);
         DatabaseAccess dataAccessObject = new DatabaseAccess();
 
-        libraryList = dataAccessObject.GetJsonPerformanceValues(domainId, libID);
+        libraryList = dataAccessObject.getJsonData(domainId, libID);
 
         columnLength = libraryList.size() + offsetBtnCols;
         columnHeaders = new String[columnLength];
@@ -348,7 +348,7 @@ public int getMapping(int original){
                     Image img = null;
                     try {
                         int metricValue = getMapping(rowM);
-                        img = dataAccessObject.ReadCharts(domainID, metricValue);
+                        img = dataAccessObject.readCharts(domainID, metricValue);
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
@@ -356,11 +356,11 @@ public int getMapping(int original){
                 }
                 if (columnM == 1) {
                     int typeofSort = 1;
-                    sortingTable(typeofSort, rowM);
+                    sortTable(typeofSort, rowM);
                 }
                 if (columnM == 2) {
                     int typeofSort = 2;
-                    sortingTable(typeofSort, rowM);
+                    sortTable(typeofSort, rowM);
                 }
             }
         });
@@ -379,7 +379,7 @@ public int getMapping(int original){
         setLocationRelativeTo(null);
     }
 
-    private void sortingTable(int typeofSort, int row) {
+    private void sortTable(int typeofSort, int row) {
         int i, j, largest, rowIndex;
         double tempValue;
         String tempHeader;
@@ -456,7 +456,6 @@ public int getMapping(int original){
         }
     }
 }
-
 
     class ImageRenderer extends DefaultTableCellRenderer {
         JLabel lbl = new JLabel();

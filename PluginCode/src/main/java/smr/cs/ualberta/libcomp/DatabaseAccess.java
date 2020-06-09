@@ -12,14 +12,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.UUID;
-
 import java.io.FileNotFoundException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import smr.cs.ualberta.libcomp.data.Feedback;
 import smr.cs.ualberta.libcomp.data.Library;
 import smr.cs.ualberta.libcomp.data.User;
-
 import java.io.File;
 
 /**
@@ -32,7 +30,7 @@ public class DatabaseAccess {
     private int userid = 0;
     private String filePath = PathManager.getPluginsPath()+"\\Library_Comparison\\lib";
 
-    public ArrayList<String> selectJasonAllLibraries(String librarySelected) throws IOException
+    public ArrayList<String> selectJsonAllLibraries(String librarySelected) throws IOException
     {
         String filePath = this.filePath + "\\allLibraries.json";
         ArrayList<String> Terms;
@@ -78,8 +76,7 @@ public class DatabaseAccess {
         return (Terms);
     }
 
-
-    public String VersionCloud() throws IOException  {
+    public String getLatestVersion() throws IOException  {
         String cloudVer = "";
         String linkURL = "http://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
 
@@ -101,7 +98,7 @@ public class DatabaseAccess {
         return (cloudVer);
     }
 
-    public String VersionLocal() throws IOException {
+    public String checkLocalVersion() throws IOException {
 
         String filePath = this.filePath +"\\Version.json";
         String datelocal = "NewUser";
@@ -153,7 +150,7 @@ public class DatabaseAccess {
     }
 
 
-    public void GetRestTestApi() throws IOException {
+    public void getDataRestApi() throws IOException {
         String suffixLocal = this.filePath + "\\";
         String url = "http://smr.cs.ualberta.ca/comparelibraries/api/libraries/?format=json";
         String filePath = suffixLocal + "allLibraries.json";
@@ -174,20 +171,20 @@ public class DatabaseAccess {
         String cloudVer = "";
 
         try {
-            localVer= VersionLocal();
+            localVer= checkLocalVersion();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        cloudVer= VersionCloud();
+        cloudVer= getLatestVersion();
         // check now the if we need to upload
         if  (!(localVer.equals(cloudVer)) )
         {
-            GetRestTestApi();
+            getDataRestApi();
         }
         return (returnValue);
     }
 
-    public User ReadUserProfile() {
+    public User readUserProfile() {
 
         String filePath = this.filePath + "\\user.json";
         User userRecord = null;
@@ -405,9 +402,7 @@ public class DatabaseAccess {
         return  returnValue;
     }
 
-
-
-    public void SendUser(String username, String jsonString) throws IOException {
+    public void sendUser(String username, String jsonString) throws IOException {
         String updateUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/" + username + "/";
         String InsertUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/";
         String tokenValue = getUserToken();
@@ -487,10 +482,9 @@ public class DatabaseAccess {
 
         if (Integer.parseInt(userRecord.getSendAllCloud()) == 1)
         {
-            SendUser(userRecord.getUserID(), obj.toString());
+            sendUser(userRecord.getUserID(), obj.toString());
         }
     }
-
 
     public void updateFeedback(Feedback feedback) throws IOException {
         String tokenValue = getUserToken();
@@ -516,7 +510,7 @@ public class DatabaseAccess {
 
     }
 
-    public ArrayList <Library> GetJsonPerformanceValues(int  metricDomain, int metricLibraryID)
+    public ArrayList <Library> getJsonData(int  metricDomain, int metricLibraryID)
     {
         String filePath = this.filePath +"\\allLibraries.json";
         int domain_id;
@@ -583,7 +577,7 @@ public class DatabaseAccess {
     }
 
 
-    public Image ReadCharts(int metric_DomainID,int metric_line) throws IOException {
+    public Image readCharts(int metric_DomainID, int metric_line) throws IOException {
         Image img=null;
 
         String filePath = this.filePath +"\\allCharts.json";

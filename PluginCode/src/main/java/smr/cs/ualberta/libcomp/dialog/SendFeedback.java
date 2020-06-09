@@ -43,7 +43,7 @@ public class SendFeedback extends JFrame {
 
         userRecord = new User();
         DatabaseAccess dataAccessObject = new DatabaseAccess();
-        userRecord = dataAccessObject.ReadUserProfile();
+        userRecord = dataAccessObject.readUserProfile();
 
         TitledBorder title;
         title = BorderFactory.createTitledBorder("Please fill this form to the best of your ability: ");

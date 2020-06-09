@@ -20,14 +20,12 @@ import com.intellij.psi.*;
 import com.intellij.psi.PsiImportList;
 import com.intellij.psi.PsiFile;
 import org.apache.commons.lang.StringUtils;
-//import org.intellij.sdk.libcomp.*;
 import org.jetbrains.annotations.NotNull;
 import smr.cs.ualberta.libcomp.*;
 import smr.cs.ualberta.libcomp.data.DependencyStatement;
 import smr.cs.ualberta.libcomp.data.Feedback;
 import smr.cs.ualberta.libcomp.data.ImportStatement;
 import smr.cs.ualberta.libcomp.data.User;
-
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -76,7 +74,7 @@ public class Replacement extends AnAction {
             {
                 replaceRequestedDependence(event);
                 try {
-                    detectionDependencies(event);
+                    detectDependencies(event);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -97,14 +95,12 @@ public class Replacement extends AnAction {
         while (i < editorFileAll.length) {
             PsiFile psiFile = PsiManager.getInstance(proj).findFile(filesAll[i]);
             Editor editor = ((TextEditor)editorFileAll[i]).getEditor();
-            detectionImports(psiFile, editor);
+            detectImports(psiFile, editor);
             i = i + 1;
         }
     }
 
-
-    public void detectionDependencies(@NotNull final AnActionEvent event) throws IOException {
-
+    public void detectDependencies(@NotNull final AnActionEvent event) throws IOException {
         final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
@@ -115,7 +111,7 @@ public class Replacement extends AnAction {
         String lineText;
         String TermSelected;
 
-        //Replace the selection with a fixed string.
+        //Replace the selection with a string
         DependListObjects.clear();
         editorModel.removeAllHighlighters();
 
@@ -133,7 +129,7 @@ public class Replacement extends AnAction {
                 {
                     TermSelected = valuesInQuotes[0];
                     DatabaseAccess dataAccessObject = new DatabaseAccess();
-                    ArrayList<String> choicesArray = dataAccessObject.selectJasonAllLibraries(TermSelected);
+                    ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(TermSelected);
                     if (choicesArray.size() > 0) {
 
                         DependencyStatement depObj = new DependencyStatement();
@@ -180,7 +176,7 @@ public class Replacement extends AnAction {
             else
             {
             try {
-               detectionDependencies(event);
+               detectDependencies(event);
                 event.getPresentation().setEnabledAndVisible(true);
             } catch (IOException e) { e.printStackTrace(); }
             }
@@ -212,7 +208,7 @@ public class Replacement extends AnAction {
 
         User userRecord = new User();
         DatabaseAccess dataAccessObject = new DatabaseAccess();
-        userRecord = dataAccessObject.ReadUserProfile();
+        userRecord = dataAccessObject.readUserProfile();
         sendToCloud = Integer.parseInt(userRecord.getSendAllCloud());
 
         //Work off of the primary caret to get the selection info
@@ -330,7 +326,7 @@ public class Replacement extends AnAction {
 
         User userRecord = new User();
         DatabaseAccess dataAccessObject = new DatabaseAccess();
-        userRecord = dataAccessObject.ReadUserProfile();
+        userRecord = dataAccessObject.readUserProfile();
         sendToCloud = Integer.parseInt(userRecord.getSendAllCloud());
 
         //Work off of the primary caret to get the selection info
@@ -432,17 +428,13 @@ public class Replacement extends AnAction {
         }
     }
 
-
-
-
-
     /**
      * The detectImportStatementMethod will got through the current open file and test the import statements to see if they are in the database
      * The trigger for this to occur is a right click anywhere in the editor, I have yet to figure out how to have it work onLoad
      * Right now, the library being queried is the "last word" of the import statement
      * ex. for my.import.statement.rehab, the term queried against in the database is "rehab"
      */
-    public void detectionImports(@NotNull final PsiFile psiFile,@NotNull final Editor editor ) {
+    public void detectImports(@NotNull final PsiFile psiFile, @NotNull final Editor editor ) {
         //Work off of the primary caret to get the selection info
         try {
             //Block of code to try
@@ -476,7 +468,7 @@ public class Replacement extends AnAction {
 
                 //check database
                 DatabaseAccess dataAccessObject = new DatabaseAccess();
-                ArrayList<String> choicesArray = dataAccessObject.selectJasonAllLibraries(TermSelected);
+                ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(TermSelected);
                 if (choicesArray.size()>0){
            //         setAllLibrary(choicesArray.get(0));
                     //Prepare the object for the PSI, location, library, and domain
@@ -500,8 +492,6 @@ public class Replacement extends AnAction {
         }
     }
 
-
-
     public void detectImportStatements(@NotNull final AnActionEvent event) throws IOException {
 
          PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
@@ -509,7 +499,7 @@ public class Replacement extends AnAction {
 
          try {
              final PsiJavaFile javaFile = (PsiJavaFile) psiFile;
-             detectionImports(psiFile, editor);
+             detectImports(psiFile, editor);
          }
          catch(Exception e) {
              //detectionDependencies(psiFile, editor);

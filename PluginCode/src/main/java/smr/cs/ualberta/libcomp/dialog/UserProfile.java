@@ -39,7 +39,7 @@ public class UserProfile extends JFrame {
 
         userRecord = new User();
         DatabaseAccess dataAccessObject = new DatabaseAccess();
-        userRecord = dataAccessObject.ReadUserProfile();
+        userRecord = dataAccessObject.readUserProfile();
 
         int xlocation = 0;
         int ylocation = 1;
