@@ -26,15 +26,15 @@
 
 To help us understand the types of users and projects LibComp is most relevant to, we have set up a feedback collection system. To be a part of this, follow these steps:
 
-1. Navigate to `Tools > LibComp > User Profile`.
+* Navigate to `Tools > LibComp > User Profile`.
 
-2. Fill in the form and click the `update` button. **Congratulations, you have just created a user profile!** (You are free to update your profile at any point).
+* Fill in the form and click the `update` button. **Congratulations, you have just created a user profile!** (You are free to update your profile at any point).
 
-3. Navigate to `Tools > LibComp > Send Us Your Feedback`.
+* Navigate to `Tools > LibComp > Send Us Your Feedback`.
 
-4. Here is where you can check the relevant boxes to confirm that you are giving consent for your tracked plugin usage to be sent to our central database on the SMR server. You also have the option to send a feedback comment and/or rate the plugin from 1 (worst) to 5 (best) and send this to our database. Whenever you wish to send your information, click `Update library interaction data`. 
+* Here is where you can check the relevant boxes to confirm that you are giving consent for your tracked plugin usage to be sent to our central database on the SMR server. You also have the option to send a feedback comment and/or rate the plugin from 1 (worst) to 5 (best) and send this to our database. Whenever you wish to send your information, click `Update library interaction data`. 
 
-5. We will not be saving any feedback data to our central database unless you explicitly allow it.
+* We will not be saving any feedback data to our central database unless you explicitly allow it.
 
 ## Running LibComp Locally:
 
