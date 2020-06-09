@@ -55,3 +55,7 @@ To publish a new version of LibComp, follow these steps
 3. Click `Run` then `publishPlugin` 
 
 4. A new version of the plugin will be generated as a .zip file. This .zip file will be located in `LibCompPlugin\PluginCode\build\distributions` relative to the root of this repository.
+
+## Contributors
+- Rehab El-hajj  (relhajj at ualberta dot ca)
+- Sarah Nadi (snadi at ualberta dot ca)
