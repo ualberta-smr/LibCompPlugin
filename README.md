@@ -42,7 +42,7 @@ To help us understand the types of users and projects LibComp is most relevant t
 
 2. Open the project `PluginCode` in your IntelliJ IDE
 
-3. Compile and run the plugin (you will have the option to select a project to open on a new IDE instance where the plugin will be running)
+3. Compile and run as a plugin (you will have the option to select a project to open on a new IDE instance where the plugin will be running)
 
 ## Publishing a New Version of LibComp:
 
