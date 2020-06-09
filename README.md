@@ -22,7 +22,7 @@
 
 * To replace a library package, select the relevant column and click `replace`. Otherwise, click `cancel`. Note that you cannot replace a library with itself. 
 
-## Sending us feedback:
+## Sending Us Feedback:
 
 To help us understand the types of users and projects LibComp is most relevant to, we have set up a feedback collection system. To be a part of this, follow these steps:
 
