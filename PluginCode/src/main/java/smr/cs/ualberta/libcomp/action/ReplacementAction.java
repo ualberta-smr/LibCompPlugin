@@ -168,7 +168,7 @@ public class ReplacementAction extends AnAction {
                 detectDependancy(editor);
             }
             catch(Exception e) {
-                //catch errors
+                e.printStackTrace();
             }
 
     }
@@ -502,7 +502,6 @@ public class ReplacementAction extends AnAction {
             }
         }
         catch(Exception e) {
-            //catch errors
             e.printStackTrace();
         }
     }
@@ -516,7 +515,6 @@ public class ReplacementAction extends AnAction {
              detectImports(psiFile, editor);
          }
          catch(Exception e) {
-             //catch errors
              e.printStackTrace();
          }
     }
