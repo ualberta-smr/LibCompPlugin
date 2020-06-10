@@ -475,7 +475,7 @@ public class DatabaseAccess {
         myOutWriter.append(result);
         myOutWriter.close();
 
-        if (Integer.parseInt(userRecord.getSendAllCloud()) == 1) {
+        if (Integer.parseInt(userRecord.getCloudStore()) == 1) {
             sendUser(userRecord.getUserID(), obj.toString());
         }
     }
