@@ -26,7 +26,7 @@
 
 ## Sending Us Feedback:
 
-To help us understand the types of users and projects LibComp is most relevant to, we have set up a feedback collection system. To be a part of this, follow these steps:
+To help us understand which libraries get replaced, as well as the types of users and projects LibComp is most relevant to, we have set up a feedback collection system. To be a part of this, follow these steps:
 
 * Navigate to `Tools > LibComp > User Profile`.
 
@@ -34,9 +34,9 @@ To help us understand the types of users and projects LibComp is most relevant t
 
 * Navigate to `Tools > LibComp > Send Us Your Feedback`.
 
-* Here is where you can check the relevant boxes to confirm that you are giving consent for your tracked plugin usage to be sent to our central database on the SMR server. You also have the option to send a feedback comment and/or rate the plugin from 1 (worst) to 5 (best) and send this to our database. Whenever you wish to send your information, click `Update library interaction data`. 
+* Here is where you can check the relevant boxes to confirm that you are giving consent for your tracked plugin usage to be sent to our server. You also have the option to send a feedback comment and/or rate the plugin from 1 (worst) to 5 (best) and send this to our database. Whenever you wish to send your information, click `Send library interaction data`. 
 
-* We will not be saving any feedback data to our central database unless you explicitly allow it.
+* All interaction data with the plugin is stored locally. We do not send any feedback data to our central database unless you explicitly allow it.
 
 ## Running LibComp Locally:
 
