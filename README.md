@@ -14,13 +14,15 @@
 
 ## How to Use LibComp:
 
-* Right-click on the `java file` you want our plugin to analyze (or on your `build.gradle file`), all the libraries we have information on will be highlighted in pink 
+* When the project you are working on has loaded, all open files/editors will be analyzed and all the libraries we have information on will be highlighted in pink 
 
 * If you want to compare a specific library package (only valid for the ones highlighted in pink), right click on the import statement and click `Library Comparison`
 
 * A dialogue will now pop up with all alternative libraries. We provide the ability to sort by any chosen metric (in ascending or descending order) and there are trends shown in graphs. 
 
 * To replace a library package, select the relevant column and click `replace`. Otherwise, click `cancel`. Note that you cannot replace a library with itself. 
+
+* **`Important Note:`** On project load, all files are automatically analyzed, however once the project has already loaded, if you wish to open another fil in the project to analyze it, first open the file and then simple `Right-click` with your mouse or mouse-pad on the java file (or build.gradle file) of choice. This `right-click` will trigger our plugin to analyze the current editor and highlight the relevant libraries. 
 
 ## Sending Us Feedback:
 
