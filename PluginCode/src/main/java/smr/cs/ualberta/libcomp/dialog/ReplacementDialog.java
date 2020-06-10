@@ -25,7 +25,7 @@ import java.util.Vector;
  * This file contains the details of the main plugin dialog, its formatting, and displaying the information related to it
  */
 
-public class Replacement extends JFrame {
+public class ReplacementDialog extends JFrame {
 
     private String LibraryReturned = "None";
     private String LibraryName = "None";
@@ -89,7 +89,7 @@ public int getMapping(int original){
         return returnValue;
 }
 
-    public Replacement(String domainName, int domainId, int libID) throws HeadlessException {
+    public ReplacementDialog(String domainName, int domainId, int libID) throws HeadlessException {
 
         this.libID = libID;
         this.domainID = domainId;
@@ -106,7 +106,7 @@ public int getMapping(int original){
         this.setTitle(domainName);
         DatabaseAccess dataAccessObject = new DatabaseAccess();
 
-        libraryList = dataAccessObject.getJsonData(domainId, libID);
+        libraryList = dataAccessObject.getMetricsData(domainId, libID);
 
         columnLength = libraryList.size() + offsetBtnCols;
         columnHeaders = new String[columnLength];

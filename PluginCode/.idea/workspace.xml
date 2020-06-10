@@ -2,12 +2,100 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b9000c08-9d3a-4449-b947-0c3f74a18055" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/build/classes/java/main/smr/cs/ualberta/libcomp/dialog/Chart$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/config/options/jdk.table.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/config/options/textmate_os.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/icons/55357df99f05b1e0c119a53be481de823e388a181f231d750947c3d3f80bba31.x1.25" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/icons/612c686013cac10742856d8812ee7d0fbe5e034c94ac5db2fc5b9fabe949b9ef.x1.25" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/.persistent/bytecodeanalysis/values.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/.persistent/textContentHashes_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/.persistent/trigram.index/values" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/devkit.extensionpointindex/devkit.ExtensionPointIndex.ver" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/domfileindex/DomFileIndex.storage.keystream" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/domfileindex/DomFileIndex.storage_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/filenameindex/FilenameIndex.project.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/frameworkdetectionindex/FrameworkDetectionIndex_inputs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/groovy.trait.methods/groovy.trait.methods.storage.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/html5.custom.attributes.index/html5.custom.attributes.index_inputs.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/ideapluginregistrationindex/IdeaPluginRegistrationIndex.storage" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/ideapluginregistrationindex/IdeaPluginRegistrationIndex.storage.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/ideapluginregistrationindex/IdeaPluginRegistrationIndex.storage_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/idindex/compositeHashId.keystream.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/java.binary.plus.expression/java.binary.plus.expression.storage.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/java.binary.plus.expression/java.binary.plus.expression.ver" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/java.null.method.argument/java.null.method.argument.storage.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/java.source.module.name/java.source.module.name_inputs_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/javafx.id.name/javafx.id.name.storage" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/javafx.id.name/javafx.id.name.storage.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/javafx.id.name/javafx.id.name.ver" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/javafx.id.name/javafx.id.name_inputs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/javafxcontrollerclassindex/JavaFxControllerClassIndex.storage" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/javafxcontrollerclassindex/JavaFxControllerClassIndex_inputs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/org.jetbrains.kotlin.ide.konan.index.kotlinnativemetafileindex/org.jetbrains.kotlin.ide.konan.index.KotlinNativeMetaFileIndex.ver" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/org.jetbrains.kotlin.idea.versions.kotlinjvmmetadataversionindex/org.jetbrains.kotlin.idea.versions.KotlinJvmMetadataVersionIndex_inputs_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/org.jetbrains.kotlin.idea.vfilefinder.kotlinmodulemappingindex/org.jetbrains.kotlin.idea.vfilefinder.KotlinModuleMappingIndex.storage.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/pluginidmoduleindex/PluginIdModuleIndex_inputs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/refqueueindex/RefQueueIndex.ver" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/registered" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/rep.names_i" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/schematypeinheritance/SchemaTypeInheritance.storage.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/.versions/dom.elementClass.ver" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/.versions/java.method.parameter.types.ver" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/.versions/org.jetbrains.kotlin.idea.stubindex.KotlinFileFacadeShortNameIndex.ver" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/.versions/org.jetbrains.kotlin.idea.stubindex.KotlinTopLevelPropertyByPackageIndex.ver" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/dom.namespacekey/dom.namespaceKey.storage" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/gr.script.class/gr.script.class.storage" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/gr.script.class/gr.script.class.storage.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/java.annotations/java.annotations.storage.keystream.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/java.method.name/java.method.name.storage" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/jvm.static.member.name/jvm.static.member.name.storage" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/jvm.static.member.name/jvm.static.member.name.storage.values.s" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/jvm.static.member.type/jvm.static.member.type.storage.keystream" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/markdown.header/markdown.header.storage" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/org.jetbrains.kotlin.idea.stubindex.kotlinannotationsindex/org.jetbrains.kotlin.idea.stubindex.KotlinAnnotationsIndex.storage.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/stubs/org.jetbrains.kotlin.idea.stubindex.kotlinsuperclassindex/org.jetbrains.kotlin.idea.stubindex.KotlinSuperClassIndex.storage.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/todoindex/fileIdToHashId" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/todoindex/fileIdToHashId_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/xmlnamespaces/XmlNamespaces.storage" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/xmlnamespaces/XmlNamespaces_inputs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/xsltsymbolindex/XsltSymbolIndex.storage" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/xsltsymbolindex/XsltSymbolIndex_inputs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/index/yaml.keys.name/yaml.keys.name.ver" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/vcs-log/hashes/LibComp_7d8332c8_a38ded8c/storage.7.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/vcs-log/index/LibComp_7d8332c8_a38ded8c/committers.21" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/vcs-log/index/LibComp_7d8332c8_a38ded8c/messages.7" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/vcs-log/index/LibComp_7d8332c8_a38ded8c/parents.21.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/vcs-log/index/LibComp_7d8332c8_a38ded8c/paths.21.storage.values.s" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/vcs-log/index/LibComp_7d8332c8_a38ded8c/timestamps.21.values.at" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/vcs-log/index/LibComp_7d8332c8_a38ded8c/timestamps.21_i.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/vcs-log/index/LibComp_7d8332c8_a38ded8c/users.21.storage" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/vcs-log/refs/LibComp_7d8332c8_a38ded8c/storage.9.len" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/idea-sandbox/system/workspace/app.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/tmp/jar/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileContent/fileContent.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileContent/fileContent.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/taskHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/PluginCode.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/PostStartupActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/PostStartupActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/DatabaseAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/DatabaseAccess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/Replacement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/Replacement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/Replacement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/Replacement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/SendFeedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/SendFeedback.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/UserProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/UserProfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/Replacement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/ReplacementAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/SendFeedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/SendFeedbackAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/UserProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/UserProfileAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/data/Feedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/data/ReplacementFeedback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/Replacement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/ReplacementDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/SendFeedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/SendFeedbackDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/UserProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/dialog/UserProfileDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +178,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../TestCodePlugin/pluginPhase1/My_Plugin" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../TestCodePlugin/pluginPhase1/My_Plugin" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.27530748" />
@@ -257,13 +345,12 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
@@ -295,62 +382,62 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="619" y="315" width="336" height="193" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.packages/0.0.1536.824@0.0.1536.824" timestamp="1591724292728" />
-    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1591725110156">
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1591771503589">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1591725110156" />
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1591771503589" />
     <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1589276240054">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824@0.0.1536.824" timestamp="1589276240054" />
-    <state width="455" height="466" key="DebuggerActiveHint" timestamp="1591594071010">
+    <state width="455" height="466" key="DebuggerActiveHint" timestamp="1591761132753">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="455" height="466" key="DebuggerActiveHint/0.0.1536.824@0.0.1536.824" timestamp="1591594071010" />
+    <state width="455" height="466" key="DebuggerActiveHint/0.0.1536.824@0.0.1536.824" timestamp="1591761132753" />
     <state x="592" y="297" key="DetectedRootsChooserDialog" timestamp="1591084574222">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="592" y="297" key="DetectedRootsChooserDialog/0.0.1536.824@0.0.1536.824" timestamp="1591084574222" />
-    <state x="501" y="153" key="FileChooserDialogImpl" timestamp="1591667721129">
+    <state x="501" y="153" key="FileChooserDialogImpl" timestamp="1591761562753">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="501" y="153" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1591667721129" />
-    <state width="1493" height="144" key="GridCell.Tab.0.bottom" timestamp="1591734104494">
+    <state x="501" y="153" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1591761562753" />
+    <state width="1073" height="121" key="GridCell.Tab.0.bottom" timestamp="1591771848743">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="144" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591734104494" />
-    <state width="1493" height="144" key="GridCell.Tab.0.center" timestamp="1591734104494">
+    <state width="1073" height="121" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591771848743" />
+    <state width="1073" height="121" key="GridCell.Tab.0.center" timestamp="1591771848743">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="144" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591734104494" />
-    <state width="1493" height="144" key="GridCell.Tab.0.left" timestamp="1591734104494">
+    <state width="1073" height="121" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591771848743" />
+    <state width="1073" height="121" key="GridCell.Tab.0.left" timestamp="1591771848743">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="144" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591734104494" />
-    <state width="1493" height="144" key="GridCell.Tab.0.right" timestamp="1591734104494">
+    <state width="1073" height="121" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591771848743" />
+    <state width="1073" height="121" key="GridCell.Tab.0.right" timestamp="1591771848743">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="144" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591734104494" />
-    <state width="1537" height="261" key="GridCell.Tab.1.bottom" timestamp="1591647438006">
+    <state width="1073" height="121" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591771848743" />
+    <state width="768" height="261" key="GridCell.Tab.1.bottom" timestamp="1591763524608">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1537" height="261" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591647438006" />
-    <state width="1537" height="261" key="GridCell.Tab.1.center" timestamp="1591647438006">
+    <state width="768" height="261" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591763524608" />
+    <state width="768" height="261" key="GridCell.Tab.1.center" timestamp="1591763524607">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1537" height="261" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1591647438006" />
-    <state width="1537" height="261" key="GridCell.Tab.1.left" timestamp="1591647438006">
+    <state width="768" height="261" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1591763524607" />
+    <state width="768" height="261" key="GridCell.Tab.1.left" timestamp="1591763524607">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1537" height="261" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1591647438006" />
-    <state width="1537" height="261" key="GridCell.Tab.1.right" timestamp="1591647438006">
+    <state width="768" height="261" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1591763524607" />
+    <state width="768" height="261" key="GridCell.Tab.1.right" timestamp="1591763524607">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1537" height="261" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1591647438006" />
-    <state x="277" y="0" width="1181" height="824" key="SettingsEditor" timestamp="1591665784692">
+    <state width="768" height="261" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1591763524607" />
+    <state x="277" y="0" width="1181" height="824" key="SettingsEditor" timestamp="1591760077875">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="277" y="0" width="1181" height="824" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1591665784692" />
+    <state x="277" y="0" width="1181" height="824" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1591760077875" />
     <state width="776" height="420" key="XDebugger.FullValuePopup" timestamp="1591585361122">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -373,6 +460,25 @@
     <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1591546700497" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/action/ReplacementAction.java</url>
+          <line>510</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/DatabaseAccess.java</url>
+          <line>83</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/smr/cs/ualberta/libcomp/DatabaseAccess.java</url>
+          <line>298</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Remote">
         <watch expression="end" />
@@ -384,7 +490,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/untitled$Plugin.ic" NAME="Plugin Coverage Results" MODIFIED="1574737006639" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="coverage/Library_Comparison$PluginCode__buildPlugin_.ic" NAME="PluginCode [buildPlugin] Coverage Results" MODIFIED="1588496505792" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/Library_Comparison$Plugin.ic" NAME="Plugin Coverage Results" MODIFIED="1587269459170" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/Library_Comparison$PluginCode__buildPlugin_.ic" NAME="PluginCode [buildPlugin] Coverage Results" MODIFIED="1588496505792" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

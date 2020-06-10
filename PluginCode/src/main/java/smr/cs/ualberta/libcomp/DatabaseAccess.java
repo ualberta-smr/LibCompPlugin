@@ -15,13 +15,13 @@ import java.util.UUID;
 import java.io.FileNotFoundException;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import smr.cs.ualberta.libcomp.data.Feedback;
+import smr.cs.ualberta.libcomp.data.ReplacementFeedback;
 import smr.cs.ualberta.libcomp.data.Library;
 import smr.cs.ualberta.libcomp.data.User;
 import java.io.File;
 
 /**
- * The DatabaseAccess class is where all connections to the databases are made
+ * The DatabaseAccess class is where all rest api calls to the databases are made
  */
 
 public class DatabaseAccess {
@@ -33,8 +33,7 @@ public class DatabaseAccess {
     public ArrayList<String> selectJsonAllLibraries(String librarySelected) throws IOException
     {
         String filePath = this.filePath + "\\allLibraries.json";
-        ArrayList<String> Terms;
-        Terms = new ArrayList<String>();
+        ArrayList<String> domainLibraries = new ArrayList<String>();;
         long library_id = 0;
         long domain_id =0 ;
         String domain_name = "";
@@ -44,10 +43,10 @@ public class DatabaseAccess {
         if (file.exists()) {
             String content = FileUtils.readFileToString(file, "utf-8");
             JSONObject obj = new JSONObject(content);
-            JSONArray jsonarr_1 = obj.getJSONArray("Libraries");
+            JSONArray libraries = obj.getJSONArray("Libraries");
 
-            for (int i = 0; i < jsonarr_1.length(); i++) {
-                JSONObject jsonObj = (JSONObject) jsonarr_1.get(i);
+            for (int i = 0; i < libraries.length(); i++) {
+                JSONObject jsonObj = (JSONObject) libraries.get(i);
                 if (jsonObj.has("id"))
                     library_id = jsonObj.getLong("id");
                 if (jsonObj.has("domain"))
@@ -57,24 +56,19 @@ public class DatabaseAccess {
                 if (jsonObj.has("package"))
                     Package = jsonObj.getString("package");
 
-                boolean isFound;
-
-                {
-                    isFound = Package.contains(librarySelected);
-                    if (isFound) {
-                        Terms.add(Long.toString(library_id));
-                        Terms.add(Long.toString(domain_id));
-                        Terms.add("0"); // for future use
-                        Terms.add("0"); // for future use
-                        Terms.add(domain_name);
-                    }
+                boolean isFound = Package.contains(librarySelected);
+                if (isFound) {
+                        domainLibraries.add(Long.toString(library_id));
+                        domainLibraries.add(Long.toString(domain_id));
+                        domainLibraries.add(domain_name);
                 }
+
             }
         }
-        return (Terms);
+        return domainLibraries;
     }
 
-    public String getLatestVersion() throws IOException  {
+    public String getLatestMetricDate() throws IOException  {
         String cloudVer = "";
         String linkURL = "http://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
 
@@ -83,20 +77,20 @@ public class DatabaseAccess {
 
         int responseCode = connection.getResponseCode();
         if(responseCode == 200 || responseCode == 201) {
-            String line;
             InputStream response = connection.getInputStream();
             InputStream in = new BufferedInputStream(response);
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            String line;
             while ((line = reader.readLine()) != null) {
                 cloudVer = line;
             }
         }
         int loc = cloudVer.indexOf(":");
         cloudVer = cloudVer.substring(loc+2, cloudVer.length()-3);
-        return (cloudVer);
+        return cloudVer;
     }
 
-    public String checkLocalVersion() throws IOException {
+    public String checkLocalDate() throws IOException {
 
         String filePath = this.filePath +"\\Version.json";
         String datelocal = "NewUser";
@@ -105,25 +99,25 @@ public class DatabaseAccess {
         if (file.exists()) {
             String content = FileUtils.readFileToString(file, "utf-8");
             JSONObject obj = new JSONObject(content);
-            JSONArray jsonarr_1 = obj.getJSONArray("version");
+            JSONArray localDate = obj.getJSONArray("version");
             int i = 0;
             boolean found = false;
-            while (i < jsonarr_1.length() && !(found)) {
-                JSONObject jsonObj = (JSONObject) jsonarr_1.get(i);
+            while (i < localDate.length() && !(found)) {
+                JSONObject jsonObj = (JSONObject) localDate.get(i);
                 if (jsonObj.has("created_on")) {
                     datelocal = jsonObj.getString("created_on");
                 }
                 i++;
             }
         }
-        return (datelocal);
+        return datelocal;
     }
 
-    public void uploadJson(String linkURL, String filePath, String suffix) throws IOException {
+    public void getJson(String linkURL, String filePath, String suffix) throws IOException {
 
-        File myFile = new File(filePath);
-        FileOutputStream fOuts = new FileOutputStream(myFile);
-        myFile.createNewFile();
+        File jsonFile = new File(filePath);
+        FileOutputStream fOuts = new FileOutputStream(jsonFile);
+        jsonFile.createNewFile();
 
         StringBuilder result = new StringBuilder();
         String line;
@@ -151,35 +145,35 @@ public class DatabaseAccess {
         String suffixLocal = this.filePath + "\\";
         String url = "http://smr.cs.ualberta.ca/comparelibraries/api/libraries/?format=json";
         String filePath = suffixLocal + "allLibraries.json";
-        uploadJson(url, filePath, "{\"Libraries\":");
+        getJson(url, filePath, "{\"Libraries\":");
 
         url = "http://smr.cs.ualberta.ca/comparelibraries/api/charts/?format=json";
         filePath = suffixLocal + "allCharts.json";
-        uploadJson(url, filePath, "{\"Charts\":");
+        getJson(url, filePath, "{\"Charts\":");
 
         url = "http://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
         filePath = suffixLocal + "Version.json";
-        uploadJson(url, filePath, "{\"version\":");
+        getJson(url, filePath, "{\"version\":");
     }
 
-    public int updateVersionData() throws IOException {
+    public int updateMetricsData() throws IOException {
         int returnValue = 1;
         String localVersion = "";
         String smrServerVersion = "";
 
         try {
-            localVersion= checkLocalVersion();
+            localVersion= checkLocalDate();
         }
         catch (IOException e) {
             e.printStackTrace();
         }
 
-        smrServerVersion= getLatestVersion();
+        smrServerVersion= getLatestMetricDate();
 
         if  (!(localVersion.equals(smrServerVersion)) ) {
             getDataRestApi();
         }
-        return (returnValue);
+        return returnValue;
     }
 
     public User readUserProfile() {
@@ -204,7 +198,6 @@ public class DatabaseAccess {
             userRecord.setTeam4("0");
             userRecord.setProgramming("0");
             userRecord.setJavaSkills("0");
-            userRecord.setSendAllCloud("0");
             userRecord.setRate("0");
             userRecord.setOptionalFeedback("Enter your feedback");
             userRecord.setCloudStore("0");
@@ -301,14 +294,12 @@ public class DatabaseAccess {
         return tokenValue;
     }
 
-    public String createLocalToken(String line) throws IOException {
+    public void storeLocalToken(String jsonData) throws IOException {
 
-        String tokenValue;
-        int userID;
         String filePath = this.filePath + "\\token.json";
-        JSONObject json = new JSONObject(line);
-        tokenValue = (String) json.get("token");
-        userID = (int) json.get("id");
+        JSONObject json = new JSONObject(jsonData);
+        String tokenValue = (String) json.get("token");
+        int userID = (int) json.get("id");
         File myFile = new File(filePath);
 
             FileOutputStream fOuts = new FileOutputStream(myFile);
@@ -321,7 +312,6 @@ public class DatabaseAccess {
             myOutWriter.append(result);
             myOutWriter.close();
 
-        return tokenValue;
     }
 
     public boolean createUser(String urlStr, String jsonBodyStr) throws IOException {
@@ -344,7 +334,7 @@ public class DatabaseAccess {
                     String line;
                     while ((line = bufferedReader.readLine()) != null) {
                         returnValue = true;
-                        String tokenValue = createLocalToken(line);
+                        storeLocalToken(line);
 
                     }
                 }
@@ -383,7 +373,7 @@ public class DatabaseAccess {
         return returnValue;
     }
 
-    public boolean createFeedBack(String urlStr, String jsonBodyStr, String tokenValue) throws IOException {
+    public boolean sendFeedback(String urlStr, String jsonBodyStr, String tokenValue) throws IOException {
 
         boolean returnValue = false;
         URL url = new URL(urlStr);
@@ -461,11 +451,10 @@ public class DatabaseAccess {
         obj.put("projects", projects);
         obj.put("teams", teams);
 
-        String line = obj.toString();
-        File myFile = new File(filePath);
+        File userFile = new File(filePath);
         FileOutputStream fOuts = null;
         try {
-            fOuts = new FileOutputStream(myFile);
+            fOuts = new FileOutputStream(userFile);
 
         }
         catch (FileNotFoundException fileNotFoundException) {
@@ -473,14 +462,15 @@ public class DatabaseAccess {
         }
 
         try {
-            myFile.createNewFile();
+            userFile.createNewFile();
         }
         catch (IOException ioException) {
             ioException.printStackTrace();
         }
 
         StringBuilder result = new StringBuilder();
-        result.append(line);
+        String jsonData = obj.toString();
+        result.append(jsonData);
         OutputStreamWriter myOutWriter = new OutputStreamWriter(fOuts);
         myOutWriter.append(result);
         myOutWriter.close();
@@ -490,49 +480,49 @@ public class DatabaseAccess {
         }
     }
 
-    public void updateFeedback(Feedback feedback) throws IOException {
+    public void updateFeedback(ReplacementFeedback replacementFeedback) throws IOException {
 
         String tokenValue = getUserToken();
         JSONObject obj = new JSONObject();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
         obj.put("user", this.userid);
-        obj.put("full_lib_list", feedback.getFull_lib_list());
-        obj.put("to_library", feedback.getTo_library_id());
-        obj.put("from_library", feedback.getFrom_library_id());
-        obj.put("line_num", feedback.getLine_num());
-        obj.put("project_name", feedback.getProject_name());
-        obj.put("class_name", feedback.getClass_name());
-        obj.put("action_date", df.format(feedback.getAction_date()));
+        obj.put("full_lib_list", replacementFeedback.getFull_lib_list());
+        obj.put("to_library", replacementFeedback.getTo_library_id());
+        obj.put("from_library", replacementFeedback.getFrom_library_id());
+        obj.put("line_num", replacementFeedback.getLine_num());
+        obj.put("project_name", replacementFeedback.getProject_name());
+        obj.put("class_name", replacementFeedback.getClass_name());
+        obj.put("action_date", df.format(replacementFeedback.getAction_date()));
 
         String JsonString = obj.toString();
         String InsertUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginfeedback/";
 
-        if (createFeedBack(InsertUrllink,JsonString, tokenValue)) {}
+        if (sendFeedback(InsertUrllink,JsonString, tokenValue)) {}
     }
 
-    public ArrayList <Library> getJsonData(int  metricDomain, int metricLibraryID) {
+    public ArrayList <Library> getMetricsData(int  metricDomain, int metricLibraryID) {
 
         String filePath = this.filePath +"\\allLibraries.json";
         int domain_id;
         Library libraryDataPoint;
         ArrayList <Library> libraryList = new ArrayList<Library> ();
 
-        File file = new File(filePath);
-        if (file.exists()) {
+        File libraryFile = new File(filePath);
+        if (libraryFile.exists()) {
             String content = null;
             try {
-                content = FileUtils.readFileToString(file, "utf-8");
+                content = FileUtils.readFileToString(libraryFile, "utf-8");
             }
             catch (IOException e) {
                 e.printStackTrace();
             }
 
             JSONObject obj = new JSONObject(content);
-            JSONArray jsonarr_1 = obj.getJSONArray("Libraries");
+            JSONArray domainLibraries = obj.getJSONArray("Libraries");
 
-            for (int i = 0; i < jsonarr_1.length(); i++) {
-                JSONObject jsonObj = (JSONObject) jsonarr_1.get(i);
+            for (int i = 0; i < domainLibraries.length(); i++) {
+                JSONObject jsonObj = (JSONObject) domainLibraries.get(i);
                 if (jsonObj.has("domain")) {
                     domain_id = jsonObj.getInt("domain");
                     if (domain_id == metricDomain) {
@@ -575,7 +565,7 @@ public class DatabaseAccess {
                 }
             }
         }
-        return (libraryList);
+        return libraryList;
     }
 
 
@@ -610,7 +600,7 @@ public class DatabaseAccess {
             }
             i++;
         }
-        return (img);
+        return img;
     }
 }
 

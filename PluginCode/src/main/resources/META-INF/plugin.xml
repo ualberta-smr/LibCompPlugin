@@ -23,7 +23,7 @@
         <!-- Add your actions here -->
 
         <action id="EditorBasics.EditorIllustrationAction"
-                class="smr.cs.ualberta.libcomp.action.Replacement"
+                class="smr.cs.ualberta.libcomp.action.ReplacementAction"
                 popup="true"
                 text="Library Comparison"
                 description="Replaces selected text with suggested library."
@@ -36,7 +36,7 @@
             <group id="MyPlugin.test" text="LibComp"  popup="true">
 
                <action id="EditorBasics.EditorIllustrationAct"
-                        class="smr.cs.ualberta.libcomp.action.UserProfile"
+                        class="smr.cs.ualberta.libcomp.action.UserProfileAction"
                         popup="true"
                         text="User Profile"
                         description="Replaces selected text with suggested library."
@@ -45,7 +45,7 @@
                 </action>
 
                 <action id="EditorBasics.EditorIllustrationAct3"
-                        class="smr.cs.ualberta.libcomp.action.SendFeedback"
+                        class="smr.cs.ualberta.libcomp.action.SendFeedbackAction"
                         popup="true"
                         text="Send Us Your Feedback"
                         description="Replaces selected text with suggested library."

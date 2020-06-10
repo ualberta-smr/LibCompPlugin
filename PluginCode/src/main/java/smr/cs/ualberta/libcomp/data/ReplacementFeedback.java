@@ -6,7 +6,7 @@ import java.util.Date;
  * The DataFeedback class is an object to store a feedback object after a user interacts with the plugin
  */
 
-public class Feedback {
+public class ReplacementFeedback {
 
     private int id;
     private Date action_date;
@@ -26,7 +26,7 @@ public class Feedback {
     public int getFrom_library_id() {return from_library_id;}
     public int getTo_library_id() { return to_library_id; }
 
-    public Feedback(int id, Date action_date, int line_num, String project_name, String class_name, String full_lib_list, int from_library_id, int to_library_id) {
+    public ReplacementFeedback(int id, Date action_date, int line_num, String project_name, String class_name, String full_lib_list, int from_library_id, int to_library_id) {
         this.id = id;
         this.action_date = action_date;
         this.line_num = line_num;

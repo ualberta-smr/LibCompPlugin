@@ -17,9 +17,9 @@ import static java.awt.GridBagConstraints.LINE_START;
  * This dialog is accessable via the Tools menu
  */
 
-public class SendFeedback extends JFrame {
+public class SendFeedbackDialog extends JFrame {
 
-    public SendFeedback(String title) {
+    public SendFeedbackDialog(String title) {
         super(title);
     }
 

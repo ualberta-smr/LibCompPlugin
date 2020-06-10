@@ -3,15 +3,16 @@ package smr.cs.ualberta.libcomp.action;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
+import smr.cs.ualberta.libcomp.dialog.SendFeedbackDialog;
 
 /**
  * The ActionSendFeedback class is the action for sending feedback entries to the database
  * This is triggered by the user opening the send feedback dialog via the Tools menu
  */
 
-public class SendFeedback extends AnAction {
+public class SendFeedbackAction extends AnAction {
 
-    public SendFeedback() {
+    public SendFeedbackAction() {
     }
 
     public void update(@NotNull final AnActionEvent event) {
@@ -21,7 +22,7 @@ public class SendFeedback extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
-        smr.cs.ualberta.libcomp.dialog.SendFeedback sendFeedback = new smr.cs.ualberta.libcomp.dialog.SendFeedback("User Profile");
-        sendFeedback.init();
+        SendFeedbackDialog sendFeedbackDialog = new SendFeedbackDialog("User Profile");
+        sendFeedbackDialog.init();
     }
 }

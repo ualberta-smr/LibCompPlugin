@@ -15,9 +15,9 @@ import static java.awt.GridBagConstraints.LINE_START;
  * This dialog is accessable via the Tools menu
  */
 
-public class UserProfile extends JFrame {
+public class UserProfileDialog extends JFrame {
 
-    public UserProfile(String title) {
+    public UserProfileDialog(String title) {
         super(title);
     }
 

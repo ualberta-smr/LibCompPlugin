@@ -2,21 +2,34 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import smr.cs.ualberta.libcomp.DatabaseAccess;
 import org.jetbrains.annotations.NotNull;
+import smr.cs.ualberta.libcomp.action.ReplacementAction;
 
+import javax.swing.*;
 import java.io.IOException;
 
 /**
- * Author: George Bakhtadze
- * Date: 13/01/2016
+ * PostStartupActivity class is triggered on load to start the plugin
  */
 
 public class PostStartupActivity implements StartupActivity {
+
+
     @Override
     public void runActivity(@NotNull Project project) {
-        int x = 1;
         DatabaseAccess dataAccessObject = new DatabaseAccess();
         try {
-            dataAccessObject.updateVersionData();
+            dataAccessObject.updateMetricsData();
+
+            SwingUtilities.invokeLater(() -> {
+                ReplacementAction actionPerformed = new ReplacementAction();
+                try {
+                    actionPerformed.detectAllOpenEditors();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
