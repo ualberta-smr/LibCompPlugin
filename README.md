@@ -2,9 +2,9 @@
 
 ## Installing LibComp:
 
-1. Download the file `Library_Comparison-1.0.10.zip`, copy the path to the location where you saved this file onto your clipboard 
+1. **Ensure your intelliJ version is updated to 2020,** then, download the file `Library_Comparison-1.0.2020.zip` and copy the path to the location where you saved this file onto your clipboard 
 
-2. Open your IntelliJ IDE and click `File > settings` (make sure your IDE version is updated to 2020)
+2. Open your IntelliJ IDE and click `File > settings` 
 
 3. A popup should appear, click on `plugins` at the left, then on the `gear icon` at the top, then on `install plugin from disk`
 
