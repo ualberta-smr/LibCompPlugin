@@ -47,7 +47,7 @@ public class ReplacementDialog extends JFrame {
     private DecimalFormat reposf;
     private DecimalFormat percentf;
     private DecimalFormat changef;
-    private Color colorBackGround = new Color(64, 64, 64);
+    private Color colorBackGround = new Color(210, 210, 210);
     private Color colorForGround = new Color(255, 255, 255);
     private Color colorForGroundDis = new Color(0, 0, 0);
     private Color colorAlternateLine = new Color(230, 230, 230);
@@ -267,6 +267,7 @@ public int getMapping(int original){
                 if (column == 3) {
                     setHorizontalAlignment(JLabel.LEFT);
                     c.setFont(new Font(Font.MONOSPACED, Font.BOLD, 14));
+                    c.setForeground(Color.black);
                 } else
                     setHorizontalAlignment(JLabel.CENTER);
                 return c;
@@ -329,8 +330,9 @@ public int getMapping(int original){
                     bConfirm.setText(message);
                 }
                 if ((columnM < 4) || (columnM == currentLibrary)) {
+                    bConfirm.setText("");
                     bConfirm.setEnabled(false);
-                    bConfirm.setForeground(colorForGround);
+                    bConfirm.setForeground(colorForGroundDis);
                 }
 
                 //How to add image:
@@ -360,12 +362,14 @@ public int getMapping(int original){
         table.setSize(ColumnWidth, frameHeight);
         pane.setBorder(border);
         pane.setBounds(0, 0, ColumnWidth, frameHeight);
+        pane. setOpaque(true);
         getContentPane().add(pane);
         setSize(ColumnWidth, frameHeight + 50);
         setSize(ColumnWidth, frameHeight + 10);
         setUndecorated(true);
 
         setVisible(true);
+
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
     }
