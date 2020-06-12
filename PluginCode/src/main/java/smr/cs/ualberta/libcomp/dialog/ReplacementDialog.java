@@ -52,7 +52,7 @@ public class ReplacementDialog extends JFrame {
     private Color colorForGroundDis = new Color(0, 0, 0);
     private Color colorAlternateLine = new Color(230, 230, 230);
     private Color cololrSelectColumn = Color.lightGray;
-    private Color cololrCurrentLibrary = new Color(210, 210, 210);
+    private Color cololrCurrentLibrary = new Color(245, 245, 245);//new Color(210, 210, 210);
     private ArrayList<Library> libraryList;
 
     String[] columnToolTips = {"Column 1 Chart", // chart
@@ -185,7 +185,7 @@ public int getMapping(int original){
 
         table = new JTable(data, columnHeaders) {
             public boolean isCellEditable(int row, int column) {
-                return column <= 2;
+                return column < 0;
             }
 
             //Implement table cell tool tips.
@@ -255,21 +255,31 @@ public int getMapping(int original){
 
                 c.setBackground(row % 2 == 0 ? Color.white : colorAlternateLine);
 
-                if (currentLibrary == column)
+
+                if (currentLibrary == column) {
                     c.setBackground(cololrCurrentLibrary);
+                    c.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
+                }
 
                 if (isSelected) {
-                    if ((column > offsetBtnCols - 1) && (column != currentLibrary))
+                    if ((column > offsetBtnCols - 1) && (column != currentLibrary)) {
                         c.setBackground(cololrSelectColumn);
+                        c.setForeground(colorForGroundDis);
+                        c.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
+                    }
                 } else {
                     c.setForeground(Color.black);
                 }
+
                 if (column == 3) {
                     setHorizontalAlignment(JLabel.LEFT);
                     c.setFont(new Font(Font.MONOSPACED, Font.BOLD, 14));
                     c.setForeground(Color.black);
                 } else
                     setHorizontalAlignment(JLabel.CENTER);
+
+                c.setForeground(colorForGroundDis);
+
                 return c;
             }
 
@@ -289,10 +299,10 @@ public int getMapping(int original){
         bConfirm.setEnabled(false);
 
         bCancel.setOpaque(true);
-        bConfirm.setBackground(colorBackGround);
-        bConfirm.setForeground(colorForGround);
-        bCancel.setBackground(colorBackGround);
-        bCancel.setForeground(colorForGroundDis);
+     //   bConfirm.setBackground(colorBackGround);
+     //   bConfirm.setForeground(colorForGround);
+     //   bCancel.setBackground(colorBackGround);
+     //   bCancel.setForeground(colorForGroundDis);
 
         getContentPane().add(bConfirm);
         getContentPane().add(bCancel);
@@ -324,15 +334,15 @@ public int getMapping(int original){
                 int columnM = table.getSelectedColumn();
                 if ((columnM > offsetBtnCols - 1) && (columnM != currentLibrary)) {
                     bConfirm.setEnabled(true);
-                    bConfirm.setForeground(colorForGroundDis);
+                //    bConfirm.setForeground(colorForGroundDis);
 
                     String message = "Replace " + libraryList.get(0).getPackage() + " Package with " + libraryList.get(columnM - offsetBtnCols).getPackage();
                     bConfirm.setText(message);
                 }
                 if ((columnM < 4) || (columnM == currentLibrary)) {
-                    bConfirm.setText("");
+                    bConfirm.setText("Replace");
                     bConfirm.setEnabled(false);
-                    bConfirm.setForeground(colorForGroundDis);
+                //    bConfirm.setForeground(colorForGroundDis);
                 }
 
                 //How to add image:
@@ -367,13 +377,31 @@ public int getMapping(int original){
         setSize(ColumnWidth, frameHeight + 50);
         setSize(ColumnWidth, frameHeight + 10);
         setUndecorated(true);
-
         setVisible(true);
+
+        // test LookAndFeel
+
+
+    /**    try {
+                //    UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel"); //UGLY
+                //   UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel"); //UGLY
+            // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                 //   UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+     **/
+
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
     }
-
     private void sortTable(int typeofSort, int row) {
         int i, j, largest, rowIndex;
         double tempValue;
@@ -569,8 +597,8 @@ class Chart extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         bConfirm.setEnabled(true);
-        bConfirm.setForeground(colorForGroundDis);
-        bConfirm.setOpaque(true);
+      //  bConfirm.setForeground(colorForGroundDis);
+      //  bConfirm.setOpaque(true);
 
         bConfirm.addActionListener(new ActionListener() {
             @Override

@@ -11,6 +11,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import smr.cs.ualberta.libcomp.DatabaseAccess;
 import org.jetbrains.annotations.NotNull;
 import smr.cs.ualberta.libcomp.action.ReplacementAction;
+
 import javax.swing.*;
 import java.io.IOException;
 
@@ -21,20 +22,9 @@ import java.io.IOException;
 public class PostStartupActivity implements StartupActivity {
     @Override
     public void runActivity(@NotNull Project project) {
-
         DatabaseAccess dataAccessObject = new DatabaseAccess();
-        MessageBusConnection connection = project.getMessageBus().connect(project);
+     /*   MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
-            @Override
-            public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
-               // super.fileOpened(source, file);
-            }
-
-            @Override
-            public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
-               // super.fileClosed(source, file);
-            }
-
             @Override
             public void selectionChanged(@NotNull FileEditorManagerEvent event) {
                // super.selectionChanged(event);
@@ -46,6 +36,7 @@ public class PostStartupActivity implements StartupActivity {
                 }
             }
         });
+*/
 
         try {
             dataAccessObject.updateMetricsData();
