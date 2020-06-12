@@ -375,8 +375,8 @@ public int getMapping(int original){
         pane. setOpaque(true);
         getContentPane().add(pane);
         setSize(ColumnWidth, frameHeight + 50);
-        setSize(ColumnWidth, frameHeight + 10);
-        setUndecorated(true);
+        //setSize(ColumnWidth, frameHeight + 10);
+        // setUndecorated(true);
         setVisible(true);
 
         // test LookAndFeel
