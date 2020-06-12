@@ -1,35 +1,63 @@
 # LibComp: An IntelliJ IDE Plugin for Java Library Metric Comparison
 
-## Installing LibComp From the Source code:
+## Installing LibComp:
 
-1. Clone the repository 
+1. **Ensure your intelliJ version is updated to 2020,** then, download the file `Library_Comparison-1.0.2020.zip` and copy the path to the location where you saved this file onto your clipboard 
 
-2. Navigate to `C:\Users\[userid]\AppData\Roaming` on your machine and insert the LibComp folder there. This is where the library data DB and feedback DB as well as all of the .png's showing the trends of library metrics are stored. 
+2. Open your IntelliJ IDE and click `File > settings` 
 
-3. Open the project `PluginCode` in your intelliJ IDE
+3. A popup should appear, click on `plugins` at the left, then on the `gear icon` at the top, then on `install plugin from disk`
 
-4. Compile and run the plugin (a new IDE window will open with the plugin running, you may now open any Java files of your choice and use the tool to analyze your library packages)
+4. Another popup should appear, paste the path to the .zip file from your clipboard and click `ok`
 
-## How to use LibComp:
+5. Restart the IntelliJ IDE, the plugin should now be installed!
 
-* Right click on the java file you want our plugin to analyze, all the libraries we have information on will be highlighted in pink 
+## How to Use LibComp:
+
+* When the project you are working on has loaded, all open files/editors will be analyzed and all the libraries we have information on will be highlighted in pink 
 
 * If you want to compare a specific library package (only valid for the ones highlighted in pink), right click on the import statement and click `Library Comparison`
 
-* A dialog will now pop up with all alternative libraries. We provide the ability to sort by any chosen metric (in ascending or descending order) and there are trends shown in graphs. 
+* A dialogue will now pop up with all alternative libraries. We provide the ability to sort by any chosen metric (in ascending or descending order) and there are trends shown in graphs. 
 
-* To replace a library package, select the relavent column and click `replace`. Otherwise click `cancel`. Note that you cannot replace a library with itself. 
+* To replace a library package, select the relevant column and click `replace`. Otherwise, click `cancel`. Note that you cannot replace a library with itself. 
 
-## Sending us feedback:
+* **`Important Note:`** On project load, all files are automatically analyzed, however once the project has already loaded, if you wish to open another fil in the project to analyze it, first open the file and then simple `Right-click` with your mouse or mouse-pad on the java file (or build.gradle file) of choice. This `right-click` will trigger our plugin to analyze the current editor and highlight the relevant libraries. 
 
-To help us understand the types of users and projects LibComp is most relevent to, we have set up a feedback collection system. To be a part of this, follow these steps:
+## Sending Us Feedback:
 
-1. Navigate to `Tools > LibComp > User Profile` 
+To help us understand which libraries get replaced, as well as the types of users and projects LibComp is most relevant to, we have set up a feedback collection system. To be a part of this, follow these steps:
 
-2. Fill in the form and click the `update` button. **Congratulations, you have just created a user profile!** (You are free to update your profile at any point as the information about you is updated, just navigate to the same dialog, update the relevant information, and click `Update`)
+* Navigate to `Tools > LibComp > User Profile`.
 
-3. Navigate to `Tools > LibComp > Send Us Your Feedback` 
+* Fill in the form and click the `update` button. **Congratulations, you have just created a user profile!** (You are free to update your profile at any point).
 
-4. Here you have 4 capabilities: you may rate our plugin from 1 (worst) to 5 (best), you may send us a comment about your user experience, and you may click `save to the cloud` for all of future feedback data to be tagged to be to our central database, and you may click `Update library interaction data` to actually send us your feedback data. 
+* Navigate to `Tools > LibComp > Send Us Your Feedback`.
 
-5. We will not be saving any feedback data to our central database unless you explicitly allow it
+* Here is where you can check the relevant boxes to confirm that you are giving consent for your tracked plugin usage to be sent to our server. You also have the option to send a feedback comment and/or rate the plugin from 1 (worst) to 5 (best) and send this to our database. Whenever you wish to send your information, click `Send library interaction data`. 
+
+* All interaction data with the plugin is stored locally. We do not send any feedback data to our central database unless you explicitly allow it.
+
+## Running LibComp Locally:
+
+1. Clone the repository 
+
+2. Open the project `PluginCode` in your IntelliJ IDE
+
+3. Compile and run as a plugin (you will have the option to select a project to open on a new IDE instance where the plugin will be running)
+
+## Publishing a New Version of LibComp:
+
+To publish a new version of LibComp, follow these steps
+
+1. Ensure the plugin runs with no errors before attempting to publish, also ensure that the IntelliJ version number is correct in the `build.gradle` file 
+
+2. Increment the version number of the plugin in the `build.gradle` and `plugin.xml` files _(For example, version 1.07 becomes 1.08)_
+
+3. Click `Run` then `publishPlugin` 
+
+4. A new version of the plugin will be generated as a .zip file. This .zip file will be located in `LibCompPlugin\PluginCode\build\distributions` relative to the root of this repository.
+
+## Contributors
+- Rehab El-hajj  (relhajj at ualberta dot ca)
+- Sarah Nadi (snadi at ualberta dot ca)
