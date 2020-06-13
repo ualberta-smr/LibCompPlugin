@@ -8,7 +8,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.UUID;
@@ -501,7 +503,13 @@ public class DatabaseAccess {
         if (sendFeedback(InsertUrllink,JsonString, tokenValue)) {}
     }
 
-    public ArrayList <Library> getMetricsData(int  metricDomain, int metricLibraryID) {
+    public static LocalDate StringToDate(String dob) throws ParseException {
+        dob = dob.substring(0,10);
+        LocalDate date = LocalDate.parse(dob);
+        return date;
+    }
+
+    public ArrayList <Library> getMetricsData(int  metricDomain, int metricLibraryID) throws ParseException {
 
         String filePath = this.filePath +"\\allLibraries.json";
         int domain_id;
@@ -551,9 +559,18 @@ public class DatabaseAccess {
                             libraryDataPoint.setPerformance(jsonObj.getDouble("performance") / 100);
                         if (jsonObj.has("security"))
                             libraryDataPoint.setSecurity(jsonObj.getDouble("security") / 100);
-
                         if (jsonObj.has("backwards_compatibility"))
                             libraryDataPoint.setBackwards_compatibility(jsonObj.getDouble("backwards_compatibility"));
+
+                        if (jsonObj.has("overall_score"))
+                            libraryDataPoint.setOverall_score(jsonObj.getDouble("overall_score"));
+                        if (jsonObj.has("license"))
+                            libraryDataPoint.setLicense(jsonObj.getString("license"));
+                        if (jsonObj.has("last_modification_date"))
+                            libraryDataPoint.setLast_modification_date(StringToDate(jsonObj.getString("last_modification_date")));
+                        if (jsonObj.has("last_discussed_so"))
+                            libraryDataPoint.setLast_discussed_so(StringToDate(jsonObj.getString("last_discussed_so")));
+
                         if (metricLibraryID == libraryDataPoint.getLibrary_id()) {
                             // at the first row for the selected one
                             libraryDataPoint.setName(libraryDataPoint.getName() + " \n(Current \n Library)");

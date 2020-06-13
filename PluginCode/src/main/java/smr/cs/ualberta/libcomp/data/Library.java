@@ -3,6 +3,7 @@ package smr.cs.ualberta.libcomp.data;
 /**
  * The DataLibrary class is an object to store information on an library such as the metric data
  */
+import java.time.LocalDate;
 
 public class Library {
     private int id;
@@ -18,6 +19,11 @@ public class Library {
     private double performance;
     private double security;
     private double backwards_compatibility;
+    private LocalDate last_discussed_so;
+    private LocalDate Last_modification_date;
+    private double overall_score;
+    private String license;
+
 
     public Library() {
     }
@@ -60,6 +66,11 @@ public class Library {
         return backwards_compatibility;
     }
 
+    public LocalDate getLast_discussed_so() { return last_discussed_so; }
+    public LocalDate getLast_modification_date() { return Last_modification_date; }
+    public double getOverall_score() { return overall_score; }
+    public String getLicense() { return license; }
+
     public void setLibrary_id(int library_id) {
         this.library_id = library_id;
     }
@@ -96,6 +107,13 @@ public class Library {
     public void setSecurity(double security) {
         this.security = security;
     }
+    public void setLast_discussed_so(LocalDate last_discussed_so) { this.last_discussed_so = last_discussed_so; }
+    public void setLast_modification_date(LocalDate last_modification_date) { Last_modification_date = last_modification_date; }
+    public void setOverall_score(double overall_score) { this.overall_score = overall_score; }
+    public void setLicense(String license) { this.license = license; }
     public void setBackwards_compatibility(double backwards_compatibility) {this.backwards_compatibility = backwards_compatibility;
+
+
     }
 }
+

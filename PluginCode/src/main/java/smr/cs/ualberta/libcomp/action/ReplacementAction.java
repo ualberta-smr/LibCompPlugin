@@ -31,6 +31,7 @@ import smr.cs.ualberta.libcomp.dialog.ReplacementDialog;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -63,7 +64,11 @@ public class ReplacementAction extends AnAction {
         if (psiFile != null) {
             FileType fileType = psiFile.getFileType();
             if (fileType.getDefaultExtension().equalsIgnoreCase("java")) {
-                replaceRequestedImport(event);
+                try {
+                    replaceRequestedImport(event);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 try {
                     detectImportOnAction(event);
                 }
@@ -72,7 +77,11 @@ public class ReplacementAction extends AnAction {
                 }
             }
             else {
-                replaceRequestedDependency(event);
+                try {
+                    replaceRequestedDependency(event);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 try {
                     detectDependencyOnAction(event);
                 } catch (IOException e) {
@@ -221,7 +230,7 @@ public class ReplacementAction extends AnAction {
      * This can be changed with some lexical analysis once we discuss exactly which part of the statement must be queried against the database
      * @param event This is the current action event
      */
-    public void replaceRequestedImport(@NotNull final AnActionEvent event) {
+    public void replaceRequestedImport(@NotNull final AnActionEvent event) throws ParseException {
         final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
         final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
         final Document document = editor.getDocument();
@@ -339,7 +348,7 @@ public class ReplacementAction extends AnAction {
         }
     }
 
-    public void replaceRequestedDependency(@NotNull final AnActionEvent event) {
+    public void replaceRequestedDependency(@NotNull final AnActionEvent event) throws ParseException {
 
         final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
         final Project project = event.getRequiredData(CommonDataKeys.PROJECT);

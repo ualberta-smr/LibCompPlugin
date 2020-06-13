@@ -15,7 +15,10 @@ import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Enumeration;
@@ -38,7 +41,11 @@ public class ReplacementDialog extends JFrame {
     private int offsetBtnCols = 4;
     private int currentLibrary = 4;
     private int rowLength;
+    private int rowLengthTotal;
+
     private double[][] dataDouble;
+    private LocalDate[][] dataDate;
+    private String[][] dataString;
     private JTable table;
     private String[] columnHeaders;
     private DecimalFormat df;
@@ -47,6 +54,7 @@ public class ReplacementDialog extends JFrame {
     private DecimalFormat reposf;
     private DecimalFormat percentf;
     private DecimalFormat changef;
+    private DecimalFormat scoref;
     private Color colorBackGround = new Color(210, 210, 210);
     private Color colorForGround = new Color(255, 255, 255);
     private Color colorForGroundDis = new Color(0, 0, 0);
@@ -54,6 +62,7 @@ public class ReplacementDialog extends JFrame {
     private Color cololrSelectColumn = Color.lightGray;
     private Color cololrCurrentLibrary = new Color(245, 245, 245);//new Color(210, 210, 210);
     private ArrayList<Library> libraryList;
+
 
     String[] columnToolTips = {"Column 1 Chart", // chart
             "Column 2 Sort Descending",
@@ -65,31 +74,76 @@ public class ReplacementDialog extends JFrame {
             "Average time in days to get the first response on issues in the issue tracking system of a library", //issue response time
             "Average number of code breaking changes per release", //backwards compatibility
             "Approximation of the percentage of security related issues of a library",//security
-            "Approximation of the percentage of performance related issues of a library" //performance
-            };
+            "Approximation of the percentage of performance related issues of a library", //performance
+            "A rating out of 5 stars calculated for each library, based on the values of the above metrics. Briefly, each metric gets a normalized weight between 0 and 1 depending on its semantics, and then we calculate an overall weighted score across all metrics", //Overall Score
+            "The time since a question tagged with this library has been asked on Stack Overflow", // Last Discussed on Stack Overflow
+            "The date of the last commit in the library's repository", //Last Modification Date
+            "The library's license as listed on GitHub." // License
+    };
 
-    public String getSelectionLibrary() { return full_lib_list; }
-    public String getLibraryReturned() { return LibraryReturned; }
-    public String getLibraryname() { return LibraryName; }
-    public int getto_library() { return to_library; }
 
-public int getMapping(int original){
+    public String getSelectionLibrary() {
+        return full_lib_list;
+    }
+
+    public String getLibraryReturned() {
+        return LibraryReturned;
+    }
+
+    public String getLibraryname() {
+        return LibraryName;
+    }
+
+    public int getto_library() {
+        return to_library;
+    }
+
+    public int getMapping(int original) {
 
         int returnValue = 0;
 
         switch (original) {
-            case 0: { returnValue = 1; break;}
-            case 1: { returnValue = 2; break;}
-            case 2: { returnValue = 3; break;}
-            case 3: { returnValue = 4; break;}
-            case 4: { returnValue = 6; break;}
-            case 5: { returnValue = 9; break;}
-            case 6: { returnValue = 10; break;}
+            case 0: {
+                returnValue = 1;
+                break;
+            }
+            case 1: {
+                returnValue = 2;
+                break;
+            }
+            case 2: {
+                returnValue = 3;
+                break;
+            }
+            case 3: {
+                returnValue = 4;
+                break;
+            }
+            case 4: {
+                returnValue = 6;
+                break;
+            }
+            case 5: {
+                returnValue = 9;
+                break;
+            }
+            case 6: {
+                returnValue = 10;
+                break;
+            }
+            case 7: {
+                returnValue = -1;
+                break;
+            }
+            case 8: {
+                returnValue = -1;
+                break;
+            }
         }
         return returnValue;
-}
+    }
 
-    public ReplacementDialog(String domainName, int domainId, int libID) throws HeadlessException {
+    public ReplacementDialog(String domainName, int domainId, int libID) throws HeadlessException, ParseException {
 
         this.libID = libID;
         this.domainID = domainId;
@@ -99,10 +153,15 @@ public int getMapping(int original){
         int indexRelease = 1;
         int indexIssueClosing = 2;
         int indexIssueResponse = 3;
-        int indexPerformance =4 ;
+        int indexPerformance = 4;
         int indexSecurity = 5;
         int indexBackwardCompatibility = 6;
+        int indexDiscussed = 7;
+        int indexModification = 8;
+        int indexLicense = 9;
+        int indexScore = 10;
 
+        //DATA FOR OUR TABLE
         this.setTitle(domainName);
         DatabaseAccess dataAccessObject = new DatabaseAccess();
 
@@ -117,6 +176,7 @@ public int getMapping(int original){
         columnHeaders[3] = " \nMetrics \n";
         String replacedString;
 
+
         while (current < columnLength) {
             if (current > offsetBtnCols)
                 replacedString = " \n" + libraryList.get(current - offsetBtnCols).getName();
@@ -127,9 +187,13 @@ public int getMapping(int original){
             current = current + 1;
         }
 
-        rowLength = 7;
-        Object[][] data = new Object[rowLength][columnLength];
+        rowLength = 8;
+        rowLengthTotal = 11;
+        Object[][] data = new Object[rowLengthTotal][columnLength];
         dataDouble = new double[rowLength][columnLength];
+        dataDate = new LocalDate[2][columnLength]; // only two date Format
+        dataString = new String[1][columnLength]; // only one String format
+
 
         current = 0;
         df = new DecimalFormat("#");
@@ -138,7 +202,9 @@ public int getMapping(int original){
         reposf = new DecimalFormat("# Repos");
         percentf = new DecimalFormat("0.00 %");
         changef = new DecimalFormat("# Changes");
+        scoref = new DecimalFormat("# ");
 
+        // datef = new DateFormat("yyy-MM-DD");
 
         indexPopularity = 0;
         indexRelease = 1;
@@ -146,17 +212,30 @@ public int getMapping(int original){
         indexIssueResponse = 3;
         indexBackwardCompatibility = 4;
         indexSecurity = 5;
-        indexPerformance =6 ;
+        indexPerformance = 6;
+        indexScore = 7;
+
+        indexDiscussed = 0;
+        indexModification = 1;
+        indexLicense = 0;
+
 
         data[indexPopularity][offsetBtnCols - 1] = "Popularity (Repos)";
         data[indexRelease][offsetBtnCols - 1] = "Release Frequency (Days)";
         data[indexIssueClosing][offsetBtnCols - 1] = "Issue Closing Time (Days)";
-        data[indexIssueResponse][offsetBtnCols - 1] = "Issue Response Time (Repos)";
+        data[indexIssueResponse][offsetBtnCols - 1] = "Issue Response Time (Days)";
         data[indexPerformance][offsetBtnCols - 1] = "Performance (Percent)";
         data[indexSecurity][offsetBtnCols - 1] = "Security (Percent)";
         data[indexBackwardCompatibility][offsetBtnCols - 1] = "Backwards Compatibility";
 
+        data[indexScore][offsetBtnCols - 1] = "Overall Score";
+        data[rowLength + indexDiscussed][offsetBtnCols - 1] = "Stack Overflow";
+        data[rowLength + indexModification][offsetBtnCols - 1] = "Modification Date";
+        data[rowLengthTotal - 1][offsetBtnCols - 1] = "License";
+
+
         while (current < columnLength - offsetBtnCols) {
+
             dataDouble[indexPopularity][current + offsetBtnCols] = (libraryList.get(current).getPopularity());
             dataDouble[indexRelease][current + offsetBtnCols] = (libraryList.get(current).getRelease_frequency());
             dataDouble[indexIssueClosing][current + offsetBtnCols] = (libraryList.get(current).getIssue_closing_time());
@@ -164,29 +243,44 @@ public int getMapping(int original){
             dataDouble[indexBackwardCompatibility][current + offsetBtnCols] = (libraryList.get(current).getBackwards_compatibility());
             dataDouble[indexSecurity][current + offsetBtnCols] = (libraryList.get(current).getSecurity());
             dataDouble[indexPerformance][current + offsetBtnCols] = (libraryList.get(current).getPerformance());
+            dataDouble[indexScore][current + offsetBtnCols] = (libraryList.get(current).getOverall_score());
+
+            dataDate[indexDiscussed][current + offsetBtnCols] = (libraryList.get(current).getLast_discussed_so());
+            dataDate[indexModification][current + offsetBtnCols] = (libraryList.get(current).getLast_modification_date());
+            dataString[indexLicense][current + offsetBtnCols] = (libraryList.get(current).getLicense());
+
 
             data[indexPopularity][current + offsetBtnCols] = intf.format(libraryList.get(current).getPopularity());
             data[indexRelease][current + offsetBtnCols] = daysf.format(libraryList.get(current).getRelease_frequency());
             data[indexIssueClosing][current + offsetBtnCols] = daysf.format(libraryList.get(current).getIssue_closing_time());
-            data[indexIssueResponse][current + offsetBtnCols] = reposf.format(libraryList.get(current).getIssue_response_time());
+            data[indexIssueResponse][current + offsetBtnCols] = daysf.format(libraryList.get(current).getIssue_response_time());
             data[indexBackwardCompatibility][current + offsetBtnCols] = changef.format(libraryList.get(current).getBackwards_compatibility());
             data[indexSecurity][current + offsetBtnCols] = percentf.format(libraryList.get(current).getSecurity());
             data[indexPerformance][current + offsetBtnCols] = percentf.format(libraryList.get(current).getPerformance());
+            data[indexScore][current + offsetBtnCols] = scoref.format(libraryList.get(current).getOverall_score());
+
+            data[8][current + offsetBtnCols] = libraryList.get(current).getLast_discussed_so();
+            data[9][current + offsetBtnCols] = libraryList.get(current).getLast_modification_date();
+            data[10][current + offsetBtnCols] = libraryList.get(current).getLicense();
+
 
             if (full_lib_list.length() < 1)
                 full_lib_list = "" + libraryList.get(current).getLibrary_id();
             else
-                 full_lib_list = full_lib_list + "," + libraryList.get(current).getLibrary_id();
+                full_lib_list = full_lib_list + "," + libraryList.get(current).getLibrary_id();
             current = current + 1;
         }
 
+
+        // make sure that only the first 3 columns buttomsn are editable
         int frameHeight = 30;
-        frameHeight = 110 + (frameHeight * 7);
+        frameHeight = 110 + (frameHeight * (7 + 4));
 
         table = new JTable(data, columnHeaders) {
             public boolean isCellEditable(int row, int column) {
                 return column < 0;
             }
+
 
             //Implement table cell tool tips.
             public String getToolTipText(MouseEvent e) {
@@ -201,8 +295,7 @@ public int getMapping(int original){
                     tip = columnToolTips[realRowIndex + offsetBtnCols];
                     if (realColumnIndex < offsetBtnCols - 1)
                         tip = columnToolTips[realColumnIndex] + " : " + columnToolTips[realRowIndex + offsetBtnCols];
-                }
-                catch (RuntimeException e1) {
+                } catch (RuntimeException e1) {
                     //catch error
                 }
                 return tip;
@@ -221,6 +314,7 @@ public int getMapping(int original){
             }
         };
 
+        // Prepare the headers to be multilines
         // Prepare the headers to be multi-lined
         MultiLineHeaderRenderer renderer = new MultiLineHeaderRenderer();
         Enumeration Enum = table.getColumnModel().getColumns();
@@ -236,6 +330,7 @@ public int getMapping(int original){
             table.getColumnModel().getColumn(i).setHeaderRenderer(new MergeHeaderRenderer());
         }
 
+
         table.getColumnModel().getColumn(3).setMaxWidth(225);
         table.getColumnModel().getColumn(3).setPreferredWidth(225);
 
@@ -244,6 +339,7 @@ public int getMapping(int original){
         table.setColumnSelectionAllowed(true); //to allow selection based on columns
         table.setRowSelectionAllowed(false); //to disable section based on rows
         table.setRowHeight(30);
+
 
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
@@ -282,7 +378,6 @@ public int getMapping(int original){
 
                 return c;
             }
-
         });
 
         int ColumnWidth = 1000;
@@ -299,10 +394,10 @@ public int getMapping(int original){
         bConfirm.setEnabled(false);
 
         bCancel.setOpaque(true);
-     //   bConfirm.setBackground(colorBackGround);
-     //   bConfirm.setForeground(colorForGround);
-     //   bCancel.setBackground(colorBackGround);
-     //   bCancel.setForeground(colorForGroundDis);
+        //   bConfirm.setBackground(colorBackGround);
+        //   bConfirm.setForeground(colorForGround);
+        //   bCancel.setBackground(colorBackGround);
+        //   bCancel.setForeground(colorForGroundDis);
 
         getContentPane().add(bConfirm);
         getContentPane().add(bCancel);
@@ -334,7 +429,7 @@ public int getMapping(int original){
                 int columnM = table.getSelectedColumn();
                 if ((columnM > offsetBtnCols - 1) && (columnM != currentLibrary)) {
                     bConfirm.setEnabled(true);
-                //    bConfirm.setForeground(colorForGroundDis);
+                    //    bConfirm.setForeground(colorForGroundDis);
 
                     String message = "Replace " + libraryList.get(0).getPackage() + " Package with " + libraryList.get(columnM - offsetBtnCols).getPackage();
                     bConfirm.setText(message);
@@ -342,12 +437,12 @@ public int getMapping(int original){
                 if ((columnM < 4) || (columnM == currentLibrary)) {
                     bConfirm.setText("Replace");
                     bConfirm.setEnabled(false);
-                //    bConfirm.setForeground(colorForGroundDis);
+                    //    bConfirm.setForeground(colorForGroundDis);
                 }
 
                 //How to add image:
                 if ((columnM == 0)) {
-                    String message = " "+ data[rowM][3];
+                    String message = " " + data[rowM][3];
                     Image img = null;
                     try {
                         int metricValue = getMapping(rowM);
@@ -355,7 +450,7 @@ public int getMapping(int original){
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
-                    new Chart(message,img);
+                    new Chart(message, img);
                 }
                 if (columnM == 1) {
                     int typeofSort = 1;
@@ -368,43 +463,31 @@ public int getMapping(int original){
             }
         });
 
+        //SCROLLPANE,SET SZE,SET CLOSE OPERATION
         JBScrollPane pane = new JBScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+//        JScrollPane pane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
         table.setSize(ColumnWidth, frameHeight);
         pane.setBorder(border);
         pane.setBounds(0, 0, ColumnWidth, frameHeight);
-        pane. setOpaque(true);
+        pane.setOpaque(true);
         getContentPane().add(pane);
         setSize(ColumnWidth, frameHeight + 50);
         //setSize(ColumnWidth, frameHeight + 10);
         // setUndecorated(true);
         setVisible(true);
-
-        // test LookAndFeel
-
-
-    /**    try {
-                //    UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel"); //UGLY
-                //   UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel"); //UGLY
-            // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                 //   UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-     **/
-
-
+        setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+
     }
+
+
     private void sortTable(int typeofSort, int row) {
         int i, j, largest, rowIndex;
         double tempValue;
+        LocalDate TempDate;
         String tempHeader;
         Library tempData;
 
@@ -413,13 +496,24 @@ public int getMapping(int original){
 
             for (j = i + 1; j < columnLength; j++) {
                 if (typeofSort == 1) {
-                    if (dataDouble[row][largest] < dataDouble[row][j]) {
-                        largest = j;
+                    if (row < 8) {
+                        if (dataDouble[row][largest] < dataDouble[row][j]) {
+                            largest = j;
+                        }
+                    } else {
+                        if (dataDate[row - rowLength][largest].isBefore(dataDate[row - rowLength][j])) {
+                            largest = j;
+                        }
                     }
-                }
-                else {
-                    if (dataDouble[row][largest] > dataDouble[row][j]) {
-                        largest = j;
+                } else {
+                    if (row < 8) {
+                        if (dataDouble[row][largest] > dataDouble[row][j]) {
+                            largest = j;
+                        }
+                    } else {
+                        if (dataDate[row - rowLength][largest].isAfter(dataDate[row - rowLength][j])) {
+                            largest = j;
+                        }
                     }
                 }
             }
@@ -444,13 +538,21 @@ public int getMapping(int original){
                 dataDouble[rowIndex][i] = dataDouble[rowIndex][largest];
                 dataDouble[rowIndex][largest] = tempValue;
             }
+
+            for (rowIndex = 0; rowIndex < 2; rowIndex++) {
+                TempDate = dataDate[rowIndex][i];
+                dataDate[rowIndex][i] = dataDate[rowIndex][largest];
+                dataDate[rowIndex][largest] = TempDate;
+            }
+
+
         }
 
         for (i = startingSort; i < columnLength; i++) {
             table.getColumnModel().getColumn(i).setHeaderValue(columnHeaders[i]);
             table.getTableHeader().repaint();
 
-            for (rowIndex = 0; rowIndex < rowLength; rowIndex++) {
+            for (rowIndex = 0; rowIndex < rowLength + 3; rowIndex++) {
 
                 switch (rowIndex) {
                     case 0: // indPopularity
@@ -463,7 +565,7 @@ public int getMapping(int original){
                         table.getModel().setValueAt(daysf.format(dataDouble[rowIndex][i]), rowIndex, i);
                         break;
                     case 3: // indIssueResponse
-                        table.getModel().setValueAt(reposf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        table.getModel().setValueAt(daysf.format(dataDouble[rowIndex][i]), rowIndex, i);
                         break;
                     case 4: //indBackward
                         table.getModel().setValueAt(changef.format(dataDouble[rowIndex][i]), rowIndex, i);
@@ -473,6 +575,18 @@ public int getMapping(int original){
                         break;
                     case 6: // indPerformance
                         table.getModel().setValueAt(percentf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        break;
+                    case 7: // indOverScore
+                        table.getModel().setValueAt(scoref.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        break;
+                    case 8: // Date
+                        table.getModel().setValueAt(dataDate[0][i], rowIndex, i);
+                        break;
+                    case 9: // Date
+                        table.getModel().setValueAt(dataDate[1][i], rowIndex, i);
+                        break;
+                    case 10: // Date
+                        table.getModel().setValueAt(dataString[0][i], rowIndex, i);
                         break;
                 }
             }
