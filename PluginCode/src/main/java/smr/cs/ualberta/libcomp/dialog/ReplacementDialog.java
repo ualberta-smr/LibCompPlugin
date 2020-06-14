@@ -98,47 +98,20 @@ public class ReplacementDialog extends JFrame {
         return to_library;
     }
 
-    public int getMapping(int original) {
-
+    public int getMapping(int original){
         int returnValue = 0;
-
         switch (original) {
-            case 0: {
-                returnValue = 1;
-                break;
-            }
-            case 1: {
-                returnValue = 2;
-                break;
-            }
-            case 2: {
-                returnValue = 3;
-                break;
-            }
-            case 3: {
-                returnValue = 4;
-                break;
-            }
-            case 4: {
-                returnValue = 6;
-                break;
-            }
-            case 5: {
-                returnValue = 9;
-                break;
-            }
-            case 6: {
-                returnValue = 10;
-                break;
-            }
-            case 7: {
-                returnValue = -1;
-                break;
-            }
-            case 8: {
-                returnValue = -1;
-                break;
-            }
+            case 0: { returnValue = 1; break;}
+            case 1: { returnValue = 2; break;}
+            case 2: { returnValue = 3; break;}
+            case 3: { returnValue = 4; break;}
+            case 4: { returnValue = 6; break;}
+            case 5: { returnValue = 9; break;}
+            case 6: { returnValue = 10; break;}
+            case 7: { returnValue = -1; break;}
+            case 8: { returnValue = 7; break;}
+            case 9: { returnValue = 8; break;}
+            case 10: { returnValue = -1; break;}
         }
         return returnValue;
     }
@@ -442,24 +415,32 @@ public class ReplacementDialog extends JFrame {
 
                 //How to add image:
                 if ((columnM == 0)) {
-                    String message = " " + data[rowM][3];
+                    String message = " "+ data[rowM][3];
+                    int metricValue = -1;
                     Image img = null;
                     try {
-                        int metricValue = getMapping(rowM);
+                        metricValue = getMapping(rowM);
                         img = dataAccessObject.readCharts(domainID, metricValue);
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
-                    new Chart(message, img);
+                    if (metricValue != -1)
+                        new Chart(message,img);
                 }
                 if (columnM == 1) {
                     int typeofSort = 1;
-                    sortTable(typeofSort, rowM);
+                    if (rowM < 10)
+                        sortTable(typeofSort, rowM);
                 }
                 if (columnM == 2) {
+
                     int typeofSort = 2;
-                    sortTable(typeofSort, rowM);
+                    if (rowM < 10)
+                        sortTable(typeofSort, rowM);
                 }
+
+
+
             }
         });
 

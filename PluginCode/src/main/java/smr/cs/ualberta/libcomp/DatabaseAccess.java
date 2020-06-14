@@ -58,7 +58,7 @@ public class DatabaseAccess {
                 if (jsonObj.has("package"))
                     Package = jsonObj.getString("package");
 
-                boolean isFound = Package.contains(librarySelected);
+                boolean isFound = Package.toLowerCase().contains(librarySelected.toLowerCase());
                 if (isFound) {
                         domainLibraries.add(Long.toString(library_id));
                         domainLibraries.add(Long.toString(domain_id));
