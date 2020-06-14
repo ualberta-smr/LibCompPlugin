@@ -12,6 +12,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -28,6 +29,8 @@ import smr.cs.ualberta.libcomp.data.ImportStatement;
 import smr.cs.ualberta.libcomp.data.User;
 import smr.cs.ualberta.libcomp.dialog.ReplacementDialog;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -93,13 +96,30 @@ public class ReplacementAction extends AnAction {
         }
     }
 
+   public  Project getActiveProject()
+    {
+
+        Project[] projects = ProjectManager.getInstance().getOpenProjects();
+        Project activeProject = null;
+        for (Project project : projects) {
+            Window window = WindowManager.getInstance().suggestParentWindow(project);
+            if (window != null && window.isActive()) {
+                activeProject = project;
+            }
+        }
+        return  activeProject;
+    }
+
     public void detectAllOpenEditors() throws IOException {
-        Project proj= ProjectManager.getInstance().getOpenProjects()[0];
+        Project proj= getActiveProject();
+
         FileEditorManager manager = FileEditorManager.getInstance(proj);
         VirtualFile[] filesAll = manager.getOpenFiles();
         FileEditor[] editorFileAll = manager.getAllEditors();
         int indexOpenEditors = 0;
+
         while (indexOpenEditors < editorFileAll.length) {
+
             PsiFile psiFile = PsiManager.getInstance(proj).findFile(filesAll[indexOpenEditors]);
             Editor editor = ((TextEditor)editorFileAll[indexOpenEditors]).getEditor();
 
@@ -206,7 +226,9 @@ public class ReplacementAction extends AnAction {
             if (fileType.getDefaultExtension().equalsIgnoreCase("java")) {
                 try {
                     detectImportOnAction(event);
-                } catch (IOException e) {e.printStackTrace(); }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             else {
                 try {
@@ -469,14 +491,15 @@ public class ReplacementAction extends AnAction {
         try {
             final MarkupModel editorModel = editor.getMarkupModel();
             final Document document = editor.getDocument();
-            final PsiJavaFile javaFile = (PsiJavaFile)psiFile;
+            PsiJavaFile javaFile = (PsiJavaFile)psiFile;
 
             TextAttributes attributes =
                     EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
             TextAttributes softerAttributes = attributes.clone();
 
-            final PsiImportList importList = javaFile.getImportList();
+            PsiImportList importList = javaFile.getImportList();
             if (importList == null) {
+
                 return;
             }
 
