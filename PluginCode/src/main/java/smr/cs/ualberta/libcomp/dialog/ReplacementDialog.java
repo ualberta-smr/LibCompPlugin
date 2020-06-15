@@ -609,7 +609,7 @@ public class ReplacementDialog extends JFrame {
 
                     if (row == 9) {
                         // disabled
-                        imageStr = "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAD5SURBVEhL7dZBCsIwEAXQsaB4AMFNF24KPUChIHMKD9aTiKfIAVy6le5KTyAFncgERdJkEmJd2PcXThf1J7WWLu4EfiDjz8nNxZOZi5O7UWxGi48UpRScKTGae/M8f0WxcT5A9InvEJEnuyulVS0fAXTYwYFi4yy+UHrV89FLjjnsKMbnAg3XQr2PzLEv9ckwgz1ljPfmKrDgKYyrVPMWbynfIPo7VVjxJOO7CTVR8ZoiVWLJk5uoWJPsQttQJMTFEjXWPPkFFft2vaRIJdux9KcwgotDC8Yk2XHMYpzFwzDwlF706615hkdfel0c60SJNb/QT+bfigEeWYm9Ht0Cw9gAAAAASUVORK5CYII=";
+                        imageStr = "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAETSURBVEhL7ZbRCoIwFIZP3vgAITToJiToAYIQ9r6+SD2GV4GjNKLbAovFHzXM7UyGXeR343+E+e3oNpyUZXmnHxDhOjijeDBGcXCmYopk0ineiR0VRUEHccAdP/JZ/hx/UifcMbEeIHrgJ2maIn3nKq603+5RER3lkTKVoTKxii/iQvW2RvVmLucUqxhVe4IvbBN1HpldD3URyYgWaoGqjXNxLeUSyQ+bVOMUN6pBCgtrO63lGomHaxFqWOKzOiO5WckVkh2WWMPpQnNTNyQ7bDGHjdwgufESu7quVXvPdxGsY+6neOEt9hV0EaTjPpOxipMkQQqPVVxVFZLJZ4d9X33vV62Flfw+MQ7jD/1g/JuY6AErDE9fBfvANQAAAABJRU5ErkJggg==";
                     } else {
                         // enabled
                         if (row % 2 == 0 ) {
@@ -626,7 +626,7 @@ public class ReplacementDialog extends JFrame {
                     // image for ascending sort
                     if (row == 9) {
                         // Disable button
-                        imageStr = "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAD5SURBVEhL7ZbBCoJAEIankJ7AvEnXHmJf0ScJ6iEcAkHoKnjp4CXoAaIkG2Egqd11d9X14vcfnDnIN7N72VVDwAys+eudRewNZ/GJMgRn8Ra3gIjc2eMk7gpV8rquuZIz2R0HQcCVHGvxkOPtMsrGLsNYicfatsVY/KLosB3KWJxhxtU4GInvFBNstjYSF1hw1c+DYkKv2Pbucsy50mN8xzbcKH1oxWeKCyWWXKnRPn1UxyyE4ArgSqmw4u5LKELYU1QoxUdKhBF3ALGIYUfR8Ttod8A/WrGMNE2b5J1wZ8eF0v5/oKiQbvykbChTsjxvvbGIvTGTGOAD9x/FCf2YnWUAAAAASUVORK5CYII=";
+                        imageStr = "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAEPSURBVEhL7ZbLCsIwEEVHQVduxEYY0FU/w35+xAd+gCDFXV2ULvwBlZSrqORtWxd6oOROCTmZJov2iqK40hfoY+ycv7gzosVrXiPFES0WUlCe56jCiRI/C01yIQSSntbOuCxLJD3B4k8+7zONdByzmSBxU90qvMUJJ0h6QjflLd7IDVIzeIkHPECyE9K1l3gv90huxjxGsuMUh57dTu6Q7HifcQh9di9rnXHkI1IYB3lAMmMVX+QF6ZU0TR/PLJvh7StnPiPpMf5zrXhFUzlFRTTP5jQ8DVHpeb8PamMmjB0r6XaxfXTmkiruc0fZqK6XvKxHHdqOJzyh6lShagdtx21LFe573xJ/cWf8mpjoBs/LTt5t2PUaAAAAAElFTkSuQmCC";
                     } else {
 
                         if (row % 2 == 0 )
