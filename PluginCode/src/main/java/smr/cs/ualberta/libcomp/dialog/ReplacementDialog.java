@@ -190,8 +190,8 @@ public class ReplacementDialog extends JFrame {
         data[indexBackwardCompatibility][offsetBtnCols - 1] = "Backwards Compatibility";
 
         data[indexScore][offsetBtnCols - 1] = "Overall Score";
-        data[rowLength + indexDiscussed][offsetBtnCols - 1] = "Stack Overflow";
-        data[rowLength + indexModification][offsetBtnCols - 1] = "Modification Date";
+        data[rowLength + indexDiscussed][offsetBtnCols - 1] = "Last Stack Overflow Post";
+        data[rowLength + indexModification][offsetBtnCols - 1] = "Last Modification Date";
         data[rowLengthTotal - 1][offsetBtnCols - 1] = "License";
 
 
