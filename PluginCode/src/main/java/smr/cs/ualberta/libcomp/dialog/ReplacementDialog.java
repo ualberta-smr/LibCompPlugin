@@ -40,6 +40,7 @@ public class ReplacementDialog extends JFrame {
     private int startingSort = 4;
     private int offsetBtnCols = 4;
     private int currentLibrary = 4;
+    private int selectedLibrary = -1;
     private int rowLength;
     private int rowLengthTotal;
 
@@ -59,7 +60,7 @@ public class ReplacementDialog extends JFrame {
     private Color colorForGround = new Color(255, 255, 255);
     private Color colorForGroundDis = new Color(0, 0, 0);
     private Color colorAlternateLine = new Color(230, 230, 230);
-    private Color cololrSelectColumn = Color.lightGray;
+    private Color cololrSelectColumn = new Color(204, 229, 255); //Color.lightGray;
     private Color cololrCurrentLibrary = new Color(245, 245, 245);//new Color(210, 210, 210);
     private ArrayList<Library> libraryList;
 
@@ -108,9 +109,9 @@ public class ReplacementDialog extends JFrame {
             case 4: { returnValue = 6; break;}
             case 5: { returnValue = 9; break;}
             case 6: { returnValue = 10; break;}
-            case 7: { returnValue = -1; break;}
-            case 8: { returnValue = 7; break;}
-            case 9: { returnValue = 8; break;}
+            case 7: { returnValue = 7; break;}
+            case 8: { returnValue = 8; break;}
+            case 9: { returnValue = -1; break;}
             case 10: { returnValue = -1; break;}
         }
         return returnValue;
@@ -129,7 +130,7 @@ public class ReplacementDialog extends JFrame {
         int indexBackwardCompatibility = 4;
         int indexSecurity = 5;
         int indexPerformance = 6;
-        int indexScore = 7;
+        int indexScore = 10;
 
         int indexDiscussed = 0;
         int indexModification = 1;
@@ -190,9 +191,9 @@ public class ReplacementDialog extends JFrame {
         data[indexBackwardCompatibility][offsetBtnCols - 1] = "Backwards Compatibility";
 
         data[indexScore][offsetBtnCols - 1] = "Overall Score";
-        data[rowLength + indexDiscussed][offsetBtnCols - 1] = "Last Stack Overflow Post";
-        data[rowLength + indexModification][offsetBtnCols - 1] = "Last Modification Date";
-        data[rowLengthTotal - 1][offsetBtnCols - 1] = "License";
+        data[rowLength - 1][offsetBtnCols - 1] = "Last Stack Overflow Post";
+        data[rowLength][offsetBtnCols - 1] = "Last Modification Date";
+        data[rowLength + 1][offsetBtnCols - 1] = "License";
 
 
         while (current < columnLength - offsetBtnCols) {
@@ -204,7 +205,7 @@ public class ReplacementDialog extends JFrame {
             dataDouble[indexBackwardCompatibility][current + offsetBtnCols] = (libraryList.get(current).getBackwards_compatibility());
             dataDouble[indexSecurity][current + offsetBtnCols] = (libraryList.get(current).getSecurity());
             dataDouble[indexPerformance][current + offsetBtnCols] = (libraryList.get(current).getPerformance());
-            dataDouble[indexScore][current + offsetBtnCols] = (libraryList.get(current).getOverall_score());
+            dataDouble[indexScore-3][current + offsetBtnCols] = (libraryList.get(current).getOverall_score());
 
             dataDate[indexDiscussed][current + offsetBtnCols] = (libraryList.get(current).getLast_discussed_so());
             dataDate[indexModification][current + offsetBtnCols] = (libraryList.get(current).getLast_modification_date());
@@ -219,9 +220,9 @@ public class ReplacementDialog extends JFrame {
             data[indexPerformance][current + offsetBtnCols] = percentf.format(libraryList.get(current).getPerformance());
             data[indexScore][current + offsetBtnCols] = scoref.format(libraryList.get(current).getOverall_score());
 
-            data[8][current + offsetBtnCols] = libraryList.get(current).getLast_discussed_so();
-            data[9][current + offsetBtnCols] = libraryList.get(current).getLast_modification_date();
-            data[10][current + offsetBtnCols] = libraryList.get(current).getLicense();
+            data[7][current + offsetBtnCols] = libraryList.get(current).getLast_discussed_so();
+            data[8][current + offsetBtnCols] = libraryList.get(current).getLast_modification_date();
+            data[9][current + offsetBtnCols] = libraryList.get(current).getLicense();
 
             if (full_lib_list.length() < 1)
                 full_lib_list = "" + libraryList.get(current).getLibrary_id();
@@ -350,6 +351,7 @@ public class ReplacementDialog extends JFrame {
         bCancel.setBounds(x, y, widthsize, heightsize);
         bConfirm.setBounds(x + widthsize + 10, y, 420, heightsize);
         bConfirm.setEnabled(false);
+    //    bConfirm.setBackground(cololrSelectColumn);
 
         bCancel.setOpaque(true);
 
@@ -381,8 +383,11 @@ public class ReplacementDialog extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 int rowM = table.getSelectedRow();
                 int columnM = table.getSelectedColumn();
+                selectedLibrary = columnM;
+
                 if ((columnM > offsetBtnCols - 1) && (columnM != currentLibrary)) {
                     bConfirm.setEnabled(true);
+                 //   bConfirm.setBackground(cololrSelectColumn);
                     //    bConfirm.setForeground(colorForGroundDis);
 
                     String message = "Replace " + libraryList.get(0).getPackage() + " Package with " + libraryList.get(columnM - offsetBtnCols).getPackage();
@@ -410,13 +415,13 @@ public class ReplacementDialog extends JFrame {
                 }
                 if (columnM == 1) {
                     int typeofSort = 1;
-                    if (rowM < 10)
+                    if (rowM != 9)
                         sortTable(typeofSort, rowM);
                 }
                 if (columnM == 2) {
 
                     int typeofSort = 2;
-                    if (rowM < 10)
+                    if (rowM != 9)
                         sortTable(typeofSort, rowM);
                 }
             }
@@ -449,28 +454,30 @@ public class ReplacementDialog extends JFrame {
         LocalDate TempDate;
         String tempHeader;
         Library tempData;
+        int offset = 0;
+        if (row == 10) {offset = 3; }
 
         for (i = startingSort; i < columnLength - 1; i++) {
             largest = i;
 
             for (j = i + 1; j < columnLength; j++) {
                 if (typeofSort == 1) {
-                    if (row < 8) {
-                        if (dataDouble[row][largest] < dataDouble[row][j]) {
+                    if ((row < 7 ) || (row ==10)){
+                        if (dataDouble[row-offset][largest] < dataDouble[row-offset][j]) {
                             largest = j;
                         }
                     } else {
-                        if (dataDate[row - rowLength][largest].isBefore(dataDate[row - rowLength][j])) {
+                        if (dataDate[row - 7][largest].isBefore(dataDate[row - 7][j])) {
                             largest = j;
                         }
                     }
                 } else {
-                    if (row < 8) {
-                        if (dataDouble[row][largest] > dataDouble[row][j]) {
+                    if ((row < 7 ) || (row ==10)) {
+                        if (dataDouble[row-offset][largest] > dataDouble[row-offset][j]) {
                             largest = j;
                         }
                     } else {
-                        if (dataDate[row - rowLength][largest].isAfter(dataDate[row - rowLength][j])) {
+                        if (dataDate[row - 7][largest].isAfter(dataDate[row - 7][j])) {
                             largest = j;
                         }
                     }
@@ -493,9 +500,9 @@ public class ReplacementDialog extends JFrame {
                 currentLibrary = largest;
 
             for (rowIndex = 0; rowIndex < rowLength; rowIndex++) {
-                tempValue = dataDouble[rowIndex][i];
-                dataDouble[rowIndex][i] = dataDouble[rowIndex][largest];
-                dataDouble[rowIndex][largest] = tempValue;
+                    tempValue = dataDouble[rowIndex][i];
+                    dataDouble[rowIndex][i] = dataDouble[rowIndex][largest];
+                    dataDouble[rowIndex][largest] = tempValue;
             }
 
             for (rowIndex = 0; rowIndex < 2; rowIndex++) {
@@ -535,16 +542,16 @@ public class ReplacementDialog extends JFrame {
                     case 6: // indPerformance
                         table.getModel().setValueAt(percentf.format(dataDouble[rowIndex][i]), rowIndex, i);
                         break;
-                    case 7: // indOverScore
-                        table.getModel().setValueAt(scoref.format(dataDouble[rowIndex][i]), rowIndex, i);
+                    case 10: // indOverScore
+                        table.getModel().setValueAt(scoref.format(dataDouble[rowIndex-3][i]), rowIndex, i);
                         break;
-                    case 8: // Date
+                    case 7: // Date
                         table.getModel().setValueAt(dataDate[0][i], rowIndex, i);
                         break;
-                    case 9: // Date
+                    case 8: // Date
                         table.getModel().setValueAt(dataDate[1][i], rowIndex, i);
                         break;
-                    case 10: // Date
+                    case 9: // String
                         table.getModel().setValueAt(dataString[0][i], rowIndex, i);
                         break;
                 }
@@ -573,10 +580,10 @@ public class ReplacementDialog extends JFrame {
             switch (column) {
                 case 0: {
                     // image for charts
-                    if ((row == 7)||(row == 10)) {
+                    if ((row == 9)||(row == 10)) {
                         // disable chart
                         if (row % 2 == 0 ) {
-                            // white back groud
+                            // white background
                             imageStr = "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAKCSURBVEhL7ZbNTxNBGMYfdrv9ghakbYQKBzCSiEajiXoXxJveTPzXPBu8aDB8aEzRWDEVaE8SE6mkSGLwgNBSaPjY7qzvtK+RtrvLrhq88EvezMwzk3k6785H20wC/wGFyxPn1NiRtYUFvBsfh769zYoF5TLE1hY37PFk/KVUQrW/H98LBVaaEAKv02nMZjIQlQqL1ngyNr6twzQM5POrrDRRLEJEIlA6OlAulli0xrXx55WvSF6/gZHzg7g0NoKJmRT31NHpBz2amsU5WmlkZwddvT3cY42rcyyEiafTKTy4N8YKsFEqY+75CwwM9kKrAks7+3h4/y73ukAaH8eTiZdca6SwtGTSNzXfTE6y4h7HVO+urmJu+hVu3bzGSiNBvYoDXUfE52PFPbap3ltbQ3p5GX6a+PboKBAIcE8j2/k8OgcGAE1jxR22K96jTaL6/dDJUGxustpK59CQZ1OJrXH38DD6qByOdkJJJusiDBiGoFJGK0X9APPZReRyOaxXyqxa4+l1ept6jH2RxOULBvoG77D6m43KLj5+mKdZ23Dx6hUk4wnuacXDBVKFUHsQDGioiihrdCq4lJAfFEWpRZtsOODBWE7MNjxn7tMKnk2lMD7zvi54wJNxMwHFwNmohqjf+ps7YW98eIgSPQplhx0tcytz4HqTHMHWeJ0uj8VsFhmKvR/S/K+S04LtbCa9MhrdSH46yyIcZvXfYb+MI6fMeX/+GfYrphBkbtDjXj/qVKfLo9amkMhXS9Z/teUwIds07rjrwdY4pPoQpxQnKNTamVSQiAeQiGkIt4dqY4LhdgSjMUS6YrW2T1UR7j6DUKwLvmOu0dP/1SfGqfEJAfwEUtFclpgn6iUAAAAASUVORK5CYII=";
                         }
                         else
@@ -600,7 +607,7 @@ public class ReplacementDialog extends JFrame {
                 case 1: {
                     // image for descending sort
 
-                    if (row == 10) {
+                    if (row == 9) {
                         // disabled
                         imageStr = "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAD5SURBVEhL7dZBCsIwEAXQsaB4AMFNF24KPUChIHMKD9aTiKfIAVy6le5KTyAFncgERdJkEmJd2PcXThf1J7WWLu4EfiDjz8nNxZOZi5O7UWxGi48UpRScKTGae/M8f0WxcT5A9InvEJEnuyulVS0fAXTYwYFi4yy+UHrV89FLjjnsKMbnAg3XQr2PzLEv9ckwgz1ljPfmKrDgKYyrVPMWbynfIPo7VVjxJOO7CTVR8ZoiVWLJk5uoWJPsQttQJMTFEjXWPPkFFft2vaRIJdux9KcwgotDC8Yk2XHMYpzFwzDwlF706615hkdfel0c60SJNb/QT+bfigEeWYm9Ht0Cw9gAAAAASUVORK5CYII=";
                     } else {
@@ -617,7 +624,7 @@ public class ReplacementDialog extends JFrame {
                 break;
                 case 2: {
                     // image for ascending sort
-                    if (row == 10) {
+                    if (row == 9) {
                         // Disable button
                         imageStr = "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAD5SURBVEhL7ZbBCoJAEIankJ7AvEnXHmJf0ScJ6iEcAkHoKnjp4CXoAaIkG2Egqd11d9X14vcfnDnIN7N72VVDwAys+eudRewNZ/GJMgRn8Ra3gIjc2eMk7gpV8rquuZIz2R0HQcCVHGvxkOPtMsrGLsNYicfatsVY/KLosB3KWJxhxtU4GInvFBNstjYSF1hw1c+DYkKv2Pbucsy50mN8xzbcKH1oxWeKCyWWXKnRPn1UxyyE4ArgSqmw4u5LKELYU1QoxUdKhBF3ALGIYUfR8Ttod8A/WrGMNE2b5J1wZ8eF0v5/oKiQbvykbChTsjxvvbGIvTGTGOAD9x/FCf2YnWUAAAAASUVORK5CYII=";
                     } else {
