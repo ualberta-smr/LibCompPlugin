@@ -126,13 +126,14 @@ public class ReplacementDialog extends JFrame {
         int indexRelease = 1;
         int indexIssueClosing = 2;
         int indexIssueResponse = 3;
-        int indexPerformance = 4;
+        int indexBackwardCompatibility = 4;
         int indexSecurity = 5;
-        int indexBackwardCompatibility = 6;
-        int indexDiscussed = 7;
-        int indexModification = 8;
-        int indexLicense = 9;
-        int indexScore = 10;
+        int indexPerformance = 6;
+        int indexScore = 7;
+
+        int indexDiscussed = 0;
+        int indexModification = 1;
+        int indexLicense = 0;
 
         //DATA FOR OUR TABLE
         this.setTitle(domainName);
@@ -179,19 +180,6 @@ public class ReplacementDialog extends JFrame {
 
         // datef = new DateFormat("yyy-MM-DD");
 
-        indexPopularity = 0;
-        indexRelease = 1;
-        indexIssueClosing = 2;
-        indexIssueResponse = 3;
-        indexBackwardCompatibility = 4;
-        indexSecurity = 5;
-        indexPerformance = 6;
-        indexScore = 7;
-
-        indexDiscussed = 0;
-        indexModification = 1;
-        indexLicense = 0;
-
 
         data[indexPopularity][offsetBtnCols - 1] = "Popularity (Repos)";
         data[indexRelease][offsetBtnCols - 1] = "Release Frequency (Days)";
@@ -222,7 +210,6 @@ public class ReplacementDialog extends JFrame {
             dataDate[indexModification][current + offsetBtnCols] = (libraryList.get(current).getLast_modification_date());
             dataString[indexLicense][current + offsetBtnCols] = (libraryList.get(current).getLicense());
 
-
             data[indexPopularity][current + offsetBtnCols] = intf.format(libraryList.get(current).getPopularity());
             data[indexRelease][current + offsetBtnCols] = daysf.format(libraryList.get(current).getRelease_frequency());
             data[indexIssueClosing][current + offsetBtnCols] = daysf.format(libraryList.get(current).getIssue_closing_time());
@@ -236,7 +223,6 @@ public class ReplacementDialog extends JFrame {
             data[9][current + offsetBtnCols] = libraryList.get(current).getLast_modification_date();
             data[10][current + offsetBtnCols] = libraryList.get(current).getLicense();
 
-
             if (full_lib_list.length() < 1)
                 full_lib_list = "" + libraryList.get(current).getLibrary_id();
             else
@@ -244,11 +230,10 @@ public class ReplacementDialog extends JFrame {
             current = current + 1;
         }
 
-
-        // make sure that only the first 3 columns buttomsn are editable
         int frameHeight = 30;
         frameHeight = 110 + (frameHeight * (7 + 4));
 
+        // make sure that columns buttomsn are not editable
         table = new JTable(data, columnHeaders) {
             public boolean isCellEditable(int row, int column) {
                 return column < 0;
@@ -367,10 +352,6 @@ public class ReplacementDialog extends JFrame {
         bConfirm.setEnabled(false);
 
         bCancel.setOpaque(true);
-        //   bConfirm.setBackground(colorBackGround);
-        //   bConfirm.setForeground(colorForGround);
-        //   bCancel.setBackground(colorBackGround);
-        //   bCancel.setForeground(colorForGroundDis);
 
         getContentPane().add(bConfirm);
         getContentPane().add(bCancel);
@@ -438,9 +419,6 @@ public class ReplacementDialog extends JFrame {
                     if (rowM < 10)
                         sortTable(typeofSort, rowM);
                 }
-
-
-
             }
         });
 
@@ -662,9 +640,7 @@ public class ReplacementDialog extends JFrame {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                        boolean hasFocus, int row, int column) {
 
-            Icon warnIcon = null;
-            warnIcon = new ImageIcon(getImage(getImageText(row,column)));
-            lbl.setIcon(warnIcon);
+                        lbl.setIcon(new ImageIcon(getImage(getImageText(row,column))));
             return lbl;
         }
     }
@@ -723,8 +699,6 @@ class Chart extends JFrame {
         super(title);
 
         pack();
-        Color colorForGroundDis = new Color(0, 0, 0);
-
         Container container = getContentPane();
         container.setLayout(new FlowLayout());
         JPanel r = new JPanel(new BorderLayout());
@@ -742,8 +716,7 @@ class Chart extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         bConfirm.setEnabled(true);
-      //  bConfirm.setForeground(colorForGroundDis);
-      //  bConfirm.setOpaque(true);
+
 
         bConfirm.addActionListener(new ActionListener() {
             @Override
