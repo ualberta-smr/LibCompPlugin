@@ -76,10 +76,10 @@ public class ReplacementDialog extends JFrame {
             "Average number of code breaking changes per release", //backwards compatibility
             "Approximation of the percentage of security related issues of a library",//security
             "Approximation of the percentage of performance related issues of a library", //performance
-            "A rating out of 5 stars calculated for each library, based on the values of the above metrics. Briefly, each metric gets a normalized weight between 0 and 1 depending on its semantics, and then we calculate an overall weighted score across all metrics", //Overall Score
             "The time since a question tagged with this library has been asked on Stack Overflow", // Last Discussed on Stack Overflow
             "The date of the last commit in the library's repository", //Last Modification Date
-            "The library's license as listed on GitHub." // License
+            "The library's license as listed on GitHub.", // License
+            "A rating out of 5 stars calculated for each library, based on the values of the above metrics. Briefly, each metric gets a normalized weight between 0 and 1 depending on its semantics, and then we calculate an overall weighted score across all metrics" //Overall Score
     };
 
 
@@ -297,6 +297,7 @@ public class ReplacementDialog extends JFrame {
         table.setGridColor(Color.black);
         table.setColumnSelectionAllowed(true); //to allow selection based on columns
         table.setRowSelectionAllowed(false); //to disable section based on rows
+        table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         table.setRowHeight(30);
 
 
@@ -349,11 +350,11 @@ public class ReplacementDialog extends JFrame {
         JButton bCancel = new JButton("Cancel");
 
         bCancel.setBounds(x, y, widthsize, heightsize);
-        bConfirm.setBounds(x + widthsize + 10, y, 420, heightsize);
+        bConfirm.setBounds(x + widthsize + 10, y, 410, heightsize);
         bConfirm.setEnabled(false);
-    //    bConfirm.setBackground(cololrSelectColumn);
 
-        bCancel.setOpaque(true);
+        bCancel.setOpaque(false);
+        bConfirm.setOpaque(false);
 
         getContentPane().add(bConfirm);
         getContentPane().add(bCancel);
@@ -383,20 +384,26 @@ public class ReplacementDialog extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 int rowM = table.getSelectedRow();
                 int columnM = table.getSelectedColumn();
-                selectedLibrary = columnM;
 
                 if ((columnM > offsetBtnCols - 1) && (columnM != currentLibrary)) {
+                    // Sorting Color locations
+                    selectedLibrary = columnM;
+                    table.addColumnSelectionInterval(selectedLibrary, selectedLibrary);
                     bConfirm.setEnabled(true);
-                 //   bConfirm.setBackground(cololrSelectColumn);
-                    //    bConfirm.setForeground(colorForGroundDis);
-
+                    bConfirm.setBackground(cololrSelectColumn);
                     String message = "Replace " + libraryList.get(0).getPackage() + " Package with " + libraryList.get(columnM - offsetBtnCols).getPackage();
                     bConfirm.setText(message);
                 }
-                if ((columnM < 4) || (columnM == currentLibrary)) {
+
+                if (columnM == currentLibrary) {
                     bConfirm.setText("Replace");
                     bConfirm.setEnabled(false);
-                    //    bConfirm.setForeground(colorForGroundDis);
+                    selectedLibrary = -1;
+                }
+
+                if (columnM == 3) {
+                    if (selectedLibrary != -1)
+                        table.addColumnSelectionInterval(selectedLibrary, selectedLibrary);
                 }
 
                 //How to add image:
@@ -410,20 +417,22 @@ public class ReplacementDialog extends JFrame {
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
+
+                    if (selectedLibrary != -1)
+                        table.addColumnSelectionInterval(selectedLibrary, selectedLibrary);
+
                     if (metricValue != -1)
                         new Chart(message,img);
                 }
-                if (columnM == 1) {
-                    int typeofSort = 1;
-                    if (rowM != 9)
-                        sortTable(typeofSort, rowM);
-                }
-                if (columnM == 2) {
 
-                    int typeofSort = 2;
-                    if (rowM != 9)
-                        sortTable(typeofSort, rowM);
+                if ((columnM == 1) || (columnM == 2))  {
+                    if (rowM != 9) {
+                        sortTable(columnM, rowM);
+                        if (selectedLibrary != -1)
+                            table.addColumnSelectionInterval(selectedLibrary, selectedLibrary);
+                    }
                 }
+
             }
         });
 
@@ -498,6 +507,13 @@ public class ReplacementDialog extends JFrame {
                 currentLibrary = i;
             else if (i == currentLibrary)
                 currentLibrary = largest;
+
+            if (largest == selectedLibrary)
+                selectedLibrary = i;
+            else if (i == selectedLibrary)
+                selectedLibrary = largest;
+
+
 
             for (rowIndex = 0; rowIndex < rowLength; rowIndex++) {
                     tempValue = dataDouble[rowIndex][i];
