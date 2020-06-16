@@ -1,4 +1,5 @@
-# LibComp: An IntelliJ IDE Plugin for Java Library Metric Comparison
+# LibComp
+An IntelliJ IDE Plugin for Java Library Metric Comparison. 
 
 ## Installing LibComp:
 
