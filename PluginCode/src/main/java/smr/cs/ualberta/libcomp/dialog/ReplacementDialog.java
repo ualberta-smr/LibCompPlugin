@@ -177,7 +177,7 @@ public class ReplacementDialog extends JFrame {
         reposf = new DecimalFormat("# Repos");
         percentf = new DecimalFormat("0.00 %");
         changef = new DecimalFormat("# Changes");
-        scoref = new DecimalFormat("# ");
+        scoref = new DecimalFormat("0.00/5 ");
 
         // datef = new DateFormat("yyy-MM-DD");
 
