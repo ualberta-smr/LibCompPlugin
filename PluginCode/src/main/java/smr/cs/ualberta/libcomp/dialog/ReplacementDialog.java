@@ -740,14 +740,19 @@ class Chart extends JFrame {
         JPanel r = new JPanel(new BorderLayout());
 
         JLabel jLabel = new JLabel();
-        jLabel.setIcon(new ImageIcon(new javax.swing.ImageIcon(img).getImage().getScaledInstance(650, 300, Image.SCALE_SMOOTH)));
+      //  jLabel.setIcon(new ImageIcon(new javax.swing.ImageIcon(img).getImage().getScaledInstance(650, 300, Image.SCALE_SMOOTH)));
+
+        jLabel.setIcon(new ImageIcon(img));
         r.add(jLabel);
 
         JButton bConfirm=new JButton("Okay");
         r.add(bConfirm, BorderLayout.SOUTH);
         container.add(r);
         setVisible(true);
-        setSize(680,380);
+        int width          = img.getWidth(null);
+        int height         = img.getHeight(null);
+        setSize(width+50, height+75);
+
         setVisible(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
