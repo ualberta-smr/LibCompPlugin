@@ -104,13 +104,13 @@ public class ReplacementDialog extends JFrame {
         switch (original) {
             case 0: { returnValue = 1; break;}
             case 1: { returnValue = 2; break;}
-            case 2: { returnValue = 3; break;}
-            case 3: { returnValue = 4; break;}
-            case 4: { returnValue = 6; break;}
-            case 5: { returnValue = 9; break;}
-            case 6: { returnValue = 10; break;}
-            case 7: { returnValue = 7; break;}
-            case 8: { returnValue = 8; break;}
+            case 2: { returnValue = 7; break;}
+            case 3: { returnValue = 6; break;}
+            case 4: { returnValue = 5; break;}
+            case 5: { returnValue = 8; break;}
+            case 6: { returnValue = 8; break;}
+            case 7: { returnValue = 3; break;}
+            case 8: { returnValue = 4; break;}
             case 9: { returnValue = -1; break;}
             case 10: { returnValue = -1; break;}
         }
@@ -220,8 +220,15 @@ public class ReplacementDialog extends JFrame {
             data[indexPerformance][current + offsetBtnCols] = percentf.format(libraryList.get(current).getPerformance());
             data[indexScore][current + offsetBtnCols] = scoref.format(libraryList.get(current).getOverall_score());
 
-            data[7][current + offsetBtnCols] = libraryList.get(current).getLast_discussed_so();
+            if (libraryList.get(current).getLast_discussed_so().getYear() == 1900)
+                data[7][current + offsetBtnCols] = "Never";
+            else
+                data[7][current + offsetBtnCols] = libraryList.get(current).getLast_discussed_so();
+
             data[8][current + offsetBtnCols] = libraryList.get(current).getLast_modification_date();
+
+
+
             data[9][current + offsetBtnCols] = libraryList.get(current).getLicense();
 
             if (full_lib_list.length() < 1)
@@ -562,7 +569,13 @@ public class ReplacementDialog extends JFrame {
                         table.getModel().setValueAt(scoref.format(dataDouble[rowIndex-3][i]), rowIndex, i);
                         break;
                     case 7: // Date
-                        table.getModel().setValueAt(dataDate[0][i], rowIndex, i);
+                        String setValue;
+                        if (dataDate[0][i].getYear() == 1900)
+                            setValue  = "Never";
+                        else
+                            setValue = dataDate[0][i].toString();
+
+                        table.getModel().setValueAt(setValue, rowIndex, i);
                         break;
                     case 8: // Date
                         table.getModel().setValueAt(dataDate[1][i], rowIndex, i);
@@ -749,3 +762,5 @@ class Chart extends JFrame {
         });
     }
 }
+
+

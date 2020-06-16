@@ -73,7 +73,7 @@ public class DatabaseAccess {
 
     public String getLatestMetricDate() throws IOException  {
         String cloudVer = "";
-        String linkURL = "http://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
+        String linkURL = "https://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
 
         HttpURLConnection connection = (HttpURLConnection) new URL(linkURL).openConnection();
         connection.setRequestMethod("GET");
@@ -89,7 +89,8 @@ public class DatabaseAccess {
             }
         }
         int loc = cloudVer.indexOf(":");
-        cloudVer = cloudVer.substring(loc+2, cloudVer.length()-3);
+        if (loc > -1)
+            cloudVer = cloudVer.substring(loc+2, cloudVer.length()-3);
         return cloudVer;
     }
 
@@ -146,15 +147,15 @@ public class DatabaseAccess {
 
     public void getDataRestApi() throws IOException {
         String suffixLocal = this.filePath + "\\";
-        String url = "http://smr.cs.ualberta.ca/comparelibraries/api/libraries/?format=json";
+        String url = "https://smr.cs.ualberta.ca/comparelibraries/api/libraries/?format=json";
         String filePath = suffixLocal + "allLibraries.json";
         getJson(url, filePath, "{\"Libraries\":");
 
-        url = "http://smr.cs.ualberta.ca/comparelibraries/api/charts/?format=json";
+        url = "https://smr.cs.ualberta.ca/comparelibraries/api/charts/?format=json";
         filePath = suffixLocal + "allCharts.json";
         getJson(url, filePath, "{\"Charts\":");
 
-        url = "http://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
+        url = "https://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
         filePath = suffixLocal + "Version.json";
         getJson(url, filePath, "{\"version\":");
     }
@@ -405,8 +406,8 @@ public class DatabaseAccess {
 
     public void sendUser(String username, String jsonString) throws IOException {
 
-        String updateUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/" + username + "/";
-        String InsertUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/";
+        String updateUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/" + username + "/";
+        String InsertUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/";
         String tokenValue = getUserToken();
 
         if (tokenValue.equals("NoToken")) {
@@ -499,7 +500,7 @@ public class DatabaseAccess {
         obj.put("action_date", df.format(replacementFeedback.getAction_date()));
 
         String JsonString = obj.toString();
-        String InsertUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginfeedback/";
+        String InsertUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginfeedback/";
 
         if (sendFeedback(InsertUrllink,JsonString, tokenValue)) {}
     }
@@ -569,8 +570,15 @@ public class DatabaseAccess {
                             libraryDataPoint.setLicense(jsonObj.getString("license"));
                         if (jsonObj.has("last_modification_date"))
                             libraryDataPoint.setLast_modification_date(StringToDate(jsonObj.getString("last_modification_date")));
-                        if (jsonObj.has("last_discussed_so"))
-                            libraryDataPoint.setLast_discussed_so(StringToDate(jsonObj.getString("last_discussed_so")));
+                        if (jsonObj.has("last_discussed_so")) {
+                            Object tempDateObject = jsonObj.get("last_discussed_so");
+                            String tempDate;
+                            if (tempDateObject.equals(null))
+                            {  tempDate = "1900-01-01"; }
+                            else
+                            { tempDate = jsonObj.getString("last_discussed_so"); }
+                            libraryDataPoint.setLast_discussed_so(StringToDate(tempDate));
+                        }
 
                         if (metricLibraryID == libraryDataPoint.getLibrary_id()) {
                             // at the first row for the selected one
