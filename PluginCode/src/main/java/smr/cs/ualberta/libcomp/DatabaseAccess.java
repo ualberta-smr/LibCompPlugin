@@ -8,7 +8,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.UUID;
@@ -56,7 +58,8 @@ public class DatabaseAccess {
                 if (jsonObj.has("package"))
                     Package = jsonObj.getString("package");
 
-                boolean isFound = Package.contains(librarySelected);
+
+                boolean isFound = Package.toLowerCase().contains(librarySelected.toLowerCase());
                 if (isFound) {
                         domainLibraries.add(Long.toString(library_id));
                         domainLibraries.add(Long.toString(domain_id));
@@ -70,7 +73,7 @@ public class DatabaseAccess {
 
     public String getLatestMetricDate() throws IOException  {
         String cloudVer = "";
-        String linkURL = "http://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
+        String linkURL = "https://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
 
         HttpURLConnection connection = (HttpURLConnection) new URL(linkURL).openConnection();
         connection.setRequestMethod("GET");
@@ -86,7 +89,8 @@ public class DatabaseAccess {
             }
         }
         int loc = cloudVer.indexOf(":");
-        cloudVer = cloudVer.substring(loc+2, cloudVer.length()-3);
+        if (loc > -1)
+            cloudVer = cloudVer.substring(loc+2, cloudVer.length()-3);
         return cloudVer;
     }
 
@@ -143,15 +147,15 @@ public class DatabaseAccess {
 
     public void getDataRestApi() throws IOException {
         String suffixLocal = this.filePath + "\\";
-        String url = "http://smr.cs.ualberta.ca/comparelibraries/api/libraries/?format=json";
+        String url = "https://smr.cs.ualberta.ca/comparelibraries/api/libraries/?format=json";
         String filePath = suffixLocal + "allLibraries.json";
         getJson(url, filePath, "{\"Libraries\":");
 
-        url = "http://smr.cs.ualberta.ca/comparelibraries/api/charts/?format=json";
+        url = "https://smr.cs.ualberta.ca/comparelibraries/api/charts/?format=json";
         filePath = suffixLocal + "allCharts.json";
         getJson(url, filePath, "{\"Charts\":");
 
-        url = "http://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
+        url = "https://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
         filePath = suffixLocal + "Version.json";
         getJson(url, filePath, "{\"version\":");
     }
@@ -402,8 +406,8 @@ public class DatabaseAccess {
 
     public void sendUser(String username, String jsonString) throws IOException {
 
-        String updateUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/" + username + "/";
-        String InsertUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/";
+        String updateUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/" + username + "/";
+        String InsertUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/";
         String tokenValue = getUserToken();
 
         if (tokenValue.equals("NoToken")) {
@@ -496,12 +500,18 @@ public class DatabaseAccess {
         obj.put("action_date", df.format(replacementFeedback.getAction_date()));
 
         String JsonString = obj.toString();
-        String InsertUrllink = "http://smr.cs.ualberta.ca/comparelibraries/api/pluginfeedback/";
+        String InsertUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginfeedback/";
 
         if (sendFeedback(InsertUrllink,JsonString, tokenValue)) {}
     }
 
-    public ArrayList <Library> getMetricsData(int  metricDomain, int metricLibraryID) {
+    public static LocalDate StringToDate(String dob) throws ParseException {
+        dob = dob.substring(0,10);
+        LocalDate date = LocalDate.parse(dob);
+        return date;
+    }
+
+    public ArrayList <Library> getMetricsData(int  metricDomain, int metricLibraryID) throws ParseException {
 
         String filePath = this.filePath +"\\allLibraries.json";
         int domain_id;
@@ -551,9 +561,25 @@ public class DatabaseAccess {
                             libraryDataPoint.setPerformance(jsonObj.getDouble("performance") / 100);
                         if (jsonObj.has("security"))
                             libraryDataPoint.setSecurity(jsonObj.getDouble("security") / 100);
-
                         if (jsonObj.has("backwards_compatibility"))
                             libraryDataPoint.setBackwards_compatibility(jsonObj.getDouble("backwards_compatibility"));
+
+                        if (jsonObj.has("overall_score"))
+                            libraryDataPoint.setOverall_score(jsonObj.getDouble("overall_score"));
+                        if (jsonObj.has("license"))
+                            libraryDataPoint.setLicense(jsonObj.getString("license"));
+                        if (jsonObj.has("last_modification_date"))
+                            libraryDataPoint.setLast_modification_date(StringToDate(jsonObj.getString("last_modification_date")));
+                        if (jsonObj.has("last_discussed_so")) {
+                            Object tempDateObject = jsonObj.get("last_discussed_so");
+                            String tempDate;
+                            if (tempDateObject.equals(null))
+                            {  tempDate = "1900-01-01"; }
+                            else
+                            { tempDate = jsonObj.getString("last_discussed_so"); }
+                            libraryDataPoint.setLast_discussed_so(StringToDate(tempDate));
+                        }
+
                         if (metricLibraryID == libraryDataPoint.getLibrary_id()) {
                             // at the first row for the selected one
                             libraryDataPoint.setName(libraryDataPoint.getName() + " \n(Current \n Library)");
