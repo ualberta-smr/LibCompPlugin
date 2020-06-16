@@ -1,5 +1,7 @@
 # LibComp
-An IntelliJ IDE Plugin for Java Library Metric Comparison. 
+LibComp is an IntelliJ IDE plugin for Java library metric comparison. Using LibComp, you are able to compare metrics such as library popularity, frequency of releases, performance and more through available data, view visuals of metric data, and sort by metrics that are most important to you. 
+
+![](replacement.gif)
 
 ## Installing LibComp:
 
