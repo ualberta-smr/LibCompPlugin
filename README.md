@@ -25,7 +25,7 @@ LibComp is an IntelliJ IDE plugin for Java library metric comparison. Using LibC
 
 * To replace a library package, select the relevant column and click `replace`. Otherwise, click `cancel`. Note that you cannot replace a library with itself. 
 
-* **`Important Note:`** On project load, all files are automatically analyzed, however once the project has already loaded, if you wish to open another fil in the project to analyze it, first open the file and then simple `Right-click` with your mouse or mouse-pad on the java file (or build.gradle file) of choice. This `right-click` will trigger our plugin to analyze the current editor and highlight the relevant libraries. 
+* **`Important Note:`** On project load, all files are automatically analyzed, however once the project has already loaded, if you wish to open another file in the project to analyze it, open the file and LibComp will automatically analyze the file and highlight relevant lines. If you wish to manually trigger libcomp to analyze a file at any point, you can also trigger libcomp by  `right-clicking` with your mouse or mouse-pad on the editor you want analyzed. 
 
 ## Sending Us Feedback:
 
