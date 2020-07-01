@@ -256,11 +256,19 @@ public class ReplacementAction extends AnAction {
         final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
         final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
         final Document document = editor.getDocument();
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
 
-         String project_name = project.getName();
-         String class_name = this.getClass().getName();
-         Date action_date = new Date();
-         int from_library;
+        String project_name = project.getName();
+        String class_name = "";
+        if (file instanceof PsiJavaFile) {
+            PsiClass[] clazzes = ((PsiJavaFile) file).getClasses();
+            if (clazzes.length > 0) {
+                class_name= clazzes[0].getQualifiedName();
+            }
+        }
+
+        Date action_date = new Date();
+        int from_library;
 
         User userRecord = new User();
         DatabaseAccess dataAccessObject = new DatabaseAccess();
@@ -300,6 +308,7 @@ public class ReplacementAction extends AnAction {
 
                 ReplacementDialog replacementDialog =new ReplacementDialog(ImportListObjects.get(currentLine).getDomainName(), ImportListObjects.get(currentLine).getImportDomain(),ImportListObjects.get(currentLine).getImportLib());
 
+                String finalClass_name = class_name;
                 WindowAdapter adapter = new WindowAdapter() {
 
                     @Override
@@ -318,7 +327,7 @@ public class ReplacementAction extends AnAction {
                         try {
                             if (sendToCloud) {
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, class_name, full_lib_list, finalFrom_library, to_library);
+                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
                                 dataAccessObject.updateFeedback(replacementFeedbackPoint);
                             }
 
@@ -342,7 +351,7 @@ public class ReplacementAction extends AnAction {
                             try {
                                 if (sendToCloud) {
                                     DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                    ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, class_name, full_lib_list, finalFrom_library, to_library);
+                                    ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
                                     dataAccessObject.updateFeedback(replacementFeedbackPoint);
                                 }
                             }
@@ -353,7 +362,7 @@ public class ReplacementAction extends AnAction {
                         try {
                             if (sendToCloud) {
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, class_name, full_lib_list, finalFrom_library, to_library);
+                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
                                 dataAccessObject.updateFeedback(replacementFeedbackPoint);
                             }
                         }
@@ -377,7 +386,8 @@ public class ReplacementAction extends AnAction {
         final Document document = editor.getDocument();
 
         String project_name = project.getName();
-        String class_name = this.getClass().getName();
+        String class_name = "";
+
         Date action_date = new Date();
         int from_library;
 
@@ -409,6 +419,7 @@ public class ReplacementAction extends AnAction {
 
                 int finalLocationStartOfImport = locationStartOfImport;
                 int finalLocationEndOfImport = locationEndOfImport;
+                String finalClass_name = class_name;
                 WindowAdapter adapter = new WindowAdapter() {
 
                     @Override
@@ -428,7 +439,7 @@ public class ReplacementAction extends AnAction {
                         try {
                             if (sendToCloud) {
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, class_name, full_lib_list, finalFrom_library, to_library);
+                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
                                 dataAccessObject.updateFeedback(replacementFeedbackPoint);
                             }
                         }
@@ -452,7 +463,7 @@ public class ReplacementAction extends AnAction {
                             try {
                                 if (sendToCloud) {
                                     DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                    ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, class_name, full_lib_list, finalFrom_library, to_library);
+                                    ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
                                     dataAccessObject.updateFeedback(replacementFeedbackPoint);
                                 }
                             }
@@ -463,7 +474,7 @@ public class ReplacementAction extends AnAction {
                         try {
                             if (sendToCloud) {
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, class_name, full_lib_list, finalFrom_library, to_library);
+                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
                                 dataAccessObject.updateFeedback(replacementFeedbackPoint);
                             }
                         }
