@@ -325,11 +325,11 @@ public class ReplacementAction extends AnAction {
                         }
 
                         try {
-                            if (sendToCloud) {
+
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
                                 ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                                dataAccessObject.updateFeedback(replacementFeedbackPoint);
-                            }
+                                dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
+
 
                         }
                         catch (IOException ioException) {
@@ -349,23 +349,22 @@ public class ReplacementAction extends AnAction {
                             WriteCommandAction.runWriteCommandAction(project, () ->
                                     document.replaceString(locationStartOfImport, locationEndOfImport, finalChoice1));
                             try {
-                                if (sendToCloud) {
+
                                     DatabaseAccess dataAccessObject = new DatabaseAccess();
                                     ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                                    dataAccessObject.updateFeedback(replacementFeedbackPoint);
-                                }
+                                    dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
+
                             }
                             catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
                         }
                         try {
-                            if (sendToCloud) {
+
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
                                 ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                                dataAccessObject.updateFeedback(replacementFeedbackPoint);
+                                dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
                             }
-                        }
                         catch (IOException ioException) {
                             ioException.printStackTrace();
                         }
@@ -437,11 +436,11 @@ public class ReplacementAction extends AnAction {
                         }
 
                         try {
-                            if (sendToCloud) {
+
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
                                 ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                                dataAccessObject.updateFeedback(replacementFeedbackPoint);
-                            }
+                                dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
+
                         }
                         catch (IOException ioException) {
                             ioException.printStackTrace();
@@ -461,22 +460,21 @@ public class ReplacementAction extends AnAction {
                             WriteCommandAction.runWriteCommandAction(project, () ->
                                     document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport, finalChoice1));
                             try {
-                                if (sendToCloud) {
                                     DatabaseAccess dataAccessObject = new DatabaseAccess();
                                     ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                                    dataAccessObject.updateFeedback(replacementFeedbackPoint);
-                                }
+                                    dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
+
                             }
                             catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
                         }
                         try {
-                            if (sendToCloud) {
+
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
                                 ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                                dataAccessObject.updateFeedback(replacementFeedbackPoint);
-                            }
+                                dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
+
                         }
                         catch (IOException ioException) {
                             ioException.printStackTrace();

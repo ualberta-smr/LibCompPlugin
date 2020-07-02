@@ -7,6 +7,8 @@ import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,6 +33,7 @@ public class DatabaseAccess {
     private static Session session = null;
     private int userid = 0;
     private String filePath = PathManager.getPluginsPath()+"\\Library_Comparison\\lib";
+    private String feedbackUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginfeedback/";
 
     public ArrayList<String> selectJsonAllLibraries(String librarySelected) throws IOException
     {
@@ -377,10 +380,10 @@ public class DatabaseAccess {
         return returnValue;
     }
 
-    public boolean sendFeedback(String urlStr, String jsonBodyStr, String tokenValue) throws IOException {
+    public boolean sendFeedback(String jsonBodyStr, String tokenValue) throws IOException {
 
         boolean returnValue = false;
-        URL url = new URL(urlStr);
+        URL url = new URL(this.feedbackUrllink);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setRequestMethod("POST");
@@ -394,7 +397,7 @@ public class DatabaseAccess {
         }
 
         try {
-            if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            if (httpURLConnection.getResponseCode() == 201) {
                 returnValue = true;
             }
         }
@@ -481,16 +484,67 @@ public class DatabaseAccess {
 
         if (Integer.parseInt(userRecord.getCloudStore()) == 1) {
             sendUser(userRecord.getUserID(), obj.toString());
+
+            sendFeedbackToCloud(); // check if the user has local feedback stored previously, send them now.
         }
     }
 
-    public void updateFeedback(ReplacementFeedback replacementFeedback) throws IOException {
+    public void storeLocalFeedback(JSONObject obj) throws IOException {
+
+        String filePath = this.filePath +"\\Feedback.json";
+        File myFile = new File(filePath);
+        JSONObject Mainobj = null; // = new JSONObject();
+        if (myFile.exists()) {
+            String content = FileUtils.readFileToString(myFile, "utf-8");
+            JSONObject objM = new JSONObject(content);
+            JSONArray jsonarr = objM.getJSONArray("Feedbacks");
+            jsonarr.put(obj);
+            Mainobj = new JSONObject();
+            Mainobj.put("Feedbacks", jsonarr);
+        } else
+        {
+            Mainobj = new JSONObject();
+            JSONArray array = new JSONArray();
+            array.put(obj);
+            Mainobj.put("Feedbacks", array);
+        }
+
+        FileOutputStream fOuts = new FileOutputStream(myFile);
+        String result = Mainobj.toString();
+        OutputStreamWriter myOutWriter = new OutputStreamWriter(fOuts);
+        myOutWriter.append(result);
+        myOutWriter.close();
+    }
+
+    public void sendFeedbackToCloud() throws IOException {
+        String filePath = this.filePath +"\\Feedback.json";
+        String tokenValue = getUserToken();
+        File myFile = new File(filePath);
+        boolean successfulsent = false;
+        if (myFile.exists()) {
+            String content = FileUtils.readFileToString(myFile, "utf-8");
+            JSONObject objM = new JSONObject(content);
+            JSONArray jsonarr = objM.getJSONArray("Feedbacks");
+            int i = 0;
+            while (i<jsonarr.length() )
+            {
+                JSONObject jsonObj = (JSONObject)jsonarr.get(i);
+                jsonObj.put("user", this.userid);
+                String JsonString = jsonObj.toString();
+                if (sendFeedback(JsonString, tokenValue)) {successfulsent = true;}
+                i++;
+            }
+            if (successfulsent) {Files.deleteIfExists(Paths.get(filePath));}
+
+        }
+    }
+
+    public void updateFeedback(boolean cloudSelect, ReplacementFeedback replacementFeedback) throws IOException {
 
         String tokenValue = getUserToken();
         JSONObject obj = new JSONObject();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-        obj.put("user", this.userid);
+        if (cloudSelect) {obj.put("user", this.userid);} // no userid to be stored locally, as it is not yet set
         obj.put("full_lib_list", replacementFeedback.getFull_lib_list());
         obj.put("to_library", replacementFeedback.getTo_library_id());
         obj.put("from_library", replacementFeedback.getFrom_library_id());
@@ -500,10 +554,18 @@ public class DatabaseAccess {
         obj.put("action_date", df.format(replacementFeedback.getAction_date()));
 
         String JsonString = obj.toString();
-        String InsertUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginfeedback/";
+        if (cloudSelect)
+        {
+            if (sendFeedback(JsonString, tokenValue)) {}
+        }
+        else
+        {
+            storeLocalFeedback(obj); // create local json file until the user decided to send his feedback
 
-        if (sendFeedback(InsertUrllink,JsonString, tokenValue)) {}
+        }
     }
+
+
 
     public static LocalDate StringToDate(String dob) throws ParseException {
         dob = dob.substring(0,10);
