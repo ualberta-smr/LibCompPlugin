@@ -1,5 +1,8 @@
 package smr.cs.ualberta.libcomp.action;
 
+import com.android.aapt.Resources;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.MarkupModel;
@@ -29,7 +32,6 @@ import smr.cs.ualberta.libcomp.data.ImportStatement;
 import smr.cs.ualberta.libcomp.data.User;
 import smr.cs.ualberta.libcomp.dialog.ReplacementDialog;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -129,42 +131,71 @@ public class ReplacementAction extends AnAction {
                     detectImports(psiFile, editor);
                 }
                 else {
-                    detectDependancy(editor);
+                    detectDependancy(editor, psiFile);
                 }
             }
             indexOpenEditors = indexOpenEditors + 1;
         }
     }
 
-    public void detectDependancy(@NotNull final Editor editor ) throws IOException {
+    public int detectDependenciesPSI(FileASTNode psinode)
+    {
+        int location = -1;
+        ASTNode child = psinode.getFirstChildNode();
+        String name = child.getText();
+        boolean found = name.contains("dependencies");
+        boolean over = false;
+        while ((!found) && (!over))
+        {
+            child = child.getTreeNext();
+            if (child != null)
+            {
+                name = child.getText();
+                found = name.contains("dependencies");
+            }
+            else over = true;
+           }
+        if (found)
+        {
+             location = child.getStartOffset();
+
+        }
+
+        return location;
+
+    }
+    public void detectDependancy(@NotNull final Editor editor, @NotNull final PsiFile psiFile ) throws IOException {
 
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
         TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
         TextAttributes softerAttributes = attributes.clone();
+        boolean dependenciesExists = false;
+        int i = 0;
+        int loc = detectDependenciesPSI(psiFile.getNode()); // Parse PSI to detect the PSI dependencies node
+        if (loc != -1) // dependencies exists
+        {
+            dependenciesExists = true;
+            i = document.getLineNumber(loc); // line number of the dependencies PSI node
+        }
+
 
         String lineText;
         String selectedTerm;
         DependListObjects.clear();
         editorModel.removeAllHighlighters();
 
-        boolean searchMode = false;
-
-        for (int i = 0; i < document.getLineCount() - 1; i++) {
+        while (dependenciesExists)
+        {
             int startOffset = document.getLineStartOffset(i);
             int endOffset = document.getLineEndOffset(i);
             lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
-
-            // checking values between single quotes in dependencies in build.gradle file
-            // check te first value, "group", as the selectedTerm
-            if (searchMode) {
-                String[] valuesInQuotes = StringUtils.substringsBetween(lineText, "\'", "\'");
+            String[] valuesInQuotes = StringUtils.substringsBetween(lineText, "\'", "\'");
                 if (valuesInQuotes != null) {
                     selectedTerm = valuesInQuotes[0];
                     DatabaseAccess dataAccessObject = new DatabaseAccess();
                     ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
                     if (choicesArray.size() > 0) {
-
                         DependencyStatement depObj = new DependencyStatement();
                         depObj.setImportLocation(i);
                         depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
@@ -178,14 +209,10 @@ public class ReplacementAction extends AnAction {
                                 DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
                     }
                 }
-            }
-            boolean isContains = lineText.contains("dependencies");
-            if (isContains) {
-                searchMode = true;
-            }
+            ++i;
             boolean isContainsEnd = lineText.contains("}");
-            if (searchMode && isContainsEnd) {
-                searchMode = false;
+            if (isContainsEnd) {
+                dependenciesExists = false;
             }
         }
     }
@@ -193,8 +220,10 @@ public class ReplacementAction extends AnAction {
     public void detectDependencyOnAction(@NotNull final AnActionEvent event) throws IOException {
 
             Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
+            PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
+
             try {
-                detectDependancy(editor);
+                detectDependancy(editor, psiFile);
             }
             catch(Exception e) {
                 e.printStackTrace();

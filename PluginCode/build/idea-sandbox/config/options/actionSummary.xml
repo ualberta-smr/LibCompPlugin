@@ -1,0 +1,27 @@
+<application>
+  <component name="ActionsLocalSummary">
+    <data>
+      <entry key="EditorBasics.EditorIllustrationAction">
+        <ActionSummary times="3" last="1594232164114" />
+      </entry>
+      <entry key="EditorDown">
+        <ActionSummary times="27" last="1594233711304" />
+      </entry>
+      <entry key="EditorEnter">
+        <ActionSummary times="1" last="1594233728836" />
+      </entry>
+      <entry key="EditorPaste">
+        <ActionSummary times="1" last="1594233748021" />
+      </entry>
+      <entry key="EditorUp">
+        <ActionSummary times="16" last="1594233710677" />
+      </entry>
+      <entry key="SaveAll">
+        <ActionSummary times="2" last="1594233751420" />
+      </entry>
+      <entry key="WelcomeScreen.OpenProject">
+        <ActionSummary times="1" last="1594227807600" />
+      </entry>
+    </data>
+  </component>
+</application>

@@ -1,0 +1,12 @@
+<FilePredictionHistoryState nextCode="2" prevFile="1">
+  <option name="recentFiles">
+    <list>
+      <recent-file code="0" url="file://C:/Users/elhajjm/Documents/GitHub/TestCodePlugin/pluginPhase1/My_Plugin/src/main/java/test.class.name/intellij/sdk/editor/EditorAction2.java" />
+      <recent-file code="1" url="file://C:/Users/elhajjm/Documents/GitHub/TestCodePlugin/pluginPhase1/My_Plugin/build.gradle" />
+    </list>
+  </option>
+  <sequences count="18">
+    <usage code="1" count="9" keys="0" values="8" />
+    <usage code="0" count="9" keys="1" values="9" />
+  </sequences>
+</FilePredictionHistoryState>
