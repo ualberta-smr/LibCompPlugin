@@ -71,27 +71,21 @@ public class ReplacementAction extends AnAction {
             if (fileType.getDefaultExtension().equalsIgnoreCase("java")) {
                 try {
                     replaceRequestedImport(event);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                try {
                     detectImportOnAction(event);
-                }
-                catch (IOException e) {
+                } catch (ParseException | IOException e) {
                     e.printStackTrace();
                 }
+
             }
             else {
                 try {
                     replaceRequestedDependency(event);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                try {
                     detectDependencyOnAction(event);
-                } catch (IOException e) {
+                    // from here
+                } catch (ParseException | IOException e) {
                     e.printStackTrace();
                 }
+
             }
             event.getPresentation().setVisible(true);
             event.getPresentation().setEnabled(true);
@@ -262,6 +256,7 @@ public class ReplacementAction extends AnAction {
             else {
                 try {
                     detectDependencyOnAction(event);
+
                     event.getPresentation().setEnabledAndVisible(true);
                 }
                 catch (IOException e) {
@@ -290,9 +285,9 @@ public class ReplacementAction extends AnAction {
         String project_name = project.getName();
         String class_name = "";
         if (file instanceof PsiJavaFile) {
-            PsiClass[] clazzes = ((PsiJavaFile) file).getClasses();
-            if (clazzes.length > 0) {
-                class_name= clazzes[0].getQualifiedName();
+            PsiClass[] classes = ((PsiJavaFile) file).getClasses();
+            if (classes.length > 0) {
+                class_name= classes[0].getQualifiedName();
             }
         }
 
@@ -412,6 +407,9 @@ public class ReplacementAction extends AnAction {
         final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
         final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
         final Document document = editor.getDocument();
+        PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
+
+        final MarkupModel editorModel = editor.getMarkupModel();
 
         String project_name = project.getName();
         String class_name = "";
@@ -447,21 +445,38 @@ public class ReplacementAction extends AnAction {
 
                 int finalLocationStartOfImport = locationStartOfImport;
                 int finalLocationEndOfImport = locationEndOfImport;
+                finalLocationEndOfImport = document.getLineEndOffset(clickedLineNumber);
                 String finalClass_name = class_name;
+                int finalLocationEndOfImport1 = finalLocationEndOfImport;
+                int finalLocationEndOfImport2 = finalLocationEndOfImport;
                 WindowAdapter adapter = new WindowAdapter() {
 
                     @Override
                     public void windowLostFocus(WindowEvent e) {
-                        String finalChoice = replacementDialog.getLibraryReturned();
+                        String finalChoice = replacementDialog.getMavenReturned();
+
                         to_library = replacementDialog.getto_library();
                         full_lib_list = replacementDialog.getSelectionLibrary();
                         libraryName = replacementDialog.getLibraryname();
 
                         if (finalChoice.equals("None") == false) {
-                            finalChoice = "    compile group: \'"+ finalChoice + "', name: \'"+ libraryName + "\',  version: \'please select version\'";
+                            try {
+                                finalChoice = dataAccessObject.readMavenVersion(finalChoice);
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+
                             String finalChoice1 = finalChoice;
                             WriteCommandAction.runWriteCommandAction(project, () ->
-                                    document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport, finalChoice1));
+                                    document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport1, finalChoice1));
+
+                            try {
+                                detectDependancy(editor, psiFile);
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+
+
                         }
 
                         try {
@@ -478,16 +493,31 @@ public class ReplacementAction extends AnAction {
 
                     @Override
                     public void windowClosing(WindowEvent e) {
-                        String finalChoice = replacementDialog.getLibraryReturned();
+                        String finalChoice = replacementDialog.getMavenReturned();
                         to_library = replacementDialog.getto_library();
                         full_lib_list = replacementDialog.getSelectionLibrary();
                         libraryName = replacementDialog.getLibraryname();
 
                         if (finalChoice.equals("None") == false) {
-                            finalChoice = "    compile group: \'"+ finalChoice + "', name: \'"+ libraryName + "\',  version: \'please select version\'";
+
+                            try {
+                                finalChoice = dataAccessObject.readMavenVersion(finalChoice);
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+
                             String finalChoice1 = finalChoice;
+
                             WriteCommandAction.runWriteCommandAction(project, () ->
-                                    document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport, finalChoice1));
+                                    document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport2, finalChoice1));
+
+                            try {
+                                detectDependancy(editor, psiFile);
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+
+
                             try {
                                     DatabaseAccess dataAccessObject = new DatabaseAccess();
                                     ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
