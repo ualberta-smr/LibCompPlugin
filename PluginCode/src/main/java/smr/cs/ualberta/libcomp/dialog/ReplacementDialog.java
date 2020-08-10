@@ -31,6 +31,7 @@ import java.util.Vector;
 public class ReplacementDialog extends JFrame {
 
     private String LibraryReturned = "None";
+    private String mavenReturned = "None";
     private String LibraryName = "None";
     private String full_lib_list = "";
     private int to_library;
@@ -86,15 +87,11 @@ public class ReplacementDialog extends JFrame {
     public String getSelectionLibrary() {
         return full_lib_list;
     }
-
-    public String getLibraryReturned() {
-        return LibraryReturned;
-    }
-
+    public String getLibraryReturned() { return LibraryReturned; }
+    public String getMavenReturned(){ return mavenReturned; }
     public String getLibraryname() {
         return LibraryName;
     }
-
     public int getto_library() {
         return to_library;
     }
@@ -375,6 +372,7 @@ public class ReplacementDialog extends JFrame {
                     LibraryReturned = libraryList.get(column - offsetBtnCols).getPackage();
                     to_library = libraryList.get(column - offsetBtnCols).getLibrary_id();
                     LibraryName = libraryList.get(column - offsetBtnCols).getName();
+                    mavenReturned = libraryList.get(column - offsetBtnCols).getMavenlink();
                     dispose(); //force close
                 }
             }

@@ -1,0 +1,15 @@
+08/07 12:48:25 INFO  com.intellij.internal.statistic.uploader.ExternalDataCollectorLogger - Process started with '--ide-token C:\Users\elhajjm\Documents\GitHub\Rehab_Plugin\plugin\LibCompPlugin\PluginCode\build\idea-sandbox\system\token --recorder FUS --files C:\Users\elhajjm\Documents\GitHub\Rehab_Plugin\plugin\LibCompPlugin\PluginCode\build\idea-sandbox\system\event-log-data\logs\FUS\047f-4fc3-975b-48b2bc503865-202.6109.22-eap.log --device 2609191e7675496-3c8e-4f8d-979f-2e864b9545ec --bucket 219 --url https://resources.jetbrains.com/storage/fus/config/v3/%s/%s.json --product IC --product-version 2020.2 --user-agent IntelliJ IDEA/202.6109.22 --eap'
+08/07 12:48:25 INFO  com.intellij.internal.statistic.uploader.events.ExternalEventsLogger - 1594234105151 STARTED
+08/07 12:48:25 INFO  com.intellij.internal.statistic.uploader.ExternalDataCollectorLogger - IDE token file: C:\Users\elhajjm\Documents\GitHub\Rehab_Plugin\plugin\LibCompPlugin\PluginCode\build\idea-sandbox\system\token
+08/07 12:48:25 INFO  com.intellij.internal.statistic.uploader.ExternalDataCollectorLogger - Waiting for 2000ms for IDE to close. Attempt #0
+08/07 12:48:27 INFO  com.intellij.internal.statistic.uploader.ExternalDataCollectorLogger - Waiting for 2000ms for IDE to close. Attempt #1
+08/07 12:48:29 INFO  com.intellij.internal.statistic.uploader.ExternalDataCollectorLogger - Start uploading...
+08/07 12:48:29 INFO  com.intellij.internal.statistic.uploader.ExternalDataCollectorLogger - {url:https://resources.jetbrains.com/storage/fus/config/v3/%s/%s.json, product:IC, userAgent:IntelliJ IDEA/202.6109.22(External), internal:false, isTest:false}
+08/07 12:48:29 INFO  com.intellij.internal.statistic.uploader.ExternalDataCollectorLogger - {recorder:FUS, files:C:\Users\elhajjm\Documents\GitHub\Rehab_Plugin\plugin\LibCompPlugin\PluginCode\build\idea-sandbox\system\event-log-data\logs\FUS\047f-4fc3-975b-48b2bc503865-202.6109.22-eap.log}
+08/07 12:48:29 INFO  com.intellij.internal.statistic.uploader.ExternalDataCollectorLogger - {device:2609191e7675496-3c8e-4f8d-979f-2e864b9545ec, bucket:219}
+08/07 12:48:30 TRACE com.intellij.internal.statistic.uploader.ExternalDataCollectorLogger - 047f-4fc3-975b-48b2bc503865-202.6109.22-eap.log-> Cannot upload event log, record list is empty
+08/07 12:48:30 TRACE com.intellij.internal.statistic.uploader.ExternalDataCollectorLogger - Removed sent log: 047f-4fc3-975b-48b2bc503865-202.6109.22-eap.log
+08/07 12:48:30 INFO  com.intellij.internal.statistic.uploader.events.ExternalEventsLogger - 1594234110760 SEND 0 1 1 []
+08/07 12:48:30 INFO  com.intellij.internal.statistic.uploader.events.ExternalEventsLogger - 1594234110762 FINISHED SENT_WITH_ERRORS
+08/07 12:48:30 TRACE com.intellij.internal.statistic.uploader.ExternalDataCollectorLogger - Uploading finished with SENT_WITH_ERRORS
+08/07 12:48:30 TRACE com.intellij.internal.statistic.uploader.ExternalDataCollectorLogger - Uploaded 0 out of 1 files.

@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.intellij' version '0.4.10'
 }
 
+
 group 'my_Plugin'
 version '1.0.11'
 
@@ -12,17 +13,14 @@ repositories {
     mavenCentral()
 }
 
-publishPlugin {
-    token intellijPublishToken
-}
+
 
 dependencies {
-    compile group: 'org.json', name: 'json', version: '20180813'
+    compile group: 'org.json', name: 'json',  version: '20180813'
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version '2020.1.1'
     plugins 'java'
 }
 patchPluginXml {
@@ -30,3 +28,6 @@ patchPluginXml {
       Add change notes here.<br>
       <em>most HTML tags may be used</em>"""
 }
+
+
+
