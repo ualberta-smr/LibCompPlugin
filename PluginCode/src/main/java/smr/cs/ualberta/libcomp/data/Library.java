@@ -21,8 +21,11 @@ public class Library {
     private double backwards_compatibility;
     private LocalDate last_discussed_so;
     private LocalDate Last_modification_date;
+
+
     private double overall_score;
     private String license;
+    private String mavenlink;
 
 
     public Library() {
@@ -41,9 +44,8 @@ public class Library {
     public String getRepository() {
         return repository;
     }
-    public String getPackage() {
-        return Package;
-    }
+    public String getPackage() { return Package; }
+    public String getMavenlink() { return mavenlink; }
     public double getPopularity() {
         return popularity;
     }
@@ -86,9 +88,7 @@ public class Library {
     public void setRepository(String repository) {
         this.repository = repository;
     }
-    public void setPackage(String aPackage) {
-        Package = aPackage;
-    }
+    public void setPackage(String aPackage) { Package = aPackage; }
     public void setPopularity(double popularity) {
         this.popularity = popularity;
     }
@@ -111,6 +111,7 @@ public class Library {
     public void setLast_modification_date(LocalDate last_modification_date) { Last_modification_date = last_modification_date; }
     public void setOverall_score(double overall_score) { this.overall_score = overall_score; }
     public void setLicense(String license) { this.license = license; }
+    public void setMavenlink(String mavenlink) { this.mavenlink = mavenlink; }
     public void setBackwards_compatibility(double backwards_compatibility) {this.backwards_compatibility = backwards_compatibility;
 
 

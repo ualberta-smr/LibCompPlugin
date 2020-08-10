@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DateFormat;
@@ -23,6 +24,8 @@ import smr.cs.ualberta.libcomp.data.ReplacementFeedback;
 import smr.cs.ualberta.libcomp.data.Library;
 import smr.cs.ualberta.libcomp.data.User;
 import java.io.File;
+
+import static java.net.HttpURLConnection.HTTP_CREATED;
 
 /**
  * The DatabaseAccess class is where all rest api calls to the databases are made
@@ -62,8 +65,9 @@ public class DatabaseAccess {
                     Package = jsonObj.getString("package");
 
 
-                boolean isFound = Package.toLowerCase().contains(librarySelected.toLowerCase());
-                if (isFound) {
+                boolean isFound1 = Package.toLowerCase().contains(librarySelected.toLowerCase());
+                boolean isFound2 = librarySelected.toLowerCase().contains(Package.toLowerCase());
+                if (isFound1 || isFound2) {
                         domainLibraries.add(Long.toString(library_id));
                         domainLibraries.add(Long.toString(domain_id));
                         domainLibraries.add(domain_name);
@@ -82,7 +86,7 @@ public class DatabaseAccess {
         connection.setRequestMethod("GET");
 
         int responseCode = connection.getResponseCode();
-        if(responseCode == 200 || responseCode == 201) {
+        if(responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
             InputStream response = connection.getInputStream();
             InputStream in = new BufferedInputStream(response);
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -133,7 +137,8 @@ public class DatabaseAccess {
         connection.setRequestMethod("GET");
 
         int responseCode = connection.getResponseCode();
-        if(responseCode == 200 || responseCode == 201){
+
+        if(responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED){
 
             InputStream response = connection.getInputStream();
             InputStream in = new BufferedInputStream(response);
@@ -382,6 +387,7 @@ public class DatabaseAccess {
 
     public boolean sendFeedback(String jsonBodyStr, String tokenValue) throws IOException {
 
+        // This function will send one record of feedback to the server.
         boolean returnValue = false;
         URL url = new URL(this.feedbackUrllink);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -397,7 +403,7 @@ public class DatabaseAccess {
         }
 
         try {
-            if (httpURLConnection.getResponseCode() == 201) {
+            if (httpURLConnection.getResponseCode() == HTTP_CREATED) {
                 returnValue = true;
             }
         }
@@ -414,10 +420,10 @@ public class DatabaseAccess {
         String tokenValue = getUserToken();
 
         if (tokenValue.equals("NoToken")) {
-            if (createUser(InsertUrllink, jsonString)) {}
+            createUser(InsertUrllink, jsonString);
         }
         else {
-            if  (updateUser(updateUrllink, jsonString,tokenValue)) {}
+            updateUser(updateUrllink, jsonString,tokenValue);
         }
     }
 
@@ -491,60 +497,88 @@ public class DatabaseAccess {
 
     public void storeLocalFeedback(JSONObject obj) throws IOException {
 
-        String filePath = this.filePath +"\\Feedback.json";
-        File myFile = new File(filePath);
-        JSONObject Mainobj = null; // = new JSONObject();
-        if (myFile.exists()) {
-            String content = FileUtils.readFileToString(myFile, "utf-8");
+        String localFeedbackPath = this.filePath +"\\Feedback.json";
+        File localFeedbackFile = new File(localFeedbackPath);
+        JSONObject feedbackObject = null; // = new JSONObject();
+        if (localFeedbackFile.exists()) {
+            String content = FileUtils.readFileToString(localFeedbackFile, "utf-8");
             JSONObject objM = new JSONObject(content);
-            JSONArray jsonarr = objM.getJSONArray("Feedbacks");
+            JSONArray jsonarr = objM.getJSONArray("Feedback");
             jsonarr.put(obj);
-            Mainobj = new JSONObject();
-            Mainobj.put("Feedbacks", jsonarr);
+            feedbackObject = new JSONObject();
+            feedbackObject.put("Feedback", jsonarr);
         } else
         {
-            Mainobj = new JSONObject();
-            JSONArray array = new JSONArray();
-            array.put(obj);
-            Mainobj.put("Feedbacks", array);
+            feedbackObject = new JSONObject();
+            JSONArray feedbackEntryArray = new JSONArray();
+            feedbackEntryArray.put(obj);
+            feedbackObject.put("Feedback", feedbackEntryArray);
         }
 
-        FileOutputStream fOuts = new FileOutputStream(myFile);
-        String result = Mainobj.toString();
+        FileOutputStream fOuts = new FileOutputStream(localFeedbackFile);
+        String result = feedbackObject.toString();
         OutputStreamWriter myOutWriter = new OutputStreamWriter(fOuts);
         myOutWriter.append(result);
         myOutWriter.close();
     }
 
     public void sendFeedbackToCloud() throws IOException {
+        // this function sends all records in feedback.json, it will iterate through each record which will be sent via sendFeedback() function
         String filePath = this.filePath +"\\Feedback.json";
         String tokenValue = getUserToken();
-        File myFile = new File(filePath);
-        boolean successfulsent = false;
-        if (myFile.exists()) {
-            String content = FileUtils.readFileToString(myFile, "utf-8");
+        File feedbackFile = new File(filePath);
+        int successfulsent = 0;
+        if (feedbackFile.exists()) {
+            String content = FileUtils.readFileToString(feedbackFile, "utf-8");
             JSONObject objM = new JSONObject(content);
-            JSONArray jsonarr = objM.getJSONArray("Feedbacks");
+            JSONArray jsonarr = objM.getJSONArray("Feedback");
             int i = 0;
             while (i<jsonarr.length() )
             {
                 JSONObject jsonObj = (JSONObject)jsonarr.get(i);
                 jsonObj.put("user", this.userid);
                 String JsonString = jsonObj.toString();
-                if (sendFeedback(JsonString, tokenValue)) {successfulsent = true;}
+                if (sendFeedback(JsonString, tokenValue)) {++successfulsent;}
                 i++;
             }
-            if (successfulsent) {Files.deleteIfExists(Paths.get(filePath));}
+            if (successfulsent<=jsonarr.length()) {
+                Files.deleteIfExists(Paths.get(filePath));
+            }
 
         }
     }
 
-    public void updateFeedback(boolean cloudSelect, ReplacementFeedback replacementFeedback) throws IOException {
+    public String readMavenVersion(String urlStr) throws IOException {
+        String returnValue = "// " + urlStr;
+        urlStr = urlStr + "/latest";
+        try {
+            URL oracle = new URL(urlStr);
+            URLConnection yc = oracle.openConnection();
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(
+                    yc.getInputStream()))) {
+                String inputLine;
+                int location = -1;
+                while (((inputLine = in.readLine()) != null) && (location == -1)) {
+                    location = inputLine.indexOf("gradle-div");
+                    if (location != -1) {
+                       returnValue = "    " + in.readLine() + "\n" + "    "  + in.readLine();
+                    }
+                }
+                in.close();
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  returnValue;
+    }
+
+    public void updateFeedback(boolean sendToCloud, ReplacementFeedback replacementFeedback) throws IOException {
 
         String tokenValue = getUserToken();
         JSONObject obj = new JSONObject();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        if (cloudSelect) {obj.put("user", this.userid);} // no userid to be stored locally, as it is not yet set
+        if (sendToCloud) {obj.put("user", this.userid);} // no userid to be stored locally, as it is not yet set
         obj.put("full_lib_list", replacementFeedback.getFull_lib_list());
         obj.put("to_library", replacementFeedback.getTo_library_id());
         obj.put("from_library", replacementFeedback.getFrom_library_id());
@@ -554,14 +588,13 @@ public class DatabaseAccess {
         obj.put("action_date", df.format(replacementFeedback.getAction_date()));
 
         String JsonString = obj.toString();
-        if (cloudSelect)
+        if (sendToCloud)
         {
-            if (sendFeedback(JsonString, tokenValue)) {}
+           sendFeedback(JsonString, tokenValue);
         }
         else
         {
             storeLocalFeedback(obj); // create local json file until the user decided to send his feedback
-
         }
     }
 
@@ -611,6 +644,11 @@ public class DatabaseAccess {
                             libraryDataPoint.setRepository(jsonObj.getString("github_repo"));
                         if (jsonObj.has("package"))
                             libraryDataPoint.setPackage(jsonObj.getString("package")); // Change tag to package
+                        if (jsonObj.has("maven_url"))
+                            libraryDataPoint.setMavenlink(jsonObj.getString("maven_url")); // Change tag to maven
+// will be removed later
+                    //    libraryDataPoint.setMavenlink("https://mvnrepository.com/artifact/junit/junit");
+
                         if (jsonObj.has("popularity"))
                             libraryDataPoint.setPopularity(jsonObj.getDouble("popularity"));
                         if (jsonObj.has("release_frequency"))

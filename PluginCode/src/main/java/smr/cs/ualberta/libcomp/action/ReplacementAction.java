@@ -158,6 +158,13 @@ public class ReplacementAction extends AnAction {
         return location;
 
     }
+
+    public String parsePackage(String term)
+    {
+        String returnTerml = "";
+       // returnTerml = term.substring(term.lastIndexOf(".") + 1);
+        return returnTerml;
+    }
     public void detectDependancy(@NotNull final Editor editor, @NotNull final PsiFile psiFile ) throws IOException {
 
         final MarkupModel editorModel = editor.getMarkupModel();
@@ -187,6 +194,7 @@ public class ReplacementAction extends AnAction {
             String[] valuesInQuotes = StringUtils.substringsBetween(lineText, "\'", "\'");
                 if (valuesInQuotes != null) {
                     selectedTerm = valuesInQuotes[0];
+
                     DatabaseAccess dataAccessObject = new DatabaseAccess();
                     ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
                     if (choicesArray.size() > 0) {

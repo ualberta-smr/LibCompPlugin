@@ -39,13 +39,12 @@ public class PostStartupActivity implements StartupActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } // public void selectionChanged
+            }
         });
 
         connection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
             @Override
             public void after(@NotNull List<? extends VFileEvent> events) {
-                // handle the events
                 ReplacementAction actionPerformed = new ReplacementAction();
                 try {
                     actionPerformed.detectAllOpenEditors();
