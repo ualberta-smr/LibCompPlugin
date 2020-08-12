@@ -63,4 +63,4 @@ To publish a new version of LibComp, follow these steps
 
 ## Contributors
 - Rehab El-hajj  (relhajj at ualberta dot ca)
-- Sarah Nadi (snadi at ualberta dot ca)
+- Sarah Nadi (nadi at ualberta dot ca)
