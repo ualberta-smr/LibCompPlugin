@@ -1,6 +1,9 @@
 package smr.cs.ualberta.libcomp;
 
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.wm.WindowManager;
 import com.jcraft.jsch.Session;
 import org.apache.commons.io.FileUtils;
 import java.awt.*;
@@ -728,5 +731,142 @@ public class DatabaseAccess {
         }
         return img;
     }
+
+
+
+    public void EnabledDomain(int domain, String project_name) {
+        if (isEnabled(domain, project_name))
+        { setdisabled(domain, project_name);}
+        else
+        { setEnabled(domain, project_name);}
+
+    }
+
+    private void setdisabled(int domain, String project_name) {
+
+        String filePath = this.filePath +"\\"+ project_name +"domains.json";
+        File myFile = new File(filePath);
+        JSONObject Mainobj = null; // = new JSONObject();
+        if (myFile.exists()) {
+            String content = null;
+            try {
+                content = FileUtils.readFileToString(myFile, "utf-8");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            JSONObject objM = new JSONObject(content);
+            JSONArray jsonarr = objM.getJSONArray("Domains");
+            int location = domainExist(domain, jsonarr);
+            jsonarr.remove(location);
+            Mainobj = new JSONObject();
+            Mainobj.put("Domains", jsonarr);
+        }
+        FileOutputStream fOuts = null;
+        try {
+            fOuts = new FileOutputStream(myFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String result = Mainobj.toString();
+        OutputStreamWriter myOutWriter = new OutputStreamWriter(fOuts);
+        try {
+            myOutWriter.append(result);
+            myOutWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void setEnabled(int domain, String project_name) {
+
+        String filePath = this.filePath +"\\"+ project_name +"domains.json";
+        File myFile = new File(filePath);
+        JSONObject Mainobj = null; // = new JSONObject();
+        if (myFile.exists()) {
+            String content = null;
+            try {
+                content = FileUtils.readFileToString(myFile, "utf-8");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            JSONObject objM = new JSONObject(content);
+            JSONArray jsonarr = objM.getJSONArray("Domains");
+            jsonarr.put(domain);
+            Mainobj = new JSONObject();
+            Mainobj.put("Domains", jsonarr);
+        } else
+        {
+            Mainobj = new JSONObject();
+            JSONArray array = new JSONArray();
+            array.put(domain);
+            Mainobj.put("Domains", array);
+        }
+
+        FileOutputStream fOuts = null;
+        try {
+            fOuts = new FileOutputStream(myFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String result = Mainobj.toString();
+        OutputStreamWriter myOutWriter = new OutputStreamWriter(fOuts);
+        try {
+            myOutWriter.append(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            myOutWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    private int domainExist(int domain, JSONArray arr)
+    {
+        Boolean found = false;
+        int index = 0;
+        while (!found && index < arr.length() )
+        {
+            if (arr.getInt(index) == domain)
+            {
+                found = true;
+            } else {++index;}
+        }
+        if (!found) index = -1;
+        return index;
+    }
+
+    public boolean isEnabled(int domain, String project_name) {
+        boolean disabled = false;
+        String filePath = this.filePath +"\\"+ project_name +"domains.json";
+
+        File myFile = new File(filePath);
+        JSONObject Mainobj = null; // = new JSONObject();
+        if (myFile.exists()) {
+            String content = null;
+            try {
+                content = FileUtils.readFileToString(myFile, "utf-8");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            JSONObject objM = new JSONObject(content);
+            JSONArray arr = objM.getJSONArray("Domains");
+            int location = domainExist(domain, arr);
+            if (location > -1)
+            { disabled = true; }
+        } else
+        { disabled = false; }
+
+        return disabled;
+    }
+
+
+
 }
 

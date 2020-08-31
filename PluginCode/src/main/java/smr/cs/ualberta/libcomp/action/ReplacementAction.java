@@ -53,6 +53,8 @@ public class ReplacementAction extends AnAction {
     private String full_lib_list;
     private String libraryName;
     private boolean sendToCloud = false ;
+
+
     public ReplacementAction() {
     ImportListObjects = new ArrayList<>();
     DependListObjects = new ArrayList<>();
@@ -108,7 +110,7 @@ public class ReplacementAction extends AnAction {
 
     public void detectAllOpenEditors() throws IOException {
         Project proj= getActiveProject();
-
+        String project_name = proj.getName();
         FileEditorManager manager = FileEditorManager.getInstance(proj);
         VirtualFile[] filesAll = manager.getOpenFiles();
         FileEditor[] editorFileAll = manager.getAllEditors();
@@ -122,10 +124,10 @@ public class ReplacementAction extends AnAction {
             if (psiFile != null) {
                 FileType fileType = psiFile.getFileType();
                 if (fileType.getDefaultExtension().equalsIgnoreCase("java")) {
-                    detectImports(psiFile, editor);
+                    detectImports(psiFile, editor, project_name);
                 }
                 else {
-                    detectDependancy(editor, psiFile);
+                    detectDependancy(editor, psiFile, project_name);
                 }
             }
             indexOpenEditors = indexOpenEditors + 1;
@@ -152,20 +154,11 @@ public class ReplacementAction extends AnAction {
         if (found)
         {
              location = child.getStartOffset();
-
         }
-
         return location;
-
     }
 
-    public String parsePackage(String term)
-    {
-        String returnTerml = "";
-       // returnTerml = term.substring(term.lastIndexOf(".") + 1);
-        return returnTerml;
-    }
-    public void detectDependancy(@NotNull final Editor editor, @NotNull final PsiFile psiFile ) throws IOException {
+    public void detectDependancy(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String project_name ) throws IOException {
 
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
@@ -205,10 +198,24 @@ public class ReplacementAction extends AnAction {
                         depObj.setDomainName(choicesArray.get(2));
                         depObj.setFromlocation(startOffset);
                         depObj.setTolocation(endOffset);
+
+                        if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), project_name)) {
+                            depObj.setEnableddomain(false);
+                        }
+                        else {
+                            depObj.setEnableddomain(true);
+                        }
+
                         DependListObjects.add(depObj);
 
-                        editorModel.addLineHighlighter(i,
-                                DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
+
+                        if (depObj.getEnableddomain()) {
+                            editorModel.addLineHighlighter(i,
+                                    DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
+
+                        }
+
+
                     }
                 }
             ++i;
@@ -223,9 +230,11 @@ public class ReplacementAction extends AnAction {
 
             Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
             PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
+            final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
+            String project_name = project.getName();
 
             try {
-                detectDependancy(editor, psiFile);
+                detectDependancy(editor, psiFile, project_name);
             }
             catch(Exception e) {
                 e.printStackTrace();
@@ -417,7 +426,7 @@ public class ReplacementAction extends AnAction {
         final Document document = editor.getDocument();
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
 
-        final MarkupModel editorModel = editor.getMarkupModel();
+ //       final MarkupModel editorModel = editor.getMarkupModel();
 
         String project_name = project.getName();
         String class_name = "";
@@ -479,7 +488,7 @@ public class ReplacementAction extends AnAction {
                                     document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport1, finalChoice1));
 
                             try {
-                                detectDependancy(editor, psiFile);
+                                detectDependancy(editor, psiFile, project_name);
                             } catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
@@ -520,7 +529,7 @@ public class ReplacementAction extends AnAction {
                                     document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport2, finalChoice1));
 
                             try {
-                                detectDependancy(editor, psiFile);
+                                detectDependancy(editor, psiFile, project_name);
                             } catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
@@ -556,13 +565,21 @@ public class ReplacementAction extends AnAction {
         }
     }
 
+    public Boolean domainsEnabled (int domain)
+    {
+        Boolean enabledDomain = false;
+
+        if (domain < 2) { enabledDomain = true; }
+
+        return enabledDomain;
+    }
     /**
      * The detectImportStatementMethod will got through the current open file and test the import statements to see if they are in the database
      * The trigger for this to occur is a right click anywhere in the editor, I have yet to figure out how to have it work onLoad
      * Right now, the library being queried is the "last word" of the import statement
      * ex. for my.import.statement.rehab, the term queried against in the database is "rehab"
      */
-    public void detectImports(@NotNull final PsiFile psiFile, @NotNull final Editor editor ) {
+    public void detectImports(@NotNull final PsiFile psiFile, @NotNull final Editor editor, @NotNull final  String project_name ) {
 
         try {
             final MarkupModel editorModel = editor.getMarkupModel();
@@ -603,11 +620,18 @@ public class ReplacementAction extends AnAction {
                     impObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
                     impObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
                     impObj.setDomainName(choicesArray.get(2));
+                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), project_name)) {
+                        impObj.setEnableddomain(false);
+                    }
+                    else {
+                        impObj.setEnableddomain(true);
+                    }
                     ImportListObjects.add(impObj);
 
-                    //highlight the line
-                    editorModel.addLineHighlighter(importLineNumber,
-                            DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1,softerAttributes);
+                    if (impObj.getEnableddomain()) {
+                        editorModel.addLineHighlighter(importLineNumber,
+                        DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1,softerAttributes);
+                    }
                 }
             }
         }
@@ -620,9 +644,11 @@ public class ReplacementAction extends AnAction {
 
          PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
          Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
+         final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
+         String project_name = project.getName();
 
          try {
-             detectImports(psiFile, editor);
+             detectImports(psiFile, editor, project_name);
          }
          catch(Exception e) {
              e.printStackTrace();
