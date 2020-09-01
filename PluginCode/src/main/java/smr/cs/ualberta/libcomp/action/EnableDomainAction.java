@@ -64,10 +64,13 @@ public class EnableDomainAction extends AnAction {
 
         if (psiFile != null) {
             FileType fileType = psiFile.getFileType();
+
             if (fileType.getDefaultExtension().equalsIgnoreCase("java")) {
                 detectImports(psiFile, editor, project);
             }
-            else {
+
+            if (fileType.getDefaultExtension().equalsIgnoreCase("groovy"))
+            {
                 try {
                     detectDependancy(editor, psiFile , project);
                 } catch (IOException e) {
@@ -75,6 +78,17 @@ public class EnableDomainAction extends AnAction {
                 }
                 event.getPresentation().setEnabledAndVisible(true);
             }
+
+            if (fileType.getDefaultExtension().equalsIgnoreCase("xml"))
+            {
+                try {
+                    detectMaven(editor, psiFile , project);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                event.getPresentation().setEnabledAndVisible(true);
+            }
+
             event.getPresentation().setVisible(true);
             event.getPresentation().setEnabled(true);
         }
@@ -104,6 +118,96 @@ public class EnableDomainAction extends AnAction {
         }
         return location;
     }
+
+    public int detectMavenPSI(final Document document)
+    {
+        int location = -1;
+        int i = 0;
+
+        int startOffset = document.getLineStartOffset(i);
+        int endOffset = document.getLineEndOffset(i);
+        String name = document.getText(new TextRange(startOffset, endOffset)).trim();
+        boolean found = name.contains("dependencies");
+        boolean over = false;
+        while ((!found) && (!over))
+        {
+            ++i;
+            startOffset = document.getLineStartOffset(i);
+            endOffset = document.getLineEndOffset(i);
+            name = document.getText(new TextRange(startOffset, endOffset)).trim();
+            found = name.contains("dependencies");
+            over = name.contains("</project>");
+        }
+        if (found)
+        {
+            location = i;
+        }
+        return location;
+    }
+
+    public void detectMaven(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  Project project  ) throws IOException {
+
+        final MarkupModel editorModel = editor.getMarkupModel();
+        final Document document = editor.getDocument();
+        String project_name = project.getName();
+
+        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
+        TextAttributes softerAttributes = attributes.clone();
+        boolean dependenciesExists = false;
+        int i = 0;
+        int loc = detectMavenPSI(document); // Parse PSI to detect the PSI dependencies node
+        if (loc != -1) // dependencies exists
+        {
+            dependenciesExists = true;
+            i = document.getLineNumber(loc); // line number of the dependencies PSI node
+        }
+
+        Caret primaryCaret = editor.getCaretModel().getPrimaryCaret();
+        int mouseClickLocation = primaryCaret.getOffset();
+        int clickedLineNumber = document.getLineNumber(mouseClickLocation);
+
+
+        String lineText = null;
+        String selectedTerm;
+
+        while (dependenciesExists)
+        {
+            int startOffset = document.getLineStartOffset(i);
+            int endOffset = document.getLineEndOffset(i);
+
+            lineText = null;
+            String[] valuesInQuotes = new String[0];
+            valuesInQuotes = null;
+            lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
+            if ((lineText != null) && (lineText.length()>2))
+            {valuesInQuotes = StringUtils.substringsBetween(lineText, "<groupId>", "</groupId>");}
+
+
+            if (i == clickedLineNumber) {
+                if (valuesInQuotes != null) {
+                    selectedTerm = valuesInQuotes[0];
+                    DatabaseAccess dataAccessObject = new DatabaseAccess();
+                    ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
+                    if (choicesArray.size() > 0) {
+                        int domain = Integer.parseInt(choicesArray.get(1));
+                        dataAccessObject.EnabledDomain (domain, project_name);
+                        ReplacementAction actionPerformed = new ReplacementAction();
+                        try {
+                            actionPerformed.detectAllOpenEditors();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            ++i;
+            boolean isContainsEnd = lineText.contains("</dependencies>");
+            if (isContainsEnd) {
+                dependenciesExists = false;
+            }
+        }
+    }
+
 
 
     public void detectDependancy(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  Project project  ) throws IOException {

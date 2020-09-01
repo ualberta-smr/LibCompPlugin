@@ -551,7 +551,7 @@ public class DatabaseAccess {
         }
     }
 
-    public String readMavenVersion(String urlStr) throws IOException {
+    public String readMavenVersion(String urlStr, int typeofMaven) throws IOException {
         String returnValue = "// " + urlStr;
         urlStr = urlStr + "/latest";
         try {
@@ -562,9 +562,24 @@ public class DatabaseAccess {
                 String inputLine;
                 int location = -1;
                 while (((inputLine = in.readLine()) != null) && (location == -1)) {
-                    location = inputLine.indexOf("gradle-div");
-                    if (location != -1) {
-                       returnValue = "    " + in.readLine() + "\n" + "    "  + in.readLine();
+                    if (typeofMaven == 1)
+                    {
+                        location = inputLine.indexOf("gradle-div");
+                        if (location != -1) {
+                           returnValue = "    " + in.readLine() + "\n" + "    "  + in.readLine();
+                        }
+                    }
+                    if (typeofMaven == 2)
+                    {
+                        location = inputLine.indexOf("maven-div");
+                        if (location != -1) {
+                            returnValue = "\t\t" + in.readLine() + "\n" + "\t\t" + in.readLine() + "\n" + "\t\t" + in.readLine() + "\n" + "\t\t"  + in.readLine() + "\n" + "\t\t"  + in.readLine() + "\n" + "\t\t"  + in.readLine() + "\n" + "\t\t"  + in.readLine();
+                            returnValue = returnValue.replaceAll("&lt;","<");
+                            returnValue = returnValue.replaceAll("&gt;",">");
+                            returnValue = returnValue.replaceAll("&#32;&#32;&#32;&#32;","\t");
+
+
+                        }
                     }
                 }
                 in.close();
