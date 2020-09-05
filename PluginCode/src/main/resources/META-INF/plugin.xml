@@ -6,7 +6,6 @@
     <!-- increment the version number with each publish -->
     <version>1.0.11</version>
 
-
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
 

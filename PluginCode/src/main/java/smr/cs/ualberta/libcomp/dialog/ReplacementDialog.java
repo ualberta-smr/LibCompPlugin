@@ -70,7 +70,7 @@ public class ReplacementDialog extends JFrame {
             "Column 2 Sort Descending",
             "Column 3 Sort Ascending",
             "The header row shows your current library, click on an alternative library to replace",
-            "Number of times the library is imported in the 1000 top repositories on GitHub", //popularity
+            "Number of times the library package is imported in the 1000 top starred repositories on GitHub", //popularity
             "Average time in days between two consecutive releases of a library", //release frequency
             "Average time in days to close issues in the issue tracking system of a library", //issue closing time
             "Average time in days to get the first response on issues in the issue tracking system of a library", //issue response time
@@ -166,18 +166,14 @@ public class ReplacementDialog extends JFrame {
         dataDate = new LocalDate[2][columnLength]; // only two date Format
         dataString = new String[1][columnLength]; // only one String format
 
-
         current = 0;
         df = new DecimalFormat("#");
-        intf = new DecimalFormat("# Repos"); // "#/1000 Repos"
+        intf = new DecimalFormat("#'/1000' Repos"); // "#/1000 Repos"
         daysf = new DecimalFormat("# Days");
         reposf = new DecimalFormat("# Repos");
         percentf = new DecimalFormat("0.00 %");
         changef = new DecimalFormat("# Breaking Changes");
         scoref = new DecimalFormat("0.00/5 ");
-
-        // datef = new DateFormat("yyy-MM-DD");
-
 
         data[indexPopularity][offsetBtnCols - 1] = "Popularity (Repos)";
         data[indexRelease][offsetBtnCols - 1] = "Release Frequency (Days)";
@@ -191,7 +187,6 @@ public class ReplacementDialog extends JFrame {
         data[rowLength - 1][offsetBtnCols - 1] = "Last Stack Overflow Post";
         data[rowLength][offsetBtnCols - 1] = "Last Modification Date";
         data[rowLength + 1][offsetBtnCols - 1] = "License";
-
 
         while (current < columnLength - offsetBtnCols) {
 
