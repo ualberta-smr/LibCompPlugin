@@ -39,7 +39,7 @@ To help us understand which libraries get replaced, as well as the types of user
 
 * Here is where you can check the relevant boxes to confirm that you are giving consent for your tracked plugin usage to be sent to our server. You also have the option to send a feedback comment and/or rate the plugin from 1 (worst) to 5 (best) and send this to our database. Whenever you wish to send your information, click `Send library interaction data`. 
 
-* All interaction data with the plugin is stored locally. We do not send any feedback data to our central database unless you explicitly allow it.
+* All interaction data with the plugin is stored locally. We do not send any data to our central database unless you explicitly allow it. Please note that we do not collect any personal information, such as your name, email, or phone number. We do collect the name of the project and files a library comparison or replacement was made in so if your project/file names contain sensitive information, please do not consent to having your data sent. The data is sent using encrypted channels (https) to our secure server. For GDPR compliance, please check out this [pending issue](https://github.com/ualberta-smr/LibCompPlugin/issues/39).
 
 ## Running LibComp Locally:
 
