@@ -26,6 +26,8 @@ import org.json.JSONObject;
 import smr.cs.ualberta.libcomp.data.ReplacementFeedback;
 import smr.cs.ualberta.libcomp.data.Library;
 import smr.cs.ualberta.libcomp.data.User;
+
+import javax.swing.*;
 import java.io.File;
 
 import static java.net.HttpURLConnection.HTTP_CREATED;
@@ -40,6 +42,11 @@ public class DatabaseAccess {
     private int userid = 0;
     private String filePath = PathManager.getPluginsPath()+"\\Library_Comparison\\lib";
     private String feedbackUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginfeedback/";
+    private String linkURL = "https://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
+    private String librariesURL = "https://smr.cs.ualberta.ca/comparelibraries/api/libraries/?format=json";
+    private String chartsURL = "https://smr.cs.ualberta.ca/comparelibraries/api/charts/?format=json";
+    private String metricsURL = "https://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
+    private String updateUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/";
 
     public ArrayList<String> selectJsonAllLibraries(String librarySelected) throws IOException
     {
@@ -66,8 +73,6 @@ public class DatabaseAccess {
                     domain_name = jsonObj.getString("domain_name");
                 if (jsonObj.has("package"))
                     Package = jsonObj.getString("package");
-
-
                 boolean isFound1 = Package.toLowerCase().contains(librarySelected.toLowerCase());
                 boolean isFound2 = librarySelected.toLowerCase().contains(Package.toLowerCase());
                 if (isFound1 || isFound2) {
@@ -75,7 +80,6 @@ public class DatabaseAccess {
                         domainLibraries.add(Long.toString(domain_id));
                         domainLibraries.add(domain_name);
                 }
-
             }
         }
         return domainLibraries;
@@ -83,7 +87,7 @@ public class DatabaseAccess {
 
     public String getLatestMetricDate() throws IOException  {
         String cloudVer = "";
-        String linkURL = "https://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
+        String linkURL = this.linkURL;
 
         HttpURLConnection connection = (HttpURLConnection) new URL(linkURL).openConnection();
         connection.setRequestMethod("GET");
@@ -130,6 +134,9 @@ public class DatabaseAccess {
     public void getJson(String linkURL, String filePath, String suffix) throws IOException {
 
         File jsonFile = new File(filePath);
+       // to be removed later
+       // JOptionPane.showMessageDialog(null, jsonFile);
+
         FileOutputStream fOuts = new FileOutputStream(jsonFile);
         jsonFile.createNewFile();
 
@@ -158,15 +165,15 @@ public class DatabaseAccess {
 
     public void getDataRestApi() throws IOException {
         String suffixLocal = this.filePath + "\\";
-        String url = "https://smr.cs.ualberta.ca/comparelibraries/api/libraries/?format=json";
+        String url = this.librariesURL;
         String filePath = suffixLocal + "allLibraries.json";
         getJson(url, filePath, "{\"Libraries\":");
 
-        url = "https://smr.cs.ualberta.ca/comparelibraries/api/charts/?format=json";
+        url = this.chartsURL;
         filePath = suffixLocal + "allCharts.json";
         getJson(url, filePath, "{\"Charts\":");
 
-        url = "https://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
+        url = this.metricsURL ;
         filePath = suffixLocal + "Version.json";
         getJson(url, filePath, "{\"version\":");
     }
@@ -418,8 +425,10 @@ public class DatabaseAccess {
 
     public void sendUser(String username, String jsonString) throws IOException {
 
-        String updateUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/" + username + "/";
-        String InsertUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/";
+        String updateUrllink = this.updateUrllink + username + "/";
+        String InsertUrllink = this.feedbackUrllink;
+
+
         String tokenValue = getUserToken();
 
         if (tokenValue.equals("NoToken")) {
@@ -664,9 +673,6 @@ public class DatabaseAccess {
                             libraryDataPoint.setPackage(jsonObj.getString("package")); // Change tag to package
                         if (jsonObj.has("maven_url"))
                             libraryDataPoint.setMavenlink(jsonObj.getString("maven_url")); // Change tag to maven
-// will be removed later
-                    //    libraryDataPoint.setMavenlink("https://mvnrepository.com/artifact/junit/junit");
-
                         if (jsonObj.has("popularity"))
                             libraryDataPoint.setPopularity(jsonObj.getDouble("popularity"));
                         if (jsonObj.has("release_frequency"))
