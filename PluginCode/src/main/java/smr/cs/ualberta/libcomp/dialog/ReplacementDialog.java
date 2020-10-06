@@ -425,7 +425,7 @@ public class ReplacementDialog extends JFrame {
                     table.addColumnSelectionInterval(selectedLibrary, selectedLibrary);
                     bConfirm.setEnabled(true);
                     bConfirm.setBackground(cololrSelectColumn);
-                    String message = "Replace " + libraryList.get(0).getPackage() + " Package with " + libraryList.get(columnM - offsetBtnCols).getPackage();
+                    String message = "Replace " + libraryList.get(currentLibrary - offsetBtnCols).getPackage() + " Package with " + libraryList.get(columnM - offsetBtnCols).getPackage();
                     bConfirm.setText(message);
                 }
 

@@ -426,7 +426,7 @@ public class DatabaseAccess {
     public void sendUser(String username, String jsonString) throws IOException {
 
         String updateUrllink = this.updateUrllink + username + "/";
-        String InsertUrllink = this.feedbackUrllink;
+        String InsertUrllink = this.updateUrllink;
 
 
         String tokenValue = getUserToken();
