@@ -569,7 +569,7 @@ public class ReplacementAction extends AnAction {
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
 
         String project_name = project.getName();
-        String class_name = "";
+        String class_name = "Maven File";
 
         Date action_date = new Date();
         int from_library;
@@ -715,10 +715,8 @@ public class ReplacementAction extends AnAction {
         final Document document = editor.getDocument();
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
 
- //       final MarkupModel editorModel = editor.getMarkupModel();
-
         String project_name = project.getName();
-        String class_name = "";
+        String class_name = "groovy Class";
 
         Date action_date = new Date();
         int from_library;
