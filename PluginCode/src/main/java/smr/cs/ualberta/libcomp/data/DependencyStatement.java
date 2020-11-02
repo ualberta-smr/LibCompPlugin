@@ -9,7 +9,9 @@ public class DependencyStatement {
     public Integer fromlocation;
     public Integer tolocation;
     private String domainName;
+    private Boolean Enableddomain;
 
+    public Boolean getEnableddomain() { return Enableddomain;}
     public Integer getImportLocation() { return importLocation; }
     public Integer getImportDomain() { return importDomain; }
     public Integer getImportLib() { return importLib; }
@@ -23,5 +25,5 @@ public class DependencyStatement {
     public void setFromlocation(Integer fromlocation) { this.fromlocation = fromlocation; }
     public void setTolocation(Integer tolocation) { this.tolocation = tolocation; }
     public void setDomainName(String domainName) { this.domainName = domainName; }
-
+    public void setEnableddomain(Boolean enableddomain) { Enableddomain = enableddomain; }
 }

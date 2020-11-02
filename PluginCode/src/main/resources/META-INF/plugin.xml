@@ -1,11 +1,10 @@
 <idea-plugin>
-    <id>my_Plugin.LibraryCompare</id>
-    <name>LibraryComparison</name>
+    <id>library.comparison</id>
+    <name>LibComp</name>
     <vendor email="relhajj@ualberta.ca" url="http://smr.cs.ualberta.ca">Rehab El-hajj</vendor>
     <description>The LibComp plugin is a tool to aid developers in Java library comparison. LibComp detects Java libraries and highlights them, the user is then able to click on these libraries and view other suggestions with relevant metric data and charts. All suggestions are Java libraries within the same domain as the original package. If the user chooses, they also have the option to replace a library package with one of the provided suggestions. This tool detects import statements in Java files and dependencies in the build.gradle file.</description>
     <!-- increment the version number with each publish -->
-    <version>1.0.11</version>
-
+    <version>1.0.13</version>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -22,6 +21,16 @@
     <actions>
         <!-- Add your actions here -->
 
+
+        <action id="EditorBasics.EnableDomainAction"
+                class="smr.cs.ualberta.libcomp.action.EnableDomainAction"
+                popup="true"
+                text="Enable / Disable comparisons for this domain"
+                description="Replaces selected text with suggested library."
+        >
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
+
         <action id="EditorBasics.EditorIllustrationAction"
                 class="smr.cs.ualberta.libcomp.action.ReplacementAction"
                 popup="true"
@@ -29,10 +38,13 @@
                 description="Replaces selected text with suggested library."
         >
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-
         </action>
 
-           <!-- Add your actions here -->
+
+
+
+
+        <!-- Add your actions here -->
             <group id="MyPlugin.test" text="LibComp"  popup="true">
 
                <action id="EditorBasics.EditorIllustrationAct"

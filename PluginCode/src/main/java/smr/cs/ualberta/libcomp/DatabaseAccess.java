@@ -1,6 +1,9 @@
 package smr.cs.ualberta.libcomp;
 
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.wm.WindowManager;
 import com.jcraft.jsch.Session;
 import org.apache.commons.io.FileUtils;
 import java.awt.*;
@@ -23,6 +26,8 @@ import org.json.JSONObject;
 import smr.cs.ualberta.libcomp.data.ReplacementFeedback;
 import smr.cs.ualberta.libcomp.data.Library;
 import smr.cs.ualberta.libcomp.data.User;
+
+import javax.swing.*;
 import java.io.File;
 
 import static java.net.HttpURLConnection.HTTP_CREATED;
@@ -37,6 +42,11 @@ public class DatabaseAccess {
     private int userid = 0;
     private String filePath = PathManager.getPluginsPath()+"\\Library_Comparison\\lib";
     private String feedbackUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginfeedback/";
+    private String linkURL = "https://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
+    private String librariesURL = "https://smr.cs.ualberta.ca/comparelibraries/api/libraries/?format=json";
+    private String chartsURL = "https://smr.cs.ualberta.ca/comparelibraries/api/charts/?format=json";
+    private String metricsURL = "https://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
+    private String updateUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/";
 
     public ArrayList<String> selectJsonAllLibraries(String librarySelected) throws IOException
     {
@@ -63,8 +73,6 @@ public class DatabaseAccess {
                     domain_name = jsonObj.getString("domain_name");
                 if (jsonObj.has("package"))
                     Package = jsonObj.getString("package");
-
-
                 boolean isFound1 = Package.toLowerCase().contains(librarySelected.toLowerCase());
                 boolean isFound2 = librarySelected.toLowerCase().contains(Package.toLowerCase());
                 if (isFound1 || isFound2) {
@@ -72,7 +80,6 @@ public class DatabaseAccess {
                         domainLibraries.add(Long.toString(domain_id));
                         domainLibraries.add(domain_name);
                 }
-
             }
         }
         return domainLibraries;
@@ -80,7 +87,7 @@ public class DatabaseAccess {
 
     public String getLatestMetricDate() throws IOException  {
         String cloudVer = "";
-        String linkURL = "https://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
+        String linkURL = this.linkURL;
 
         HttpURLConnection connection = (HttpURLConnection) new URL(linkURL).openConnection();
         connection.setRequestMethod("GET");
@@ -127,6 +134,9 @@ public class DatabaseAccess {
     public void getJson(String linkURL, String filePath, String suffix) throws IOException {
 
         File jsonFile = new File(filePath);
+       // to be removed later
+       // JOptionPane.showMessageDialog(null, jsonFile);
+
         FileOutputStream fOuts = new FileOutputStream(jsonFile);
         jsonFile.createNewFile();
 
@@ -155,15 +165,15 @@ public class DatabaseAccess {
 
     public void getDataRestApi() throws IOException {
         String suffixLocal = this.filePath + "\\";
-        String url = "https://smr.cs.ualberta.ca/comparelibraries/api/libraries/?format=json";
+        String url = this.librariesURL;
         String filePath = suffixLocal + "allLibraries.json";
         getJson(url, filePath, "{\"Libraries\":");
 
-        url = "https://smr.cs.ualberta.ca/comparelibraries/api/charts/?format=json";
+        url = this.chartsURL;
         filePath = suffixLocal + "allCharts.json";
         getJson(url, filePath, "{\"Charts\":");
 
-        url = "https://smr.cs.ualberta.ca/comparelibraries/api/metrics/?format=json&latestdate=";
+        url = this.metricsURL ;
         filePath = suffixLocal + "Version.json";
         getJson(url, filePath, "{\"version\":");
     }
@@ -415,8 +425,10 @@ public class DatabaseAccess {
 
     public void sendUser(String username, String jsonString) throws IOException {
 
-        String updateUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/" + username + "/";
-        String InsertUrllink = "https://smr.cs.ualberta.ca/comparelibraries/api/pluginusers/";
+        String updateUrllink = this.updateUrllink + username + "/";
+        String InsertUrllink = this.updateUrllink;
+
+
         String tokenValue = getUserToken();
 
         if (tokenValue.equals("NoToken")) {
@@ -548,7 +560,7 @@ public class DatabaseAccess {
         }
     }
 
-    public String readMavenVersion(String urlStr) throws IOException {
+    public String readMavenVersion(String urlStr, int typeofMaven) throws IOException {
         String returnValue = "// " + urlStr;
         urlStr = urlStr + "/latest";
         try {
@@ -559,9 +571,24 @@ public class DatabaseAccess {
                 String inputLine;
                 int location = -1;
                 while (((inputLine = in.readLine()) != null) && (location == -1)) {
-                    location = inputLine.indexOf("gradle-div");
-                    if (location != -1) {
-                       returnValue = "    " + in.readLine() + "\n" + "    "  + in.readLine();
+                    if (typeofMaven == 1)
+                    {
+                        location = inputLine.indexOf("gradle-div");
+                        if (location != -1) {
+                           returnValue = "    " + in.readLine() + "\n" + "    "  + in.readLine();
+                        }
+                    }
+                    if (typeofMaven == 2)
+                    {
+                        location = inputLine.indexOf("maven-div");
+                        if (location != -1) {
+                            returnValue = "\t\t" + in.readLine() + "\n" + "\t\t" + in.readLine() + "\n" + "\t\t" + in.readLine() + "\n" + "\t\t"  + in.readLine() + "\n" + "\t\t"  + in.readLine() + "\n" + "\t\t"  + in.readLine() + "\n" + "\t\t"  + in.readLine();
+                            returnValue = returnValue.replaceAll("&lt;","<");
+                            returnValue = returnValue.replaceAll("&gt;",">");
+                            returnValue = returnValue.replaceAll("&#32;&#32;&#32;&#32;","\t");
+
+
+                        }
                     }
                 }
                 in.close();
@@ -646,9 +673,6 @@ public class DatabaseAccess {
                             libraryDataPoint.setPackage(jsonObj.getString("package")); // Change tag to package
                         if (jsonObj.has("maven_url"))
                             libraryDataPoint.setMavenlink(jsonObj.getString("maven_url")); // Change tag to maven
-// will be removed later
-                    //    libraryDataPoint.setMavenlink("https://mvnrepository.com/artifact/junit/junit");
-
                         if (jsonObj.has("popularity"))
                             libraryDataPoint.setPopularity(jsonObj.getDouble("popularity"));
                         if (jsonObj.has("release_frequency"))
@@ -728,5 +752,142 @@ public class DatabaseAccess {
         }
         return img;
     }
+
+
+
+    public void EnabledDomain(int domain, String project_name) {
+        if (isEnabled(domain, project_name))
+        { setdisabled(domain, project_name);}
+        else
+        { setEnabled(domain, project_name);}
+
+    }
+
+    private void setdisabled(int domain, String project_name) {
+
+        String filePath = this.filePath +"\\"+ project_name +"domains.json";
+        File myFile = new File(filePath);
+        JSONObject Mainobj = null; // = new JSONObject();
+        if (myFile.exists()) {
+            String content = null;
+            try {
+                content = FileUtils.readFileToString(myFile, "utf-8");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            JSONObject objM = new JSONObject(content);
+            JSONArray jsonarr = objM.getJSONArray("Domains");
+            int location = domainExist(domain, jsonarr);
+            jsonarr.remove(location);
+            Mainobj = new JSONObject();
+            Mainobj.put("Domains", jsonarr);
+        }
+        FileOutputStream fOuts = null;
+        try {
+            fOuts = new FileOutputStream(myFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String result = Mainobj.toString();
+        OutputStreamWriter myOutWriter = new OutputStreamWriter(fOuts);
+        try {
+            myOutWriter.append(result);
+            myOutWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void setEnabled(int domain, String project_name) {
+
+        String filePath = this.filePath +"\\"+ project_name +"domains.json";
+        File myFile = new File(filePath);
+        JSONObject Mainobj = null; // = new JSONObject();
+        if (myFile.exists()) {
+            String content = null;
+            try {
+                content = FileUtils.readFileToString(myFile, "utf-8");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            JSONObject objM = new JSONObject(content);
+            JSONArray jsonarr = objM.getJSONArray("Domains");
+            jsonarr.put(domain);
+            Mainobj = new JSONObject();
+            Mainobj.put("Domains", jsonarr);
+        } else
+        {
+            Mainobj = new JSONObject();
+            JSONArray array = new JSONArray();
+            array.put(domain);
+            Mainobj.put("Domains", array);
+        }
+
+        FileOutputStream fOuts = null;
+        try {
+            fOuts = new FileOutputStream(myFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String result = Mainobj.toString();
+        OutputStreamWriter myOutWriter = new OutputStreamWriter(fOuts);
+        try {
+            myOutWriter.append(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            myOutWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    private int domainExist(int domain, JSONArray arr)
+    {
+        Boolean found = false;
+        int index = 0;
+        while (!found && index < arr.length() )
+        {
+            if (arr.getInt(index) == domain)
+            {
+                found = true;
+            } else {++index;}
+        }
+        if (!found) index = -1;
+        return index;
+    }
+
+    public boolean isEnabled(int domain, String project_name) {
+        boolean disabled = false;
+        String filePath = this.filePath +"\\"+ project_name +"domains.json";
+
+        File myFile = new File(filePath);
+        JSONObject Mainobj = null; // = new JSONObject();
+        if (myFile.exists()) {
+            String content = null;
+            try {
+                content = FileUtils.readFileToString(myFile, "utf-8");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            JSONObject objM = new JSONObject(content);
+            JSONArray arr = objM.getJSONArray("Domains");
+            int location = domainExist(domain, arr);
+            if (location > -1)
+            { disabled = true; }
+        } else
+        { disabled = false; }
+
+        return disabled;
+    }
+
+
+
 }
 

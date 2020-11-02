@@ -33,6 +33,7 @@ public class PostStartupActivity implements StartupActivity {
             @Override
             public void selectionChanged(@NotNull FileEditorManagerEvent event) {
 
+
                 ReplacementAction actionPerformed = new ReplacementAction();
                 try {
                     actionPerformed.detectAllOpenEditors();

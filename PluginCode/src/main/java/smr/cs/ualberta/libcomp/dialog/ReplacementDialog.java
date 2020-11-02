@@ -57,6 +57,7 @@ public class ReplacementDialog extends JFrame {
     private DecimalFormat percentf;
     private DecimalFormat changef;
     private DecimalFormat scoref;
+    private String NoData = "No Data";
     private Color colorBackGround = new Color(210, 210, 210);
     private Color colorForGround = new Color(255, 255, 255);
     private Color colorForGroundDis = new Color(0, 0, 0);
@@ -70,7 +71,7 @@ public class ReplacementDialog extends JFrame {
             "Column 2 Sort Descending",
             "Column 3 Sort Ascending",
             "The header row shows your current library, click on an alternative library to replace",
-            "Number of times the library is imported per 1000 repositories", //popularity
+            "Number of times the library package is imported in the 1000 top starred repositories on GitHub", //popularity
             "Average time in days between two consecutive releases of a library", //release frequency
             "Average time in days to close issues in the issue tracking system of a library", //issue closing time
             "Average time in days to get the first response on issues in the issue tracking system of a library", //issue response time
@@ -166,18 +167,14 @@ public class ReplacementDialog extends JFrame {
         dataDate = new LocalDate[2][columnLength]; // only two date Format
         dataString = new String[1][columnLength]; // only one String format
 
-
         current = 0;
         df = new DecimalFormat("#");
-        intf = new DecimalFormat("# Repos");
+        intf = new DecimalFormat("#'/1000' Repos"); // "#/1000 Repos"
         daysf = new DecimalFormat("# Days");
         reposf = new DecimalFormat("# Repos");
         percentf = new DecimalFormat("0.00 %");
-        changef = new DecimalFormat("# Changes");
+        changef = new DecimalFormat("# Breaking Changes");
         scoref = new DecimalFormat("0.00/5 ");
-
-        // datef = new DateFormat("yyy-MM-DD");
-
 
         data[indexPopularity][offsetBtnCols - 1] = "Popularity (Repos)";
         data[indexRelease][offsetBtnCols - 1] = "Release Frequency (Days)";
@@ -191,7 +188,6 @@ public class ReplacementDialog extends JFrame {
         data[rowLength - 1][offsetBtnCols - 1] = "Last Stack Overflow Post";
         data[rowLength][offsetBtnCols - 1] = "Last Modification Date";
         data[rowLength + 1][offsetBtnCols - 1] = "License";
-
 
         while (current < columnLength - offsetBtnCols) {
 
@@ -208,14 +204,51 @@ public class ReplacementDialog extends JFrame {
             dataDate[indexModification][current + offsetBtnCols] = (libraryList.get(current).getLast_modification_date());
             dataString[indexLicense][current + offsetBtnCols] = (libraryList.get(current).getLicense());
 
-            data[indexPopularity][current + offsetBtnCols] = intf.format(libraryList.get(current).getPopularity());
-            data[indexRelease][current + offsetBtnCols] = daysf.format(libraryList.get(current).getRelease_frequency());
-            data[indexIssueClosing][current + offsetBtnCols] = daysf.format(libraryList.get(current).getIssue_closing_time());
-            data[indexIssueResponse][current + offsetBtnCols] = daysf.format(libraryList.get(current).getIssue_response_time());
-            data[indexBackwardCompatibility][current + offsetBtnCols] = changef.format(libraryList.get(current).getBackwards_compatibility());
-            data[indexSecurity][current + offsetBtnCols] = percentf.format(libraryList.get(current).getSecurity());
-            data[indexPerformance][current + offsetBtnCols] = percentf.format(libraryList.get(current).getPerformance());
-            data[indexScore][current + offsetBtnCols] = scoref.format(libraryList.get(current).getOverall_score());
+            if (libraryList.get(current).getPopularity() > 0)
+                data[indexPopularity][current + offsetBtnCols] = intf.format(libraryList.get(current).getPopularity());
+            else
+                data[indexPopularity][current + offsetBtnCols] = NoData;
+
+            if (libraryList.get(current).getRelease_frequency() > 0)
+                data[indexRelease][current + offsetBtnCols] = daysf.format(libraryList.get(current).getRelease_frequency());
+            else
+                data[indexRelease][current + offsetBtnCols] = NoData;
+
+
+            if (libraryList.get(current).getIssue_closing_time() > 0)
+                data[indexIssueClosing][current + offsetBtnCols] = daysf.format(libraryList.get(current).getIssue_closing_time());
+            else
+                data[indexIssueClosing][current + offsetBtnCols] = NoData;
+
+            if (libraryList.get(current).getIssue_response_time() > 0)
+                data[indexIssueResponse][current + offsetBtnCols] = daysf.format(libraryList.get(current).getIssue_response_time());
+            else
+                data[indexIssueResponse][current + offsetBtnCols] = NoData;
+
+
+            if (libraryList.get(current).getBackwards_compatibility() > 0)
+                data[indexBackwardCompatibility][current + offsetBtnCols] = changef.format(libraryList.get(current).getBackwards_compatibility());
+            else
+                data[indexBackwardCompatibility][current + offsetBtnCols] = NoData;
+
+
+            if (libraryList.get(current).getSecurity() > 0)
+                data[indexSecurity][current + offsetBtnCols] = percentf.format(libraryList.get(current).getSecurity());
+            else
+                data[indexSecurity][current + offsetBtnCols] = NoData;
+
+
+            if (libraryList.get(current).getPerformance() > 0)
+                data[indexPerformance][current + offsetBtnCols] = percentf.format(libraryList.get(current).getPerformance());
+            else
+                data[indexPerformance][current + offsetBtnCols] = NoData;
+
+
+            if (libraryList.get(current).getOverall_score() > 0)
+                data[indexScore][current + offsetBtnCols] = scoref.format(libraryList.get(current).getOverall_score());
+            else
+                data[indexScore][current + offsetBtnCols] = NoData;
+
 
             if (libraryList.get(current).getLast_discussed_so().getYear() == 1900)
                 data[7][current + offsetBtnCols] = "Never";
@@ -223,8 +256,6 @@ public class ReplacementDialog extends JFrame {
                 data[7][current + offsetBtnCols] = libraryList.get(current).getLast_discussed_so();
 
             data[8][current + offsetBtnCols] = libraryList.get(current).getLast_modification_date();
-
-
 
             data[9][current + offsetBtnCols] = libraryList.get(current).getLicense();
 
@@ -243,8 +274,6 @@ public class ReplacementDialog extends JFrame {
             public boolean isCellEditable(int row, int column) {
                 return column < 0;
             }
-
-
             //Implement table cell tool tips.
             public String getToolTipText(MouseEvent e) {
                 String tip = null;
@@ -396,7 +425,7 @@ public class ReplacementDialog extends JFrame {
                     table.addColumnSelectionInterval(selectedLibrary, selectedLibrary);
                     bConfirm.setEnabled(true);
                     bConfirm.setBackground(cololrSelectColumn);
-                    String message = "Replace " + libraryList.get(0).getPackage() + " Package with " + libraryList.get(columnM - offsetBtnCols).getPackage();
+                    String message = "Replace " + libraryList.get(currentLibrary - offsetBtnCols).getPackage() + " Package with " + libraryList.get(columnM - offsetBtnCols).getPackage();
                     bConfirm.setText(message);
                 }
 
@@ -543,28 +572,52 @@ public class ReplacementDialog extends JFrame {
 
                 switch (rowIndex) {
                     case 0: // indPopularity
-                        table.getModel().setValueAt(intf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        if (dataDouble[rowIndex][i] >0)
+                            table.getModel().setValueAt(intf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        else
+                            table.getModel().setValueAt(NoData, rowIndex, i);
                         break;
                     case 1: // indRelease
-                        table.getModel().setValueAt(daysf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        if (dataDouble[rowIndex][i] >0)
+                            table.getModel().setValueAt(daysf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        else
+                            table.getModel().setValueAt(NoData, rowIndex, i);
                         break;
                     case 2: //indIssueClosing
-                        table.getModel().setValueAt(daysf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        if (dataDouble[rowIndex][i] >0)
+                            table.getModel().setValueAt(daysf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        else
+                            table.getModel().setValueAt(NoData, rowIndex, i);
                         break;
                     case 3: // indIssueResponse
-                        table.getModel().setValueAt(daysf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        if (dataDouble[rowIndex][i] >0)
+                            table.getModel().setValueAt(daysf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        else
+                            table.getModel().setValueAt(NoData, rowIndex, i);
                         break;
                     case 4: //indBackward
-                        table.getModel().setValueAt(changef.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        if (dataDouble[rowIndex][i] >0)
+                            table.getModel().setValueAt(changef.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        else
+                            table.getModel().setValueAt(NoData, rowIndex, i);
                         break;
                     case 5: // indSecurity
-                        table.getModel().setValueAt(percentf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        if (dataDouble[rowIndex][i] >0)
+                            table.getModel().setValueAt(percentf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        else
+                            table.getModel().setValueAt(NoData, rowIndex, i);
                         break;
                     case 6: // indPerformance
-                        table.getModel().setValueAt(percentf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        if (dataDouble[rowIndex][i] >0)
+                            table.getModel().setValueAt(percentf.format(dataDouble[rowIndex][i]), rowIndex, i);
+                        else
+                            table.getModel().setValueAt(NoData, rowIndex, i);
                         break;
                     case 10: // indOverScore
-                        table.getModel().setValueAt(scoref.format(dataDouble[rowIndex-3][i]), rowIndex, i);
+                        if (dataDouble[rowIndex-3][i] >0)
+                            table.getModel().setValueAt(scoref.format(dataDouble[rowIndex-3][i]), rowIndex, i);
+                        else
+                            table.getModel().setValueAt(NoData, rowIndex, i);
                         break;
                     case 7: // Date
                         String setValue;
@@ -755,8 +808,6 @@ class Chart extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         bConfirm.setEnabled(true);
-
-
         bConfirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
