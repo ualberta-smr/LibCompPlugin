@@ -478,7 +478,7 @@ public class ReplacementDialog extends JFrame {
         table.setSize(ColumnWidth, frameHeight);
         pane.setBorder(border);
         pane.setBounds(0, 0, ColumnWidth, frameHeight);
-        pane.setOpaque(true);
+        pane.setOpaque(false);
         getContentPane().add(pane);
         setSize(ColumnWidth, frameHeight + 50);
         //setSize(ColumnWidth, frameHeight + 10);
