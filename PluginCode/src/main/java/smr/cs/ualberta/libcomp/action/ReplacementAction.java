@@ -184,10 +184,6 @@ public class ReplacementAction extends AnAction {
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
         TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
-        if (UIUtil.isUnderDarcula()) {
-            attributes.setBackgroundColor(JBColor.YELLOW);
-        }
-
         TextAttributes softerAttributes = attributes.clone();
         boolean dependenciesExists = false;
         int i = 0;
@@ -293,9 +289,6 @@ public class ReplacementAction extends AnAction {
         String selectedTerm;
 
         TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
-        if (UIUtil.isUnderDarcula()) {
-            attributes.setBackgroundColor(JBColor.YELLOW);
-        }
 
         TextAttributes softerAttributes = attributes.clone();
         boolean dependenciesExists = false;
@@ -886,9 +879,6 @@ public class ReplacementAction extends AnAction {
 
             TextAttributes attributes =
                     EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
-            if (UIUtil.isUnderDarcula()) {
-                attributes.setBackgroundColor(JBColor.YELLOW);
-            }
 
             TextAttributes softerAttributes = attributes.clone();
 
