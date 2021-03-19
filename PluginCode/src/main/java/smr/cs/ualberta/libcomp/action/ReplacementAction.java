@@ -17,8 +17,6 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.WriteCommandAction;
