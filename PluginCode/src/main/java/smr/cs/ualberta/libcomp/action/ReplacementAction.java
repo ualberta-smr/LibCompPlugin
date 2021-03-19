@@ -4,6 +4,7 @@ import com.android.aapt.Resources;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -16,6 +17,8 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.ui.JBColor;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -180,7 +183,11 @@ public class ReplacementAction extends AnAction {
 
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
-        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
+        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+        if (UIUtil.isUnderDarcula()) {
+            attributes.setBackgroundColor(JBColor.YELLOW);
+        }
+
         TextAttributes softerAttributes = attributes.clone();
         boolean dependenciesExists = false;
         int i = 0;
@@ -285,7 +292,11 @@ public class ReplacementAction extends AnAction {
         String lineText;
         String selectedTerm;
 
-        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
+        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+        if (UIUtil.isUnderDarcula()) {
+            attributes.setBackgroundColor(JBColor.YELLOW);
+        }
+
         TextAttributes softerAttributes = attributes.clone();
         boolean dependenciesExists = false;
         int i = 0;
@@ -874,7 +885,11 @@ public class ReplacementAction extends AnAction {
             PsiJavaFile javaFile = (PsiJavaFile)psiFile;
 
             TextAttributes attributes =
-                    EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
+                    EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+            if (UIUtil.isUnderDarcula()) {
+                attributes.setBackgroundColor(JBColor.YELLOW);
+            }
+
             TextAttributes softerAttributes = attributes.clone();
 
             PsiImportList importList = javaFile.getImportList();
