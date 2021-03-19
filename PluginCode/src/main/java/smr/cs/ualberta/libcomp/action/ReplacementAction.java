@@ -75,8 +75,7 @@ public class ReplacementAction extends AnAction {
             FileType fileType = psiFile.getFileType();
             String fileExtention = fileType.getDefaultExtension();
 
-            if (fileExtention.equalsIgnoreCase("java") || fileExtention.equalsIgnoreCase("xml") ||
-                    fileExtention.equalsIgnoreCase("groovy")) {
+            if (fileExtention.equalsIgnoreCase("java")) {
                 try {
                     replaceRequestedImport(event);
                     detectImportOnAction(event);
@@ -86,6 +85,25 @@ public class ReplacementAction extends AnAction {
 
             }
 
+            if (fileExtention.equalsIgnoreCase("xml")) {
+                try {
+                    replaceRequestedMaven(event);
+                    detectMavenOnAction(event);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            if (fileExtention.equalsIgnoreCase("groovy"))  {
+                try {
+                    replaceRequestedDependency(event);
+                    detectDependencyOnAction(event);
+                } catch (ParseException | IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
             event.getPresentation().setVisible(true);
             event.getPresentation().setEnabled(true);
         }
@@ -122,12 +140,13 @@ public class ReplacementAction extends AnAction {
 
             if (psiFile != null) {
                 FileType fileType = psiFile.getFileType();
+                String fileExtention = fileType.getDefaultExtension();
 
-                if (fileType.getDefaultExtension().equalsIgnoreCase("java"))
+                if (fileExtention.equalsIgnoreCase("java"))
                 {detectImports(psiFile, editor, project_name); }
-                if (fileType.getDefaultExtension().equalsIgnoreCase("xml"))
+                if (fileExtention.equalsIgnoreCase("xml"))
                 {detectMaven(editor, psiFile, project_name);}
-                if (fileType.getDefaultExtension().equalsIgnoreCase("groovy"))
+                if (fileExtention.equalsIgnoreCase("groovy"))
                 {detectDependancy(editor, psiFile, project_name);}
             }
             indexOpenEditors = indexOpenEditors + 1;
