@@ -73,8 +73,10 @@ public class ReplacementAction extends AnAction {
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
         if (psiFile != null) {
             FileType fileType = psiFile.getFileType();
+            String fileExtention = fileType.getDefaultExtension();
 
-            if (fileType.getDefaultExtension().equalsIgnoreCase("java")) {
+            if (fileExtention.equalsIgnoreCase("java") || fileExtention.equalsIgnoreCase("xml") ||
+                    fileExtention.equalsIgnoreCase("groovy")) {
                 try {
                     replaceRequestedImport(event);
                     detectImportOnAction(event);
@@ -84,25 +86,6 @@ public class ReplacementAction extends AnAction {
 
             }
 
-            if (fileType.getDefaultExtension().equalsIgnoreCase("xml")) {
-                try {
-                    replaceRequestedMaven(event);
-                    detectMavenOnAction(event);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            if (fileType.getDefaultExtension().equalsIgnoreCase("groovy"))  {
-                try {
-                    replaceRequestedDependency(event);
-                    detectDependencyOnAction(event);
-                } catch (ParseException | IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
             event.getPresentation().setVisible(true);
             event.getPresentation().setEnabled(true);
         }
