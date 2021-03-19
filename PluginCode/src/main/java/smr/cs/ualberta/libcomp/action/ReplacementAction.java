@@ -4,6 +4,7 @@ import com.android.aapt.Resources;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -182,7 +183,7 @@ public class ReplacementAction extends AnAction {
 
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
-        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
+        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
         TextAttributes softerAttributes = attributes.clone();
         boolean dependenciesExists = false;
         int i = 0;
@@ -287,7 +288,8 @@ public class ReplacementAction extends AnAction {
         String lineText;
         String selectedTerm;
 
-        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
+        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+
         TextAttributes softerAttributes = attributes.clone();
         boolean dependenciesExists = false;
         int i = 0;
@@ -876,7 +878,8 @@ public class ReplacementAction extends AnAction {
             PsiJavaFile javaFile = (PsiJavaFile)psiFile;
 
             TextAttributes attributes =
-                    EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
+                    EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+
             TextAttributes softerAttributes = attributes.clone();
 
             PsiImportList importList = javaFile.getImportList();
