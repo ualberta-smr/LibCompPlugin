@@ -79,7 +79,7 @@ public class ReplacementAction extends AnAction {
             if (fileExtention.equalsIgnoreCase("java")) {
                 try {
                     replaceRequestedImport(event);
-                    detectImportOnAction(event);
+                    detectOnAction(event, "java");
                 } catch (ParseException | IOException e) {
                     e.printStackTrace();
                 }
@@ -89,7 +89,7 @@ public class ReplacementAction extends AnAction {
             if (fileExtention.equalsIgnoreCase("xml")) {
                 try {
                     replaceRequestedMaven(event);
-                    detectMavenOnAction(event);
+                    detectOnAction(event, "xml");
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -99,7 +99,7 @@ public class ReplacementAction extends AnAction {
             if (fileExtention.equalsIgnoreCase("groovy"))  {
                 try {
                     replaceRequestedDependency(event);
-                    detectDependencyOnAction(event);
+                    detectOnAction(event, "groovy");
                 } catch (ParseException | IOException e) {
                     e.printStackTrace();
                 }
@@ -354,38 +354,25 @@ public class ReplacementAction extends AnAction {
         }
     }
 
-    public void detectMavenOnAction(@NotNull final AnActionEvent event) {
+    public void detectOnAction(@NotNull final AnActionEvent event, @NotNull final String fileType) throws IOException {
 
         Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
         final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
-        String project_name = project.getName();
+        String projectName = project.getName();
 
         try {
-            detectMaven(editor, psiFile, project_name);
-        }
-        catch(Exception e) {
+            if (fileType.equals("java")) {
+                detectImports(psiFile, editor, projectName);
+            } else if (fileType.equals("xml")) {
+                detectMaven(editor, psiFile, projectName);
+            } else if (fileType.equals("groovy")) {
+                detectDependancy(editor, psiFile, projectName);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
-    public void detectDependencyOnAction(@NotNull final AnActionEvent event) throws IOException {
-
-            Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-            PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
-            final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
-            String project_name = project.getName();
-
-            try {
-                detectDependancy(editor, psiFile, project_name);
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-            }
-
-    }
-
 
 
     /**
@@ -409,17 +396,17 @@ public class ReplacementAction extends AnAction {
             FileType fileType = psiFile.getFileType();
             if (fileType.getDefaultExtension().equalsIgnoreCase("java")) {
                 try {
-                    detectImportOnAction(event);
+                    detectOnAction(event, "java");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
             if (fileType.getDefaultExtension().equalsIgnoreCase("xml")) {
-                detectMavenOnAction(event);
+                detectOnAction(event, "xml");
             }
             if (fileType.getDefaultExtension().equalsIgnoreCase("groovy")) {
                 try {
-                    detectDependencyOnAction(event);
+                    detectOnAction(event, "groovy");
                     event.getPresentation().setEnabledAndVisible(true);
                 }
                 catch (IOException e) {
@@ -930,20 +917,5 @@ public class ReplacementAction extends AnAction {
         catch(Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void detectImportOnAction(@NotNull final AnActionEvent event) throws IOException {
-
-         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
-         Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-         final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
-         String project_name = project.getName();
-
-         try {
-             detectImports(psiFile, editor, project_name);
-         }
-         catch(Exception e) {
-             e.printStackTrace();
-         }
     }
 }
