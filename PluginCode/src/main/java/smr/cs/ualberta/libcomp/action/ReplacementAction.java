@@ -90,7 +90,7 @@ public class ReplacementAction extends AnAction {
                 try {
                     replaceRequestedMaven(event);
                     detectOnAction(event, "xml");
-                } catch (ParseException e) {
+                } catch (ParseException | IOException e) {
                     e.printStackTrace();
                 }
 
@@ -402,7 +402,11 @@ public class ReplacementAction extends AnAction {
                 }
             }
             if (fileType.getDefaultExtension().equalsIgnoreCase("xml")) {
-                detectOnAction(event, "xml");
+                try {
+                    detectOnAction(event, "xml");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             if (fileType.getDefaultExtension().equalsIgnoreCase("groovy")) {
                 try {
