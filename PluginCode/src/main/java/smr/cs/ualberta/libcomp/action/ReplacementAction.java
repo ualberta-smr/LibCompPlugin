@@ -179,13 +179,13 @@ public class ReplacementAction extends AnAction {
     }
 
     public void detectStatement(@NotNull final Editor editor,
-                                @NotNull final PsiFile psiFile,
                                 @NotNull final String projectName,
                                 @NotNull final int loc,
                                 @NotNull final int lineNum,
                                 @NotNull final String identifier,
+                                @NotNull final String closeIdentifier,
                                 @NotNull final String endIdentifier,
-                                @NotNull final ArrayList<DependencyStatement> listObjects) throws IOException {
+                                @NotNull ArrayList<DependencyStatement> listObjects) throws IOException {
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
         String lineText;
@@ -205,6 +205,7 @@ public class ReplacementAction extends AnAction {
 
         while (dependenciesExists)
         {
+            System.out.println(dependenciesExists);
             int startOffset = document.getLineStartOffset(i);
             int endOffset = document.getLineEndOffset(i);
             lineText = null;
@@ -214,13 +215,14 @@ public class ReplacementAction extends AnAction {
             lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
 
             if ((lineText != null) && (lineText.length()>2))
-            {valuesInQuotes = StringUtils.substringsBetween(lineText, identifier , identifier);}
+            {valuesInQuotes = StringUtils.substringsBetween(lineText, identifier , closeIdentifier);}
 
             if (valuesInQuotes != null) {
                 selectedTerm = valuesInQuotes[0];
 
                 DatabaseAccess dataAccessObject = new DatabaseAccess();
                 ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
+
                 if (choicesArray.size() > 0) {
                     DependencyStatement depObj = new DependencyStatement();
                     depObj.setImportLocation(i);
@@ -265,7 +267,7 @@ public class ReplacementAction extends AnAction {
         }
 
         try {
-            detectStatement(editor, psiFile, projectName, loc, lineNum, "\'", "}", DependListObjects);
+            detectStatement(editor, projectName, loc, lineNum, "\'", "\'","}", DependListObjects);
         }
         catch (IOException ioException) {
             ioException.printStackTrace();
@@ -308,9 +310,9 @@ public class ReplacementAction extends AnAction {
         {
             lineNum = loc; // line number of the dependencies PSI node
         }
-
+        System.out.println("hello");
         try {
-            detectStatement(editor, psiFile, projectName, loc, lineNum, "<groupId>", "</dependencies>", MavenListObjects);
+            detectStatement(editor, projectName, loc, lineNum, "<groupId>", "</groupId>","</dependencies>", MavenListObjects);
         }
         catch (IOException ioException) {
             ioException.printStackTrace();
@@ -726,6 +728,7 @@ public class ReplacementAction extends AnAction {
             int locationLastWord = 0;
             int importLineNumber;
 
+            System.out.println("hello java");
             for (PsiImportStatementBase importStatementObject : importList.getAllImportStatements()){
 
                 //get location of import statement
