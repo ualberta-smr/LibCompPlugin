@@ -205,7 +205,6 @@ public class ReplacementAction extends AnAction {
 
         while (dependenciesExists)
         {
-            System.out.println(dependenciesExists);
             int startOffset = document.getLineStartOffset(i);
             int endOffset = document.getLineEndOffset(i);
             lineText = null;
@@ -310,7 +309,7 @@ public class ReplacementAction extends AnAction {
         {
             lineNum = loc; // line number of the dependencies PSI node
         }
-        System.out.println("hello");
+
         try {
             detectStatement(editor, projectName, loc, lineNum, "<groupId>", "</groupId>","</dependencies>", MavenListObjects);
         }
@@ -728,7 +727,6 @@ public class ReplacementAction extends AnAction {
             int locationLastWord = 0;
             int importLineNumber;
 
-            System.out.println("hello java");
             for (PsiImportStatementBase importStatementObject : importList.getAllImportStatements()){
 
                 //get location of import statement
