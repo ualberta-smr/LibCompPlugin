@@ -178,24 +178,29 @@ public class ReplacementAction extends AnAction {
         return location;
     }
 
-
-    public void detectDependancy(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException {
-
+    public void detectStatement(@NotNull final Editor editor,
+                                @NotNull final PsiFile psiFile,
+                                @NotNull final String projectName,
+                                @NotNull final int loc,
+                                @NotNull final int lineNum,
+                                @NotNull final String identifier,
+                                @NotNull final String endIdentifier,
+                                @NotNull final ArrayList<DependencyStatement> listObjects) throws IOException {
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
+        String lineText;
+        String selectedTerm;
         TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
         TextAttributes softerAttributes = attributes.clone();
         boolean dependenciesExists = false;
         int i = 0;
-        int loc = detectDependenciesPSI(psiFile.getNode()); // Parse PSI to detect the PSI dependencies node
         if (loc != -1) // dependencies exists
         {
             dependenciesExists = true;
-            i = document.getLineNumber(loc); // line number of the dependencies PSI node
+            i = lineNum; // line number of the dependencies PSI node
         }
-        String lineText;
-        String selectedTerm;
-        DependListObjects.clear();
+
+        listObjects.clear();
         editorModel.removeAllHighlighters();
 
         while (dependenciesExists)
@@ -209,48 +214,61 @@ public class ReplacementAction extends AnAction {
             lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
 
             if ((lineText != null) && (lineText.length()>2))
-            {valuesInQuotes = StringUtils.substringsBetween(lineText, "\'", "\'");}
-
-
+            {valuesInQuotes = StringUtils.substringsBetween(lineText, identifier , identifier);}
 
             if (valuesInQuotes != null) {
-                    selectedTerm = valuesInQuotes[0];
+                selectedTerm = valuesInQuotes[0];
 
-                    DatabaseAccess dataAccessObject = new DatabaseAccess();
-                    ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
-                    if (choicesArray.size() > 0) {
-                        DependencyStatement depObj = new DependencyStatement();
-                        depObj.setImportLocation(i);
-                        depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
-                        depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
-                        depObj.setDomainName(choicesArray.get(2));
-                        depObj.setFromlocation(startOffset);
-                        depObj.setTolocation(endOffset);
+                DatabaseAccess dataAccessObject = new DatabaseAccess();
+                ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
+                if (choicesArray.size() > 0) {
+                    DependencyStatement depObj = new DependencyStatement();
+                    depObj.setImportLocation(i);
+                    depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
+                    depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
+                    depObj.setDomainName(choicesArray.get(2));
+                    depObj.setFromlocation(startOffset);
+                    depObj.setTolocation(endOffset);
 
-                        if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
-                            depObj.setEnableddomain(false);
-                        }
-                        else {
-                            depObj.setEnableddomain(true);
-                        }
+                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
+                        depObj.setEnableddomain(false);
+                    }
+                    else {
+                        depObj.setEnableddomain(true);
+                    }
 
-                        DependListObjects.add(depObj);
+                    listObjects.add(depObj);
 
-
-                        if (depObj.getEnableddomain()) {
-                            editorModel.addLineHighlighter(i,
-                                    DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
-
-                        }
-
+                    if (depObj.getEnableddomain()) {
+                        editorModel.addLineHighlighter(i,
+                                DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
 
                     }
                 }
+            }
             ++i;
-            boolean isContainsEnd = lineText.contains("}");
+            boolean isContainsEnd = lineText.contains(endIdentifier);
             if (isContainsEnd) {
                 dependenciesExists = false;
             }
+        }
+    }
+
+    public void detectDependancy(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException {
+
+        final Document document = editor.getDocument();
+        int lineNum = 0;
+        int loc = detectDependenciesPSI(psiFile.getNode()); // Parse PSI to detect the PSI dependencies node
+        if (loc != -1) // dependencies exists
+        {
+            lineNum = document.getLineNumber(loc); // line number of the dependencies PSI node
+        }
+
+        try {
+            detectStatement(editor, psiFile, projectName, loc, lineNum, "\'", "}", DependListObjects);
+        }
+        catch (IOException ioException) {
+            ioException.printStackTrace();
         }
     }
 
@@ -283,74 +301,19 @@ public class ReplacementAction extends AnAction {
 
     public void detectMaven(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException {
 
-        final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
-        String lineText;
-        String selectedTerm;
-
-        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
-
-        TextAttributes softerAttributes = attributes.clone();
-        boolean dependenciesExists = false;
-        int i = 0;
+        int lineNum = 0;
         int loc = detectMavenPSI(document); // Parse PSI to detect the PSI dependencies node
         if (loc != -1) // dependencies exists
         {
-            dependenciesExists = true;
-            i = loc; // line number of the dependencies PSI node
+            lineNum = loc; // line number of the dependencies PSI node
         }
-        MavenListObjects.clear();
-        editorModel.removeAllHighlighters();
 
-        while (dependenciesExists)
-        {
-            int startOffset = document.getLineStartOffset(i);
-            int endOffset = document.getLineEndOffset(i);
-            lineText = null;
-            String[] valuesInQuotes = new String[0];
-            valuesInQuotes = null;
-            lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
-            if ((lineText != null) && (lineText.length()>2))
-            {valuesInQuotes = StringUtils.substringsBetween(lineText, "<groupId>", "</groupId>");}
-
-            if (valuesInQuotes != null) {
-                selectedTerm = valuesInQuotes[0];
-
-                DatabaseAccess dataAccessObject = new DatabaseAccess();
-                ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
-                if (choicesArray.size() > 0) {
-                    DependencyStatement depObj = new DependencyStatement();
-                    depObj.setImportLocation(i);
-                    depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
-                    depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
-                    depObj.setDomainName(choicesArray.get(2));
-                    depObj.setFromlocation(startOffset);
-                    depObj.setTolocation(endOffset);
-
-                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
-                        depObj.setEnableddomain(false);
-                    }
-                    else {
-                        depObj.setEnableddomain(true);
-                    }
-
-                    MavenListObjects.add(depObj);
-
-
-                    if (depObj.getEnableddomain()) {
-                        editorModel.addLineHighlighter(i,
-                                DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
-
-                    }
-
-
-                }
-            }
-            ++i;
-            boolean isContainsEnd = lineText.contains("</dependencies>");
-            if (isContainsEnd) {
-                dependenciesExists = false;
-            }
+        try {
+            detectStatement(editor, psiFile, projectName, loc, lineNum, "<groupId>", "</dependencies>", MavenListObjects);
+        }
+        catch (IOException ioException) {
+            ioException.printStackTrace();
         }
     }
 
