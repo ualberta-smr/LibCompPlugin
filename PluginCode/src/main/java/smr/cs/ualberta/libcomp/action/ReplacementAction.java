@@ -51,8 +51,8 @@ public class ReplacementAction extends AnAction {
     public ArrayList<ImportStatement> ImportListObjects;
     public ArrayList<DependencyStatement> DependListObjects;
     public ArrayList<DependencyStatement> MavenListObjects;
-    private int to_library;
-    private String full_lib_list;
+    private int toLibrary;
+    private String selectedLibList;
     private String libraryName;
     private boolean sendToCloud = false ;
 
@@ -126,9 +126,9 @@ public class ReplacementAction extends AnAction {
 
     public void detectAllOpenEditors() throws IOException {
         Project proj= getActiveProject();
-        String project_name = "none";
+        String projectName = "none";
         if (proj == null)  { return;}
-        project_name = proj.getName();
+        projectName = proj.getName();
         FileEditorManager manager = FileEditorManager.getInstance(proj);
         VirtualFile[] filesAll = manager.getOpenFiles();
         FileEditor[] editorFileAll = manager.getAllEditors();
@@ -144,11 +144,11 @@ public class ReplacementAction extends AnAction {
                 String fileExtention = fileType.getDefaultExtension();
 
                 if (fileExtention.equalsIgnoreCase("java"))
-                {detectImports(psiFile, editor, project_name); }
+                {detectImports(psiFile, editor, projectName); }
                 if (fileExtention.equalsIgnoreCase("xml"))
-                {detectMaven(editor, psiFile, project_name);}
+                {detectMaven(editor, psiFile, projectName);}
                 if (fileExtention.equalsIgnoreCase("groovy"))
-                {detectDependancy(editor, psiFile, project_name);}
+                {detectDependancy(editor, psiFile, projectName);}
             }
             indexOpenEditors = indexOpenEditors + 1;
         }
@@ -179,7 +179,7 @@ public class ReplacementAction extends AnAction {
     }
 
 
-    public void detectDependancy(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String project_name ) throws IOException {
+    public void detectDependancy(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException {
 
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
@@ -227,7 +227,7 @@ public class ReplacementAction extends AnAction {
                         depObj.setFromlocation(startOffset);
                         depObj.setTolocation(endOffset);
 
-                        if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), project_name)) {
+                        if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
                             depObj.setEnableddomain(false);
                         }
                         else {
@@ -281,7 +281,7 @@ public class ReplacementAction extends AnAction {
         return location;
     }
 
-    public void detectMaven(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String project_name ) throws IOException {
+    public void detectMaven(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException {
 
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
@@ -327,7 +327,7 @@ public class ReplacementAction extends AnAction {
                     depObj.setFromlocation(startOffset);
                     depObj.setTolocation(endOffset);
 
-                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), project_name)) {
+                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
                         depObj.setEnableddomain(false);
                     }
                     else {
@@ -436,17 +436,17 @@ public class ReplacementAction extends AnAction {
         final Document document = editor.getDocument();
         PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
 
-        String project_name = project.getName();
-        String class_name = "";
+        String projectName = project.getName();
+        String className = "";
         if (file instanceof PsiJavaFile) {
             PsiClass[] classes = ((PsiJavaFile) file).getClasses();
             if (classes.length > 0) {
-                class_name= classes[0].getQualifiedName();
+                className= classes[0].getQualifiedName();
             }
         }
 
-        Date action_date = new Date();
-        int from_library;
+        Date actionDate = new Date();
+        int fromLibrary;
 
         User userRecord = new User();
         DatabaseAccess dataAccessObject = new DatabaseAccess();
@@ -470,30 +470,30 @@ public class ReplacementAction extends AnAction {
                 String importStatementFull;
                 String importStatementLastWord; //this importStatementObject the last library of the import statement (i.e. last word at the end)
                 int offsetLastWord = 0;
-                int line_num;
+                int lineNum;
 
-                from_library = ImportListObjects.get(currentLine).getImportLib();
-                int finalFrom_library = from_library;
+                fromLibrary = ImportListObjects.get(currentLine).getImportLib();
+                int finalFromLibrary = fromLibrary;
                 PsiImportStatementBase importStatementObject =  ImportListObjects.get(currentLine).getImportListBase();
                 importStatementFull = importStatementObject.getImportReference().getQualifiedName();
                 importStatementLastWord = importStatementObject.getImportReference().getReferenceName();
 
                 offsetLastWord = importStatementObject.getImportReference().getTextOffset();
-                line_num = document.getLineNumber(offsetLastWord);
+                lineNum = document.getLineNumber(offsetLastWord);
 
                 int locationStartOfImport = offsetLastWord - (importStatementFull.length() - importStatementLastWord.length());
-                int locationEndOfImport = document.getLineEndOffset(line_num) - 1;
+                int locationEndOfImport = document.getLineEndOffset(lineNum) - 1;
 
                 ReplacementDialog replacementDialog =new ReplacementDialog(ImportListObjects.get(currentLine).getDomainName(), ImportListObjects.get(currentLine).getImportDomain(),ImportListObjects.get(currentLine).getImportLib());
 
-                String finalClass_name = class_name;
+                String finalClassName = className;
                 WindowAdapter adapter = new WindowAdapter() {
 
                     @Override
                     public void windowLostFocus(WindowEvent e) {
                         String finalChoice = replacementDialog.getLibraryReturned();
-                        to_library = replacementDialog.getto_library();
-                        full_lib_list = replacementDialog.getSelectionLibrary();
+                        toLibrary = replacementDialog.getto_library();
+                        selectedLibList = replacementDialog.getSelectionLibrary();
 
                         if (finalChoice.equals("None") == false) {
                             finalChoice = finalChoice + ".*";
@@ -505,7 +505,7 @@ public class ReplacementAction extends AnAction {
                         try {
 
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
+                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, lineNum, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
                                 dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
 
 
@@ -518,8 +518,8 @@ public class ReplacementAction extends AnAction {
                     @Override
                     public void windowClosing(WindowEvent e) {
                         String finalChoice = replacementDialog.getLibraryReturned();
-                        to_library = replacementDialog.getto_library();
-                        full_lib_list = replacementDialog.getSelectionLibrary();
+                        toLibrary = replacementDialog.getto_library();
+                        selectedLibList = replacementDialog.getSelectionLibrary();
 
                         if (finalChoice.equals("None") == false) {
                             finalChoice = finalChoice + ".*";
@@ -529,7 +529,7 @@ public class ReplacementAction extends AnAction {
                             try {
 
                                     DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                    ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
+                                    ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, lineNum, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
                                     dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
 
                             }
@@ -540,7 +540,7 @@ public class ReplacementAction extends AnAction {
                         try {
 
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
+                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, lineNum, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
                                 dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
                             }
                         catch (IOException ioException) {
@@ -556,18 +556,19 @@ public class ReplacementAction extends AnAction {
         }
     }
 
-    public void replaceRequestedMaven(@NotNull final AnActionEvent event) throws ParseException {
-
+    public void replaceRequestedStatement(@NotNull final AnActionEvent event,
+                                          @NotNull final String className,
+                                          @NotNull final int typeofMaven,
+                                          @NotNull final ArrayList<DependencyStatement> listObjects) throws ParseException {
         final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
         final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
         final Document document = editor.getDocument();
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
 
-        String project_name = project.getName();
-        String class_name = "Maven File";
+        String projectName = project.getName();
 
-        Date action_date = new Date();
-        int from_library;
+        Date actionDate = new Date();
+        int fromLibrary;
 
         User userRecord = new User();
         DatabaseAccess dataAccessObject = new DatabaseAccess();
@@ -586,20 +587,20 @@ public class ReplacementAction extends AnAction {
         int locationStartOfImport;
         int locationEndOfImport;
 
-        while (currentLine < MavenListObjects.size()) {
-            if (MavenListObjects.get(currentLine).getImportLocation() == clickedLineNumber) {
-                from_library = MavenListObjects.get(currentLine).getImportLib();
-                locationStartOfImport = MavenListObjects.get(currentLine).getFromlocation();
-                locationEndOfImport = MavenListObjects.get(currentLine).getTolocation();
-                int finalFrom_library = from_library;
+        while (currentLine < listObjects.size()) {
+            if (listObjects.get(currentLine).getImportLocation() == clickedLineNumber) {
+                fromLibrary = listObjects.get(currentLine).getImportLib();
+                locationStartOfImport = listObjects.get(currentLine).getFromlocation();
+                locationEndOfImport = listObjects.get(currentLine).getTolocation();
+                int finalFromLibrary = fromLibrary;
 
-                ReplacementDialog replacementDialog =new ReplacementDialog(MavenListObjects.get(currentLine).getDomainName(), MavenListObjects.get(currentLine).getImportDomain(),MavenListObjects.get(currentLine).getImportLib());
+                ReplacementDialog replacementDialog =new ReplacementDialog(listObjects.get(currentLine).getDomainName(), listObjects.get(currentLine).getImportDomain(),listObjects.get(currentLine).getImportLib());
 
-              //  int finalLocationStartOfImport = locationStartOfImport;
+                //  int finalLocationStartOfImport = locationStartOfImport;
                 int finalLocationStartOfImport = document.getLineStartOffset(clickedLineNumber - 1);
                 int finalLocationEndOfImport = locationEndOfImport;
                 finalLocationEndOfImport = document.getLineEndOffset(clickedLineNumber + 4);
-                String finalClass_name = class_name;
+                String finalClassName = className;
                 int finalLocationEndOfImport1 = finalLocationEndOfImport;
                 int finalLocationEndOfImport2 = finalLocationEndOfImport;
                 WindowAdapter adapter = new WindowAdapter() {
@@ -608,13 +609,13 @@ public class ReplacementAction extends AnAction {
                     public void windowLostFocus(WindowEvent e) {
                         String finalChoice = replacementDialog.getMavenReturned();
 
-                        to_library = replacementDialog.getto_library();
-                        full_lib_list = replacementDialog.getSelectionLibrary();
+                        toLibrary = replacementDialog.getto_library();
+                        selectedLibList = replacementDialog.getSelectionLibrary();
                         libraryName = replacementDialog.getLibraryname();
 
                         if (finalChoice.equals("None") == false) {
                             try {
-                                finalChoice = dataAccessObject.readMavenVersion(finalChoice,2);
+                                finalChoice = dataAccessObject.readMavenVersion(finalChoice,typeofMaven);
                             } catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
@@ -624,7 +625,7 @@ public class ReplacementAction extends AnAction {
                                     document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport1, finalChoice1));
 
                             try {
-                                detectMaven(editor, psiFile, project_name);
+                                detectMaven(editor, psiFile, projectName);
                             } catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
@@ -635,7 +636,7 @@ public class ReplacementAction extends AnAction {
                         try {
 
                             DatabaseAccess dataAccessObject = new DatabaseAccess();
-                            ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
+                            ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, clickedLineNumber, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
                             dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
 
                         }
@@ -647,14 +648,14 @@ public class ReplacementAction extends AnAction {
                     @Override
                     public void windowClosing(WindowEvent e) {
                         String finalChoice = replacementDialog.getMavenReturned();
-                        to_library = replacementDialog.getto_library();
-                        full_lib_list = replacementDialog.getSelectionLibrary();
+                        toLibrary = replacementDialog.getto_library();
+                        selectedLibList = replacementDialog.getSelectionLibrary();
                         libraryName = replacementDialog.getLibraryname();
 
                         if (finalChoice.equals("None") == false) {
 
                             try {
-                                finalChoice = dataAccessObject.readMavenVersion(finalChoice, 2);
+                                finalChoice = dataAccessObject.readMavenVersion(finalChoice, typeofMaven);
                             } catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
@@ -665,7 +666,7 @@ public class ReplacementAction extends AnAction {
                                     document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport2, finalChoice1));
 
                             try {
-                                detectMaven(editor, psiFile, project_name);
+                                detectMaven(editor, psiFile, projectName);
                             } catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
@@ -673,7 +674,7 @@ public class ReplacementAction extends AnAction {
 
                             try {
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
+                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, clickedLineNumber, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
                                 dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
 
                             }
@@ -684,7 +685,7 @@ public class ReplacementAction extends AnAction {
                         try {
 
                             DatabaseAccess dataAccessObject = new DatabaseAccess();
-                            ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
+                            ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, clickedLineNumber, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
                             dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
 
                         }
@@ -701,149 +702,26 @@ public class ReplacementAction extends AnAction {
         }
     }
 
+    public void replaceRequestedMaven(@NotNull final AnActionEvent event) throws ParseException {
+        String className = "Maven File";
+
+        try {
+            replaceRequestedStatement(event, className, 2, MavenListObjects);
+        }
+        catch (ParseException parseException) {
+            parseException.printStackTrace();
+        }
+    }
 
 
     public void replaceRequestedDependency(@NotNull final AnActionEvent event) throws ParseException {
+        String className = "groovy Class";
 
-        final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-        final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
-        final Document document = editor.getDocument();
-        PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
-
-        String project_name = project.getName();
-        String class_name = "groovy Class";
-
-        Date action_date = new Date();
-        int from_library;
-
-        User userRecord = new User();
-        DatabaseAccess dataAccessObject = new DatabaseAccess();
-        userRecord = dataAccessObject.readUserProfile();
-        sendToCloud = (Integer.parseInt(userRecord.getSendAllCloud())==1);
-
-        //Work off of the primary caret to get the selection info
-        Caret primaryCaret = editor.getCaretModel().getPrimaryCaret();
-
-        //Get the location of the mouse click, get the caret offset, then from the offset get the line number
-        int mouseClickLocation = primaryCaret.getOffset();
-        int clickedLineNumber = document.getLineNumber(mouseClickLocation);
-
-        //Check if the user clicked on a line that is potentially replaceable (i.e. import statement is in database)
-        int currentLine = 0;
-        int locationStartOfImport;
-        int locationEndOfImport;
-
-        while (currentLine < DependListObjects.size()) {
-            if (DependListObjects.get(currentLine).getImportLocation() == clickedLineNumber) {
-                from_library = DependListObjects.get(currentLine).getImportLib();
-                locationStartOfImport = DependListObjects.get(currentLine).getFromlocation();
-                locationEndOfImport = DependListObjects.get(currentLine).getTolocation();
-                int finalFrom_library = from_library;
-
-                ReplacementDialog replacementDialog =new ReplacementDialog(DependListObjects.get(currentLine).getDomainName(), DependListObjects.get(currentLine).getImportDomain(),DependListObjects.get(currentLine).getImportLib());
-
-                int finalLocationStartOfImport = locationStartOfImport;
-                int finalLocationEndOfImport = locationEndOfImport;
-                finalLocationEndOfImport = document.getLineEndOffset(clickedLineNumber);
-                String finalClass_name = class_name;
-                int finalLocationEndOfImport1 = finalLocationEndOfImport;
-                int finalLocationEndOfImport2 = finalLocationEndOfImport;
-                WindowAdapter adapter = new WindowAdapter() {
-
-                    @Override
-                    public void windowLostFocus(WindowEvent e) {
-                        String finalChoice = replacementDialog.getMavenReturned();
-
-                        to_library = replacementDialog.getto_library();
-                        full_lib_list = replacementDialog.getSelectionLibrary();
-                        libraryName = replacementDialog.getLibraryname();
-
-                        if (finalChoice.equals("None") == false) {
-                            try {
-                                finalChoice = dataAccessObject.readMavenVersion(finalChoice, 1);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-
-                            String finalChoice1 = finalChoice;
-                            WriteCommandAction.runWriteCommandAction(project, () ->
-                                    document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport1, finalChoice1));
-
-                            try {
-                                detectDependancy(editor, psiFile, project_name);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-
-
-                        }
-
-                        try {
-
-                                DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                                dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
-
-                        }
-                        catch (IOException ioException) {
-                            ioException.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void windowClosing(WindowEvent e) {
-                        String finalChoice = replacementDialog.getMavenReturned();
-                        to_library = replacementDialog.getto_library();
-                        full_lib_list = replacementDialog.getSelectionLibrary();
-                        libraryName = replacementDialog.getLibraryname();
-
-                        if (finalChoice.equals("None") == false) {
-
-                            try {
-                                finalChoice = dataAccessObject.readMavenVersion(finalChoice, 1);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-
-                            String finalChoice1 = finalChoice;
-
-                            WriteCommandAction.runWriteCommandAction(project, () ->
-                                    document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport2, finalChoice1));
-
-                            try {
-                                detectDependancy(editor, psiFile, project_name);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-
-
-                            try {
-                                    DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                    ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                                    dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
-
-                            }
-                            catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-                        }
-                        try {
-
-                                DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                                dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
-
-                        }
-                        catch (IOException ioException) {
-                            ioException.printStackTrace();
-                        }
-                    }
-                };
-                replacementDialog.addWindowListener(adapter);
-                replacementDialog.addWindowFocusListener(adapter);
-                replacementDialog.setVisible(true);
-            }
-            currentLine = currentLine + 1;
+        try {
+            replaceRequestedStatement(event, className, 1, DependListObjects);
+        }
+        catch (ParseException parseException) {
+            parseException.printStackTrace();
         }
     }
 
@@ -861,7 +739,7 @@ public class ReplacementAction extends AnAction {
      * Right now, the library being queried is the "last word" of the import statement
      * ex. for my.import.statement.rehab, the term queried against in the database is "rehab"
      */
-    public void detectImports(@NotNull final PsiFile psiFile, @NotNull final Editor editor, @NotNull final  String project_name ) {
+    public void detectImports(@NotNull final PsiFile psiFile, @NotNull final Editor editor, @NotNull final  String projectName ) {
 
         try {
             final MarkupModel editorModel = editor.getMarkupModel();
@@ -903,7 +781,7 @@ public class ReplacementAction extends AnAction {
                     impObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
                     impObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
                     impObj.setDomainName(choicesArray.get(2));
-                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), project_name)) {
+                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
                         impObj.setEnableddomain(false);
                     }
                     else {
