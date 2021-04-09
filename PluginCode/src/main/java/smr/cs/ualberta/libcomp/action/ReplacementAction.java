@@ -367,7 +367,7 @@ public class ReplacementAction extends AnAction {
                     e.printStackTrace();
                 }
             }
-            if (fileType.getDefaultExtension().equalsIgnoreCase("xml")) {
+            if (psiFile.getName().equalsIgnoreCase("pom.xml")) {
                 try {
                     detectOnAction(event, "xml");
                 } catch (IOException e) {
