@@ -74,6 +74,7 @@ public class ReplacementAction extends AnAction {
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
         if (psiFile != null) {
             FileType fileType = psiFile.getFileType();
+            String fileName = psiFile.getName();
             String fileExtention = fileType.getDefaultExtension();
 
             if (fileExtention.equalsIgnoreCase("java")) {
@@ -86,7 +87,7 @@ public class ReplacementAction extends AnAction {
 
             }
 
-            if (fileExtention.equalsIgnoreCase("xml")) {
+            if (fileName.equalsIgnoreCase("pom.xml")) {
                 try {
                     replaceRequestedMaven(event);
                     detectOnAction(event, "xml");
