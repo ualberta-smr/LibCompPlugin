@@ -25,6 +25,10 @@ import com.intellij.psi.*;
 import com.intellij.psi.PsiImportList;
 import com.intellij.psi.PsiFile;
 import org.apache.commons.lang.StringUtils;
+import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jetbrains.annotations.NotNull;
 import smr.cs.ualberta.libcomp.*;
 import smr.cs.ualberta.libcomp.data.DependencyStatement;
@@ -36,10 +40,12 @@ import smr.cs.ualberta.libcomp.dialog.ReplacementDialog;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The ActionReplacement class is the main action for the plugin
@@ -304,7 +310,10 @@ public class ReplacementAction extends AnAction {
 
     public void detectMaven(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException {
 
+        final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
+        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+        TextAttributes softerAttributes = attributes.clone();
         int lineNum = 0;
         int loc = detectMavenPSI(document); // Parse PSI to detect the PSI dependencies node
         if (loc != -1) // dependencies exists
@@ -312,10 +321,60 @@ public class ReplacementAction extends AnAction {
             lineNum = loc; // line number of the dependencies PSI node
         }
 
+        MavenXpp3Reader Xpp3Reader = new MavenXpp3Reader();
+        editorModel.removeAllHighlighters();
+        VirtualFile vFile = psiFile.getOriginalFile().getVirtualFile();
+        String path = vFile.getPath();
+        MavenListObjects.clear();
+        int i = lineNum;
         try {
-            detectStatement(editor, projectName, loc, lineNum, "<groupId>", "</groupId>","</dependencies>", MavenListObjects);
+            Model model = Xpp3Reader.read(new FileReader(path));
+            List<Dependency> dependencies = model.getDependencies();
+            String selectedTerm = null;
+            String lineText = "";
+            int startOffset = 0;
+            int endOffset = 0;
+            for (Dependency dependency : dependencies) {
+                selectedTerm = dependency.getGroupId();
+
+                while(!(lineText.contains(selectedTerm) && lineText.contains("<groupId>"))) {
+                    startOffset = document.getLineStartOffset(i);
+                    endOffset = document.getLineEndOffset(i);
+                    lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
+                    ++i;
+                }
+                DatabaseAccess dataAccessObject = new DatabaseAccess();
+                ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
+
+                if (choicesArray.size() > 0) {
+                    DependencyStatement depObj = new DependencyStatement();
+                    depObj.setImportLocation(i-1);
+                    depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
+                    depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
+                    depObj.setDomainName(choicesArray.get(2));
+                    depObj.setFromlocation(startOffset);
+                    depObj.setTolocation(endOffset);
+
+                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
+                        depObj.setEnableddomain(false);
+                    }
+                    else {
+                        depObj.setEnableddomain(true);
+                    }
+
+                    MavenListObjects.add(depObj);
+
+                    if (depObj.getEnableddomain()) {
+                        editorModel.addLineHighlighter(i-1,
+                                DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
+                    }
+                }
+                startOffset = document.getLineStartOffset(i);
+                endOffset = document.getLineEndOffset(i);
+                lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
+            }
         }
-        catch (IOException ioException) {
+        catch (IOException | XmlPullParserException ioException) {
             ioException.printStackTrace();
         }
     }
