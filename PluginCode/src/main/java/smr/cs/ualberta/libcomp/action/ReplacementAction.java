@@ -142,11 +142,12 @@ public class ReplacementAction extends AnAction {
 
             if (psiFile != null) {
                 FileType fileType = psiFile.getFileType();
+                String fileName = psiFile.getName();
                 String fileExtention = fileType.getDefaultExtension();
 
                 if (fileExtention.equalsIgnoreCase("java"))
                 {detectImports(psiFile, editor, projectName); }
-                if (fileExtention.equalsIgnoreCase("xml"))
+                if (fileName.equalsIgnoreCase("pom.xml"))
                 {detectMaven(editor, psiFile, projectName);}
                 if (fileExtention.equalsIgnoreCase("groovy"))
                 {detectDependancy(editor, psiFile, projectName);}
