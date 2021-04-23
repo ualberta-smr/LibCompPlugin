@@ -370,7 +370,7 @@ public class ReplacementAction extends AnAction {
     public void replaceRequestedMavenGradle(@NotNull final AnActionEvent event,
                                           @NotNull final String className,
                                           @NotNull final int typeofMaven,
-                                          @NotNull final ArrayList<DependencyStatement> listObjects) throws ParseException {
+                                          @NotNull final ArrayList<DependencyStatement> dependencyList) throws ParseException {
         final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
         final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
         final Document document = editor.getDocument();
@@ -398,14 +398,14 @@ public class ReplacementAction extends AnAction {
         int locationStartOfImport;
         int locationEndOfImport;
 
-        while (currentLine < listObjects.size()) {
-            if (listObjects.get(currentLine).getImportLocation() == clickedLineNumber) {
-                fromLibrary = listObjects.get(currentLine).getImportLib();
-                locationStartOfImport = listObjects.get(currentLine).getFromlocation();
-                locationEndOfImport = listObjects.get(currentLine).getTolocation();
+        while (currentLine < dependencyList.size()) {
+            if (dependencyList.get(currentLine).getImportLocation() == clickedLineNumber) {
+                fromLibrary = dependencyList.get(currentLine).getImportLib();
+                locationStartOfImport = dependencyList.get(currentLine).getFromlocation();
+                locationEndOfImport = dependencyList.get(currentLine).getTolocation();
                 int finalFromLibrary = fromLibrary;
 
-                ReplacementDialog replacementDialog =new ReplacementDialog(listObjects.get(currentLine).getDomainName(), listObjects.get(currentLine).getImportDomain(),listObjects.get(currentLine).getImportLib());
+                ReplacementDialog replacementDialog =new ReplacementDialog(dependencyList.get(currentLine).getDomainName(), dependencyList.get(currentLine).getImportDomain(),dependencyList.get(currentLine).getImportLib());
 
                 //  int finalLocationStartOfImport = locationStartOfImport;
                 int finalLocationStartOfImport = document.getLineStartOffset(clickedLineNumber - 1);
@@ -653,7 +653,7 @@ public class ReplacementAction extends AnAction {
      * @param identifier is the start identifier for library extraction.
      * @param closeIdentifier is the end identifier for library extraction.
      * @param endIdentifier is the end of identifier indicates a complete scan of dependencies.
-     * @param listObjects is a list of DependencyStatement objects.
+     * @param dependencyList is a list of DependencyStatement objects.
      */
     public void detectStatement(@NotNull final Editor editor,
                                 @NotNull final String projectName,
@@ -662,7 +662,7 @@ public class ReplacementAction extends AnAction {
                                 @NotNull final String identifier,
                                 @NotNull final String closeIdentifier,
                                 @NotNull final String endIdentifier,
-                                @NotNull ArrayList<DependencyStatement> listObjects) throws IOException {
+                                @NotNull ArrayList<DependencyStatement> dependencyList) throws IOException {
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
         String lineText;
@@ -677,7 +677,7 @@ public class ReplacementAction extends AnAction {
             i = lineNum; // line number of the dependencies PSI node
         }
 
-        listObjects.clear();
+        dependencyList.clear();
         editorModel.removeAllHighlighters();
 
         while (dependenciesExists)
@@ -715,7 +715,7 @@ public class ReplacementAction extends AnAction {
                         depObj.setEnableddomain(true);
                     }
 
-                    listObjects.add(depObj);
+                    dependencyList.add(depObj);
 
                     if (depObj.getEnableddomain()) {
                         editorModel.addLineHighlighter(i,
