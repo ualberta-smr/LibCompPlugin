@@ -1,7 +1,7 @@
 package smr.cs.ualberta.libcomp.data;
 
 /**
- * The DataStatement class is a parent class for ImportStatement and DependencyStatement
+ * The Statement class is a parent class for ImportStatement and DependencyStatement, any statement that LibComp may want to replace.
  */
 public class Statement {
 

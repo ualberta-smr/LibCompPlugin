@@ -1,5 +1,9 @@
 package smr.cs.ualberta.libcomp.data;
 
+/**
+ * The DependencyStatement class is for both Gradle and Maven file.
+ */
+
 public class DependencyStatement extends Statement {
     public DependencyStatement() {}
 
