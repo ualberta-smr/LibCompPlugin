@@ -52,7 +52,6 @@ import java.util.List;
  * The ActionReplacement class is the main action for the plugin
  * This is triggered by the replacement button on the main plugin dialog
  */
-
 public class ReplacementAction extends AnAction {
     
     public ArrayList<ImportStatement> ImportListObjects;
@@ -71,6 +70,9 @@ public class ReplacementAction extends AnAction {
 
     }
 
+    enum FileTypes {
+        JAVA, GRADLE, MAVEN
+    }
     /**
      * The actionPerformed method is called whenever an action event is executed, i.e. a right click on the editor
      * @param event is the current action event
@@ -87,7 +89,7 @@ public class ReplacementAction extends AnAction {
             if (fileExtention.equalsIgnoreCase("java")) {
                 try {
                     replaceRequestedImport(event);
-                    detectOnAction(event, "java");
+                    detectOnAction(event, FileTypes.JAVA);
                 } catch (ParseException | IOException e) {
                     e.printStackTrace();
                 }
@@ -97,7 +99,7 @@ public class ReplacementAction extends AnAction {
             if (fileName.equalsIgnoreCase("pom.xml")) {
                 try {
                     replaceRequestedMaven(event);
-                    detectOnAction(event, "xml");
+                    detectOnAction(event, FileTypes.MAVEN);
                 } catch (ParseException | IOException e) {
                     e.printStackTrace();
                 }
@@ -107,7 +109,7 @@ public class ReplacementAction extends AnAction {
             if (fileExtention.equalsIgnoreCase("groovy"))  {
                 try {
                     replaceRequestedDependency(event);
-                    detectOnAction(event, "groovy");
+                    detectOnAction(event, FileTypes.GRADLE);
                 } catch (ParseException | IOException e) {
                     e.printStackTrace();
                 }
@@ -166,7 +168,7 @@ public class ReplacementAction extends AnAction {
         }
     }
 
-    public void detectOnAction(@NotNull final AnActionEvent event, @NotNull final String fileType) throws IOException {
+    public void detectOnAction(@NotNull final AnActionEvent event, @NotNull final FileTypes fileType) throws IOException {
 
         Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
@@ -174,11 +176,11 @@ public class ReplacementAction extends AnAction {
         String projectName = project.getName();
 
         try {
-            if (fileType.equals("java")) {
+            if (fileType.equals(FileTypes.JAVA)) {
                 detectImports(psiFile, editor, projectName);
-            } else if (fileType.equals("xml")) {
+            } else if (fileType.equals(FileTypes.MAVEN)) {
                 detectMaven(editor, psiFile, projectName);
-            } else if (fileType.equals("groovy")) {
+            } else if (fileType.equals(FileTypes.GRADLE)) {
                 detectGradle(editor, psiFile, projectName);
             }
         } catch (Exception e) {
@@ -207,21 +209,21 @@ public class ReplacementAction extends AnAction {
             FileType fileType = psiFile.getFileType();
             if (fileType.getDefaultExtension().equalsIgnoreCase("java")) {
                 try {
-                    detectOnAction(event, "java");
+                    detectOnAction(event, FileTypes.JAVA);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
             if (psiFile.getName().equalsIgnoreCase("pom.xml")) {
                 try {
-                    detectOnAction(event, "xml");
+                    detectOnAction(event, FileTypes.MAVEN);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
             if (fileType.getDefaultExtension().equalsIgnoreCase("groovy")) {
                 try {
-                    detectOnAction(event, "groovy");
+                    detectOnAction(event, FileTypes.GRADLE);
                     event.getPresentation().setEnabledAndVisible(true);
                 }
                 catch (IOException e) {
