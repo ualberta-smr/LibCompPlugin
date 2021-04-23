@@ -42,6 +42,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -151,231 +152,17 @@ public class ReplacementAction extends AnAction {
                 String fileName = psiFile.getName();
                 String fileExtention = fileType.getDefaultExtension();
 
-                if (fileExtention.equalsIgnoreCase("java"))
-                {detectImports(psiFile, editor, projectName); }
-                if (fileName.equalsIgnoreCase("pom.xml"))
-                {detectMaven(editor, psiFile, projectName);}
-                if (fileExtention.equalsIgnoreCase("groovy"))
-                {detectDependancy(editor, psiFile, projectName);}
+                if (fileExtention.equalsIgnoreCase("java")) {
+                    detectImports(psiFile, editor, projectName);
+                }
+                if (fileName.equalsIgnoreCase("pom.xml")) {
+                    detectMaven(editor, psiFile, projectName);
+                }
+                if (fileExtention.equalsIgnoreCase("groovy")) {
+                    detectGradle(editor, psiFile, projectName);
+                }
             }
             indexOpenEditors = indexOpenEditors + 1;
-        }
-    }
-
-    public int detectDependenciesPSI(FileASTNode psinode)
-    {
-        int location = -1;
-        ASTNode child = psinode.getFirstChildNode();
-        String name = child.getText();
-        boolean found = name.contains("dependencies");
-        boolean over = false;
-        while ((!found) && (!over))
-        {
-            child = child.getTreeNext();
-            if (child != null)
-            {
-                name = child.getText();
-                found = name.contains("dependencies");
-            }
-            else over = true;
-           }
-        if (found)
-        {
-             location = child.getStartOffset();
-        }
-        return location;
-    }
-
-    public void detectStatement(@NotNull final Editor editor,
-                                @NotNull final String projectName,
-                                @NotNull final int loc,
-                                @NotNull final int lineNum,
-                                @NotNull final String identifier,
-                                @NotNull final String closeIdentifier,
-                                @NotNull final String endIdentifier,
-                                @NotNull ArrayList<DependencyStatement> listObjects) throws IOException {
-        final MarkupModel editorModel = editor.getMarkupModel();
-        final Document document = editor.getDocument();
-        String lineText;
-        String selectedTerm;
-        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
-        TextAttributes softerAttributes = attributes.clone();
-        boolean dependenciesExists = false;
-        int i = 0;
-        if (loc != -1) // dependencies exists
-        {
-            dependenciesExists = true;
-            i = lineNum; // line number of the dependencies PSI node
-        }
-
-        listObjects.clear();
-        editorModel.removeAllHighlighters();
-
-        while (dependenciesExists)
-        {
-            int startOffset = document.getLineStartOffset(i);
-            int endOffset = document.getLineEndOffset(i);
-            lineText = null;
-            String[] valuesInQuotes = new String[0];
-            valuesInQuotes = null;
-
-            lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
-
-            if ((lineText != null) && (lineText.length()>2))
-            {valuesInQuotes = StringUtils.substringsBetween(lineText, identifier , closeIdentifier);}
-
-            if (valuesInQuotes != null) {
-                selectedTerm = valuesInQuotes[0];
-
-                DatabaseAccess dataAccessObject = new DatabaseAccess();
-                ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
-
-                if (choicesArray.size() > 0) {
-                    DependencyStatement depObj = new DependencyStatement();
-                    depObj.setImportLocation(i);
-                    depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
-                    depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
-                    depObj.setDomainName(choicesArray.get(2));
-                    depObj.setFromlocation(startOffset);
-                    depObj.setTolocation(endOffset);
-
-                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
-                        depObj.setEnableddomain(false);
-                    }
-                    else {
-                        depObj.setEnableddomain(true);
-                    }
-
-                    listObjects.add(depObj);
-
-                    if (depObj.getEnableddomain()) {
-                        editorModel.addLineHighlighter(i,
-                                DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
-
-                    }
-                }
-            }
-            ++i;
-            boolean isContainsEnd = lineText.contains(endIdentifier);
-            if (isContainsEnd) {
-                dependenciesExists = false;
-            }
-        }
-    }
-
-    public void detectDependancy(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException {
-
-        final Document document = editor.getDocument();
-        int lineNum = 0;
-        int loc = detectDependenciesPSI(psiFile.getNode()); // Parse PSI to detect the PSI dependencies node
-        if (loc != -1) // dependencies exists
-        {
-            lineNum = document.getLineNumber(loc); // line number of the dependencies PSI node
-        }
-
-        try {
-            detectStatement(editor, projectName, loc, lineNum, "\'", "\'","}", DependListObjects);
-        }
-        catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
-    }
-
-
-    public int detectMavenPSI(final Document document)
-    {
-        int location = -1;
-        int i = 0;
-
-        int startOffset = document.getLineStartOffset(i);
-        int endOffset = document.getLineEndOffset(i);
-        String name = document.getText(new TextRange(startOffset, endOffset)).trim();
-        boolean found = name.contains("dependencies");
-        boolean over = false;
-        while ((!found) && (!over))
-        {
-            ++i;
-            startOffset = document.getLineStartOffset(i);
-            endOffset = document.getLineEndOffset(i);
-            name = document.getText(new TextRange(startOffset, endOffset)).trim();
-            found = name.contains("dependencies");
-            over = name.contains("</project>");
-        }
-        if (found)
-        {
-            location = i;
-        }
-        return location;
-    }
-
-    public void detectMaven(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException {
-
-        final MarkupModel editorModel = editor.getMarkupModel();
-        final Document document = editor.getDocument();
-        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
-        TextAttributes softerAttributes = attributes.clone();
-        int lineNum = 0;
-        int loc = detectMavenPSI(document); // Parse PSI to detect the PSI dependencies node
-        if (loc != -1) // dependencies exists
-        {
-            lineNum = loc; // line number of the dependencies PSI node
-        }
-
-        MavenXpp3Reader Xpp3Reader = new MavenXpp3Reader();
-        editorModel.removeAllHighlighters();
-        VirtualFile vFile = psiFile.getOriginalFile().getVirtualFile();
-        String path = vFile.getPath();
-        MavenListObjects.clear();
-        int i = lineNum;
-        try {
-            Model model = Xpp3Reader.read(new FileReader(path));
-            List<Dependency> dependencies = model.getDependencies();
-            String selectedTerm = null;
-            String lineText = "";
-            int startOffset = 0;
-            int endOffset = 0;
-            for (Dependency dependency : dependencies) {
-                selectedTerm = dependency.getGroupId();
-
-                while(!(lineText.contains(selectedTerm) && lineText.contains("<groupId>"))) {
-                    startOffset = document.getLineStartOffset(i);
-                    endOffset = document.getLineEndOffset(i);
-                    lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
-                    ++i;
-                }
-                DatabaseAccess dataAccessObject = new DatabaseAccess();
-                ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
-
-                if (choicesArray.size() > 0) {
-                    DependencyStatement depObj = new DependencyStatement();
-                    depObj.setImportLocation(i-1);
-                    depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
-                    depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
-                    depObj.setDomainName(choicesArray.get(2));
-                    depObj.setFromlocation(startOffset);
-                    depObj.setTolocation(endOffset);
-
-                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
-                        depObj.setEnableddomain(false);
-                    }
-                    else {
-                        depObj.setEnableddomain(true);
-                    }
-
-                    MavenListObjects.add(depObj);
-
-                    if (depObj.getEnableddomain()) {
-                        editorModel.addLineHighlighter(i-1,
-                                DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
-                    }
-                }
-                startOffset = document.getLineStartOffset(i);
-                endOffset = document.getLineEndOffset(i);
-                lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
-            }
-        }
-        catch (IOException | XmlPullParserException ioException) {
-            ioException.printStackTrace();
         }
     }
 
@@ -392,13 +179,12 @@ public class ReplacementAction extends AnAction {
             } else if (fileType.equals("xml")) {
                 detectMaven(editor, psiFile, projectName);
             } else if (fileType.equals("groovy")) {
-                detectDependancy(editor, psiFile, projectName);
+                detectGradle(editor, psiFile, projectName);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     /**
      * The update method is called whenever the action event is updated.
@@ -581,7 +367,7 @@ public class ReplacementAction extends AnAction {
         }
     }
 
-    public void replaceRequestedStatement(@NotNull final AnActionEvent event,
+    public void replaceRequestedMavenGradle(@NotNull final AnActionEvent event,
                                           @NotNull final String className,
                                           @NotNull final int typeofMaven,
                                           @NotNull final ArrayList<DependencyStatement> listObjects) throws ParseException {
@@ -654,8 +440,6 @@ public class ReplacementAction extends AnAction {
                             } catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
-
-
                         }
 
                         try {
@@ -731,7 +515,7 @@ public class ReplacementAction extends AnAction {
         String className = "Maven File";
 
         try {
-            replaceRequestedStatement(event, className, 2, MavenListObjects);
+            replaceRequestedMavenGradle(event, className, 2, MavenListObjects);
         }
         catch (ParseException parseException) {
             parseException.printStackTrace();
@@ -743,7 +527,7 @@ public class ReplacementAction extends AnAction {
         String className = "groovy Class";
 
         try {
-            replaceRequestedStatement(event, className, 1, DependListObjects);
+            replaceRequestedMavenGradle(event, className, 1, DependListObjects);
         }
         catch (ParseException parseException) {
             parseException.printStackTrace();
@@ -758,11 +542,15 @@ public class ReplacementAction extends AnAction {
 
         return enabledDomain;
     }
+
     /**
-     * The detectImportStatementMethod will got through the current open file and test the import statements to see if they are in the database
+     * The detectImports method will got through the current open file and test the import statements to see if they are in the database
      * The trigger for this to occur is a right click anywhere in the editor, I have yet to figure out how to have it work onLoad
      * Right now, the library being queried is the "last word" of the import statement
      * ex. for my.import.statement.rehab, the term queried against in the database is "rehab"
+     * @param editor is currently focused editor instance.
+     * @param psiFile is a PSI (Program Structure Interface) file, the root of a structure representing a file's contents as a hierarchy of elements
+     * @param projectName is the name of current project
      */
     public void detectImports(@NotNull final PsiFile psiFile, @NotNull final Editor editor, @NotNull final  String projectName ) {
 
@@ -823,6 +611,259 @@ public class ReplacementAction extends AnAction {
         }
         catch(Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * The detectGradlePSI method parses PSI file to detect the PSI dependencies node and return it's location.
+     * @param psinode is an abstract syntax tree(AST) node corresponding to elements for gradle file.
+     * @return the location of PSI dependencies node.
+     */
+    public int detectGradlePSI(FileASTNode psinode)
+    {
+        int location = -1;
+        ASTNode child = psinode.getFirstChildNode();
+        String name = child.getText();
+        boolean found = name.contains("dependencies");
+        boolean over = false;
+        while ((!found) && (!over))
+        {
+            child = child.getTreeNext();
+            if (child != null)
+            {
+                name = child.getText();
+                found = name.contains("dependencies");
+            }
+            else over = true;
+        }
+        if (found)
+        {
+            location = child.getStartOffset();
+        }
+        return location;
+    }
+
+    /**
+     * The detectStatement method gets through the current open gradle file and test the dependency statements to see if they are in the database.
+     * The detectStatement method uses string match parsing strategy to extract the libraries and highlight those libraries in database on the editor.
+     * @param editor is currently focused editor instance.
+     * @param projectName is the name of current project.
+     * @param loc is the location where the dependencies start.
+     * @param lineNum is the line number of current line.
+     * @param identifier is the start identifier for library extraction.
+     * @param closeIdentifier is the end identifier for library extraction.
+     * @param endIdentifier is the end of identifier indicates a complete scan of dependencies.
+     * @param listObjects is a list of DependencyStatement objects.
+     */
+    public void detectStatement(@NotNull final Editor editor,
+                                @NotNull final String projectName,
+                                @NotNull final int loc,
+                                @NotNull final int lineNum,
+                                @NotNull final String identifier,
+                                @NotNull final String closeIdentifier,
+                                @NotNull final String endIdentifier,
+                                @NotNull ArrayList<DependencyStatement> listObjects) throws IOException {
+        final MarkupModel editorModel = editor.getMarkupModel();
+        final Document document = editor.getDocument();
+        String lineText;
+        String selectedTerm;
+        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+        TextAttributes softerAttributes = attributes.clone();
+        boolean dependenciesExists = false;
+        int i = 0;
+        if (loc != -1) // dependencies exists
+        {
+            dependenciesExists = true;
+            i = lineNum; // line number of the dependencies PSI node
+        }
+
+        listObjects.clear();
+        editorModel.removeAllHighlighters();
+
+        while (dependenciesExists)
+        {
+            int startOffset = document.getLineStartOffset(i);
+            int endOffset = document.getLineEndOffset(i);
+            lineText = null;
+            String[] valuesInQuotes = new String[0];
+            valuesInQuotes = null;
+
+            lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
+
+            if ((lineText != null) && (lineText.length()>2))
+            {valuesInQuotes = StringUtils.substringsBetween(lineText, identifier , closeIdentifier);}
+
+            if (valuesInQuotes != null) {
+                selectedTerm = valuesInQuotes[0];
+
+                DatabaseAccess dataAccessObject = new DatabaseAccess();
+                ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
+
+                if (choicesArray.size() > 0) {
+                    DependencyStatement depObj = new DependencyStatement();
+                    depObj.setImportLocation(i);
+                    depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
+                    depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
+                    depObj.setDomainName(choicesArray.get(2));
+                    depObj.setFromlocation(startOffset);
+                    depObj.setTolocation(endOffset);
+
+                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
+                        depObj.setEnableddomain(false);
+                    }
+                    else {
+                        depObj.setEnableddomain(true);
+                    }
+
+                    listObjects.add(depObj);
+
+                    if (depObj.getEnableddomain()) {
+                        editorModel.addLineHighlighter(i,
+                                DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
+
+                    }
+                }
+            }
+            ++i;
+            boolean isContainsEnd = lineText.contains(endIdentifier);
+            if (isContainsEnd) {
+                dependenciesExists = false;
+            }
+        }
+    }
+
+    /**
+     * The detectGradle method gets through the current open gradle file and test the dependency statements to see if they are in the database.
+     * The detectGradle method calls detectStatement method to highlight targeted libraries which are in the database.
+     * @param editor is currently focused editor instance.
+     * @param psiFile is a PSI (Program Structure Interface) file, the root of a structure representing a file's contents as a hierarchy of elements
+     * @param projectName is the name of current project
+     */
+    public void detectGradle(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException {
+
+        final Document document = editor.getDocument();
+        int lineNum = 0;
+        int loc = detectGradlePSI(psiFile.getNode()); // Parse PSI to detect the PSI dependencies node for gradle file
+        if (loc != -1) // dependencies exists
+        {
+            lineNum = document.getLineNumber(loc); // line number of the dependencies PSI node for gradle file
+        }
+
+        try {
+            detectStatement(editor, projectName, loc, lineNum, "\'", "\'","}", DependListObjects);
+        }
+        catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
+
+    /**
+     * The detectMavenPSI method parses PSI file to detect the PSI dependencies node and return it's location.
+     * @param document is current document instance in the editor.
+     * @return the location of PSI dependencies node.
+     */
+    public int detectMavenPSI(final Document document)
+    {
+        int location = -1;
+        int i = 0;
+
+        int startOffset = document.getLineStartOffset(i);
+        int endOffset = document.getLineEndOffset(i);
+        String name = document.getText(new TextRange(startOffset, endOffset)).trim();
+        boolean found = name.contains("dependencies");
+        boolean over = false;
+        while ((!found) && (!over))
+        {
+            ++i;
+            startOffset = document.getLineStartOffset(i);
+            endOffset = document.getLineEndOffset(i);
+            name = document.getText(new TextRange(startOffset, endOffset)).trim();
+            found = name.contains("dependencies");
+            over = name.contains("</project>");
+        }
+        if (found)
+        {
+            location = i;
+        }
+        return location;
+    }
+
+    /**
+     * The detectMaven method gets through the current open maven file and test the dependency statements to see if they are in the database.
+     * This will highlight targeted libraries which are in the database.
+     * @param editor is currently focused editor instance.
+     * @param psiFile is a PSI (Program Structure Interface) file, the root of a structure representing a file's contents as a hierarchy of elements.
+     * @param projectName is the name of current project.
+     */
+    public void detectMaven(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException {
+
+        final MarkupModel editorModel = editor.getMarkupModel();
+        final Document document = editor.getDocument();
+        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+        TextAttributes softerAttributes = attributes.clone();
+        int lineNum = 0;
+        int loc = detectMavenPSI(document); // Parse PSI to detect the PSI dependencies node
+        if (loc != -1) // dependencies exists
+        {
+            lineNum = loc; // line number of the dependencies PSI node
+        }
+
+        MavenXpp3Reader Xpp3Reader = new MavenXpp3Reader();
+        editorModel.removeAllHighlighters();
+        VirtualFile vFile = psiFile.getOriginalFile().getVirtualFile();
+        String path = vFile.getPath();
+        MavenListObjects.clear();
+        int i = lineNum;
+        try {
+            Model model = Xpp3Reader.read(new FileReader(path));
+            List<Dependency> dependencies = model.getDependencies();
+            String selectedTerm = null;
+            String lineText = "";
+            int startOffset = 0;
+            int endOffset = 0;
+            for (Dependency dependency : dependencies) {
+                selectedTerm = dependency.getGroupId();
+
+                while(!(lineText.contains(selectedTerm) && lineText.contains("<groupId>"))) {
+                    startOffset = document.getLineStartOffset(i);
+                    endOffset = document.getLineEndOffset(i);
+                    lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
+                    ++i;
+                }
+                DatabaseAccess dataAccessObject = new DatabaseAccess();
+                ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
+
+                if (choicesArray.size() > 0) {
+                    DependencyStatement depObj = new DependencyStatement();
+                    depObj.setImportLocation(i-1);
+                    depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
+                    depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
+                    depObj.setDomainName(choicesArray.get(2));
+                    depObj.setFromlocation(startOffset);
+                    depObj.setTolocation(endOffset);
+
+                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
+                        depObj.setEnableddomain(false);
+                    }
+                    else {
+                        depObj.setEnableddomain(true);
+                    }
+
+                    MavenListObjects.add(depObj);
+
+                    if (depObj.getEnableddomain()) {
+                        editorModel.addLineHighlighter(i-1,
+                                DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
+                    }
+                }
+                startOffset = document.getLineStartOffset(i);
+                endOffset = document.getLineEndOffset(i);
+                lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
+            }
+        }
+        catch (IOException | XmlPullParserException ioException) {
+            ioException.printStackTrace();
         }
     }
 }
