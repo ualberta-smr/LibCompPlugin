@@ -54,18 +54,19 @@ import java.util.List;
  * This is triggered by the replacement button on the main plugin dialog
  */
 public class ReplacementAction extends AnAction {
-    public ArrayList<ImportStatement> importObjectList;
-    public ArrayList<DependencyStatement> dependObjectList;
-    public ArrayList<DependencyStatement> mavenObjectList;
+
+    public ArrayList<ImportStatement> javaImportList;
+    public ArrayList<DependencyStatement> gradleDepList;
+    public ArrayList<DependencyStatement> mavenDepList;
     private int toLibrary;
     private String selectedLibList;
     private String libraryName;
     private boolean sendToCloud = false ;
 
     public ReplacementAction() {
-        importObjectList = new ArrayList<>();
-        dependObjectList = new ArrayList<>();
-        mavenObjectList = new ArrayList<>();
+        javaImportList = new ArrayList<>();
+        gradleDepList = new ArrayList<>();
+        mavenDepList = new ArrayList<>();
     }
 
     enum FileTypes {
@@ -274,8 +275,8 @@ public class ReplacementAction extends AnAction {
         //Check if the user clicked on a line that is potentially replaceable (i.e. import statement is in database)
         int currentLine = 0;
 
-        while (currentLine < importObjectList.size()) {
-            if (importObjectList.get(currentLine).getImportLocation() == clickedLineNumber) {
+        while (currentLine < javaImportList.size()) {
+            if (javaImportList.get(currentLine).getImportLocation() == clickedLineNumber) {
 
                 //found a replaceable import statement
                 String importStatementFull;
@@ -283,9 +284,9 @@ public class ReplacementAction extends AnAction {
                 int offsetLastWord = 0;
                 int lineNum;
 
-                fromLibrary = importObjectList.get(currentLine).getImportLib();
+                fromLibrary = javaImportList.get(currentLine).getImportLib();
                 int finalFromLibrary = fromLibrary;
-                PsiImportStatementBase importStatementObject =  importObjectList.get(currentLine).getImportListBase();
+                PsiImportStatementBase importStatementObject =  javaImportList.get(currentLine).getImportListBase();
                 importStatementFull = importStatementObject.getImportReference().getQualifiedName();
                 importStatementLastWord = importStatementObject.getImportReference().getReferenceName();
 
@@ -295,7 +296,7 @@ public class ReplacementAction extends AnAction {
                 int locationStartOfImport = offsetLastWord - (importStatementFull.length() - importStatementLastWord.length());
                 int locationEndOfImport = document.getLineEndOffset(lineNum) - 1;
 
-                ReplacementDialog replacementDialog =new ReplacementDialog(importObjectList.get(currentLine).getDomainName(), importObjectList.get(currentLine).getImportDomain(),importObjectList.get(currentLine).getImportLib());
+                ReplacementDialog replacementDialog =new ReplacementDialog(javaImportList.get(currentLine).getDomainName(), javaImportList.get(currentLine).getImportDomain(),javaImportList.get(currentLine).getImportLib());
 
                 String finalClassName = className;
                 WindowAdapter adapter = new WindowAdapter() {
@@ -506,7 +507,7 @@ public class ReplacementAction extends AnAction {
         String className = "Maven File";
 
         try {
-            replaceRequestedMavenGradle(event, className, 2, mavenObjectList);
+            replaceRequestedMavenGradle(event, className, 2, mavenDepList);
         }
         catch (ParseException parseException) {
             parseException.printStackTrace();
@@ -518,7 +519,7 @@ public class ReplacementAction extends AnAction {
         String className = "groovy Class";
 
         try {
-            replaceRequestedMavenGradle(event, className, 1, dependObjectList);
+            replaceRequestedMavenGradle(event, className, 1, gradleDepList);
         }
         catch (ParseException parseException) {
             parseException.printStackTrace();
@@ -561,7 +562,7 @@ public class ReplacementAction extends AnAction {
                 return;
             }
 
-            importObjectList.clear();
+            javaImportList.clear();
             editorModel.removeAllHighlighters();
 
             int locationLastWord = 0;
@@ -591,7 +592,7 @@ public class ReplacementAction extends AnAction {
                     else {
                         impObj.setEnableddomain(true);
                     }
-                    importObjectList.add(impObj);
+                    javaImportList.add(impObj);
 
                     if (impObj.getEnableddomain()) {
                         editorModel.addLineHighlighter(importLineNumber,
@@ -655,7 +656,7 @@ public class ReplacementAction extends AnAction {
         }
         String lineText;
         String selectedTerm;
-        dependObjectList.clear();
+        gradleDepList.clear();
         editorModel.removeAllHighlighters();
 
         while (dependenciesExists)
@@ -692,7 +693,7 @@ public class ReplacementAction extends AnAction {
                         depObj.setEnableddomain(true);
                     }
 
-                    dependObjectList.add(depObj);
+                    gradleDepList.add(depObj);
 
                     if (depObj.getEnableddomain()) {
                         editorModel.addLineHighlighter(currentLine,
@@ -735,7 +736,7 @@ public class ReplacementAction extends AnAction {
         editorModel.removeAllHighlighters();
         VirtualFile vFile = psiFile.getOriginalFile().getVirtualFile();
         String path = vFile.getPath();
-        mavenObjectList.clear();
+        mavenDepList.clear();
         int currentLine;
         try {
             Model model = Xpp3Reader.read(new FileReader(path));
@@ -768,7 +769,7 @@ public class ReplacementAction extends AnAction {
                         depObj.setEnableddomain(true);
                     }
 
-                    mavenObjectList.add(depObj);
+                    mavenDepList.add(depObj);
 
                     if (depObj.getEnableddomain()) {
                         editorModel.addLineHighlighter(currentLine-1,

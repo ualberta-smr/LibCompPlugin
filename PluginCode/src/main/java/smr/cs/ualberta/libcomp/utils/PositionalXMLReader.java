@@ -18,6 +18,12 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * This solution follows the method suggested by Michael Kay.
+ * https://stackoverflow.com/questions/4915422/get-line-number-from-xml-node-java?rq=1
+ * PositionalXMLReader reads XMl from the input stream and creates a DOM document with a line numbers for each node.
+ */
+
 public class PositionalXMLReader {
     final static String LINE_NUMBER_KEY_NAME = "lineNumber";
 
