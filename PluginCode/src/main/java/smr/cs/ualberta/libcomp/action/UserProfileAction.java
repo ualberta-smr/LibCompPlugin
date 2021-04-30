@@ -24,6 +24,5 @@ public class UserProfileAction extends AnAction {
     public void actionPerformed(@NotNull final AnActionEvent event) {
         UserProfileDialog userProfileDialog = new UserProfileDialog("User Profile");
         userProfileDialog.init();
-
     }
 }

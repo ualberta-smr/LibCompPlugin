@@ -1,6 +1,5 @@
 package smr.cs.ualberta.libcomp.action;
 
-import com.android.aapt.Resources;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.editor.Editor;
@@ -17,6 +16,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.psi.xml.XmlFile;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -26,44 +26,50 @@ import com.intellij.psi.PsiImportList;
 import com.intellij.psi.PsiFile;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import smr.cs.ualberta.libcomp.*;
 import smr.cs.ualberta.libcomp.data.DependencyStatement;
 import smr.cs.ualberta.libcomp.data.ReplacementFeedback;
 import smr.cs.ualberta.libcomp.data.ImportStatement;
 import smr.cs.ualberta.libcomp.data.User;
 import smr.cs.ualberta.libcomp.dialog.ReplacementDialog;
+import smr.cs.ualberta.libcomp.utils.PositionalXMLReader;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The ActionReplacement class is the main action for the plugin
  * This is triggered by the replacement button on the main plugin dialog
  */
-
 public class ReplacementAction extends AnAction {
-    
-    public ArrayList<ImportStatement> ImportListObjects;
-    public ArrayList<DependencyStatement> DependListObjects;
-    public ArrayList<DependencyStatement> MavenListObjects;
-    private int to_library;
-    private String full_lib_list;
+
+    public ArrayList<ImportStatement> javaImportList;
+    public ArrayList<DependencyStatement> gradleDepList;
+    public ArrayList<DependencyStatement> mavenDepList;
+    private int toLibrary;
+    private String selectedLibList;
     private String libraryName;
     private boolean sendToCloud = false ;
 
-
     public ReplacementAction() {
-    ImportListObjects = new ArrayList<>();
-    DependListObjects = new ArrayList<>();
-    MavenListObjects = new ArrayList<>();
-
+        javaImportList = new ArrayList<>();
+        gradleDepList = new ArrayList<>();
+        mavenDepList = new ArrayList<>();
     }
 
+    enum FileTypes {
+        JAVA, GRADLE, MAVEN
+    }
     /**
      * The actionPerformed method is called whenever an action event is executed, i.e. a right click on the editor
      * @param event is the current action event
@@ -74,24 +80,25 @@ public class ReplacementAction extends AnAction {
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
         if (psiFile != null) {
             FileType fileType = psiFile.getFileType();
+            String fileName = psiFile.getName();
             String fileExtention = fileType.getDefaultExtension();
 
             if (fileExtention.equalsIgnoreCase("java")) {
                 try {
                     replaceRequestedImport(event);
-                    detectImportOnAction(event);
-                } catch (ParseException | IOException e) {
-                    e.printStackTrace();
+                    detectOnAction(event, FileTypes.JAVA);
+                } catch (ParseException | IOException exception) {
+                    exception.printStackTrace();
                 }
 
             }
 
-            if (fileExtention.equalsIgnoreCase("xml")) {
+            if (fileName.equalsIgnoreCase("pom.xml")) {
                 try {
                     replaceRequestedMaven(event);
-                    detectMavenOnAction(event);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                    detectOnAction(event, FileTypes.MAVEN);
+                } catch (ParseException | IOException exception) {
+                    exception.printStackTrace();
                 }
 
             }
@@ -99,9 +106,9 @@ public class ReplacementAction extends AnAction {
             if (fileExtention.equalsIgnoreCase("groovy"))  {
                 try {
                     replaceRequestedDependency(event);
-                    detectDependencyOnAction(event);
-                } catch (ParseException | IOException e) {
-                    e.printStackTrace();
+                    detectOnAction(event, FileTypes.GRADLE);
+                } catch (ParseException | IOException exception) {
+                    exception.printStackTrace();
                 }
 
             }
@@ -110,8 +117,7 @@ public class ReplacementAction extends AnAction {
         }
     }
 
-   public  Project getActiveProject()
-    {
+   public  Project getActiveProject() {
 
         Project[] projects = ProjectManager.getInstance().getOpenProjects();
         Project activeProject = null;
@@ -124,11 +130,12 @@ public class ReplacementAction extends AnAction {
         return  activeProject;
     }
 
-    public void detectAllOpenEditors() throws IOException {
+    public void detectAllOpenEditors() throws IOException, SAXException {
+
         Project proj= getActiveProject();
-        String project_name = "none";
+        String projectName = "none";
         if (proj == null)  { return;}
-        project_name = proj.getName();
+        projectName = proj.getName();
         FileEditorManager manager = FileEditorManager.getInstance(proj);
         VirtualFile[] filesAll = manager.getOpenFiles();
         FileEditor[] editorFileAll = manager.getAllEditors();
@@ -141,252 +148,42 @@ public class ReplacementAction extends AnAction {
 
             if (psiFile != null) {
                 FileType fileType = psiFile.getFileType();
+                String fileName = psiFile.getName();
                 String fileExtention = fileType.getDefaultExtension();
 
-                if (fileExtention.equalsIgnoreCase("java"))
-                {detectImports(psiFile, editor, project_name); }
-                if (fileExtention.equalsIgnoreCase("xml"))
-                {detectMaven(editor, psiFile, project_name);}
-                if (fileExtention.equalsIgnoreCase("groovy"))
-                {detectDependancy(editor, psiFile, project_name);}
-            }
-            indexOpenEditors = indexOpenEditors + 1;
-        }
-    }
-
-    public int detectDependenciesPSI(FileASTNode psinode)
-    {
-        int location = -1;
-        ASTNode child = psinode.getFirstChildNode();
-        String name = child.getText();
-        boolean found = name.contains("dependencies");
-        boolean over = false;
-        while ((!found) && (!over))
-        {
-            child = child.getTreeNext();
-            if (child != null)
-            {
-                name = child.getText();
-                found = name.contains("dependencies");
-            }
-            else over = true;
-           }
-        if (found)
-        {
-             location = child.getStartOffset();
-        }
-        return location;
-    }
-
-
-    public void detectDependancy(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String project_name ) throws IOException {
-
-        final MarkupModel editorModel = editor.getMarkupModel();
-        final Document document = editor.getDocument();
-        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
-        TextAttributes softerAttributes = attributes.clone();
-        boolean dependenciesExists = false;
-        int i = 0;
-        int loc = detectDependenciesPSI(psiFile.getNode()); // Parse PSI to detect the PSI dependencies node
-        if (loc != -1) // dependencies exists
-        {
-            dependenciesExists = true;
-            i = document.getLineNumber(loc); // line number of the dependencies PSI node
-        }
-        String lineText;
-        String selectedTerm;
-        DependListObjects.clear();
-        editorModel.removeAllHighlighters();
-
-        while (dependenciesExists)
-        {
-            int startOffset = document.getLineStartOffset(i);
-            int endOffset = document.getLineEndOffset(i);
-            lineText = null;
-            String[] valuesInQuotes = new String[0];
-            valuesInQuotes = null;
-
-            lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
-
-            if ((lineText != null) && (lineText.length()>2))
-            {valuesInQuotes = StringUtils.substringsBetween(lineText, "\'", "\'");}
-
-
-
-            if (valuesInQuotes != null) {
-                    selectedTerm = valuesInQuotes[0];
-
-                    DatabaseAccess dataAccessObject = new DatabaseAccess();
-                    ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
-                    if (choicesArray.size() > 0) {
-                        DependencyStatement depObj = new DependencyStatement();
-                        depObj.setImportLocation(i);
-                        depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
-                        depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
-                        depObj.setDomainName(choicesArray.get(2));
-                        depObj.setFromlocation(startOffset);
-                        depObj.setTolocation(endOffset);
-
-                        if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), project_name)) {
-                            depObj.setEnableddomain(false);
-                        }
-                        else {
-                            depObj.setEnableddomain(true);
-                        }
-
-                        DependListObjects.add(depObj);
-
-
-                        if (depObj.getEnableddomain()) {
-                            editorModel.addLineHighlighter(i,
-                                    DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
-
-                        }
-
-
-                    }
+                if (fileExtention.equalsIgnoreCase("java")) {
+                    detectJavaImport(psiFile, editor, projectName);
                 }
-            ++i;
-            boolean isContainsEnd = lineText.contains("}");
-            if (isContainsEnd) {
-                dependenciesExists = false;
-            }
-        }
-    }
-
-
-    public int detectMavenPSI(final Document document)
-    {
-        int location = -1;
-        int i = 0;
-
-        int startOffset = document.getLineStartOffset(i);
-        int endOffset = document.getLineEndOffset(i);
-        String name = document.getText(new TextRange(startOffset, endOffset)).trim();
-        boolean found = name.contains("dependencies");
-        boolean over = false;
-        while ((!found) && (!over))
-        {
-            ++i;
-            startOffset = document.getLineStartOffset(i);
-            endOffset = document.getLineEndOffset(i);
-            name = document.getText(new TextRange(startOffset, endOffset)).trim();
-            found = name.contains("dependencies");
-            over = name.contains("</project>");
-        }
-        if (found)
-        {
-            location = i;
-        }
-        return location;
-    }
-
-    public void detectMaven(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String project_name ) throws IOException {
-
-        final MarkupModel editorModel = editor.getMarkupModel();
-        final Document document = editor.getDocument();
-        String lineText;
-        String selectedTerm;
-
-        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
-
-        TextAttributes softerAttributes = attributes.clone();
-        boolean dependenciesExists = false;
-        int i = 0;
-        int loc = detectMavenPSI(document); // Parse PSI to detect the PSI dependencies node
-        if (loc != -1) // dependencies exists
-        {
-            dependenciesExists = true;
-            i = loc; // line number of the dependencies PSI node
-        }
-        MavenListObjects.clear();
-        editorModel.removeAllHighlighters();
-
-        while (dependenciesExists)
-        {
-            int startOffset = document.getLineStartOffset(i);
-            int endOffset = document.getLineEndOffset(i);
-            lineText = null;
-            String[] valuesInQuotes = new String[0];
-            valuesInQuotes = null;
-            lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
-            if ((lineText != null) && (lineText.length()>2))
-            {valuesInQuotes = StringUtils.substringsBetween(lineText, "<groupId>", "</groupId>");}
-
-            if (valuesInQuotes != null) {
-                selectedTerm = valuesInQuotes[0];
-
-                DatabaseAccess dataAccessObject = new DatabaseAccess();
-                ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
-                if (choicesArray.size() > 0) {
-                    DependencyStatement depObj = new DependencyStatement();
-                    depObj.setImportLocation(i);
-                    depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
-                    depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
-                    depObj.setDomainName(choicesArray.get(2));
-                    depObj.setFromlocation(startOffset);
-                    depObj.setTolocation(endOffset);
-
-                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), project_name)) {
-                        depObj.setEnableddomain(false);
-                    }
-                    else {
-                        depObj.setEnableddomain(true);
-                    }
-
-                    MavenListObjects.add(depObj);
-
-
-                    if (depObj.getEnableddomain()) {
-                        editorModel.addLineHighlighter(i,
-                                DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
-
-                    }
-
-
+                if (fileName.equalsIgnoreCase("pom.xml")) {
+                    detectMavenDependency(editor, psiFile, projectName);
+                }
+                if (fileExtention.equalsIgnoreCase("groovy")) {
+                    detectGradleDependency(editor, psiFile, projectName);
                 }
             }
-            ++i;
-            boolean isContainsEnd = lineText.contains("</dependencies>");
-            if (isContainsEnd) {
-                dependenciesExists = false;
-            }
+            indexOpenEditors++;
         }
     }
 
-    public void detectMavenOnAction(@NotNull final AnActionEvent event) {
+    public void detectOnAction(@NotNull final AnActionEvent event, @NotNull final FileTypes fileType) throws IOException {
 
         Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
         final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
-        String project_name = project.getName();
+        String projectName = project.getName();
 
         try {
-            detectMaven(editor, psiFile, project_name);
-        }
-        catch(Exception e) {
+            if (fileType.equals(FileTypes.JAVA)) {
+                detectJavaImport(psiFile, editor, projectName);
+            } else if (fileType.equals(FileTypes.MAVEN)) {
+                detectMavenDependency(editor, psiFile, projectName);
+            } else if (fileType.equals(FileTypes.GRADLE)) {
+                detectGradleDependency(editor, psiFile, projectName);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
-    public void detectDependencyOnAction(@NotNull final AnActionEvent event) throws IOException {
-
-            Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-            PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
-            final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
-            String project_name = project.getName();
-
-            try {
-                detectDependancy(editor, psiFile, project_name);
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-            }
-
-    }
-
-
 
     /**
      * The update method is called whenever the action event is updated.
@@ -400,8 +197,8 @@ public class ReplacementAction extends AnAction {
 
         try {
             detectAllOpenEditors();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | SAXException exception) {
+            exception.printStackTrace();
         }
 
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
@@ -409,21 +206,25 @@ public class ReplacementAction extends AnAction {
             FileType fileType = psiFile.getFileType();
             if (fileType.getDefaultExtension().equalsIgnoreCase("java")) {
                 try {
-                    detectImportOnAction(event);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    detectOnAction(event, FileTypes.JAVA);
+                } catch (IOException exception) {
+                    exception.printStackTrace();
                 }
             }
-            if (fileType.getDefaultExtension().equalsIgnoreCase("xml")) {
-                detectMavenOnAction(event);
+            if (psiFile.getName().equalsIgnoreCase("pom.xml")) {
+                try {
+                    detectOnAction(event, FileTypes.MAVEN);
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
             }
             if (fileType.getDefaultExtension().equalsIgnoreCase("groovy")) {
                 try {
-                    detectDependencyOnAction(event);
+                    detectOnAction(event, FileTypes.GRADLE);
                     event.getPresentation().setEnabledAndVisible(true);
                 }
-                catch (IOException e) {
-                    e.printStackTrace();
+                catch (IOException exception) {
+                    exception.printStackTrace();
                 }
             }
              event.getPresentation().setVisible(true);
@@ -445,17 +246,17 @@ public class ReplacementAction extends AnAction {
         final Document document = editor.getDocument();
         PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
 
-        String project_name = project.getName();
-        String class_name = "";
+        String projectName = project.getName();
+        String className = "";
         if (file instanceof PsiJavaFile) {
             PsiClass[] classes = ((PsiJavaFile) file).getClasses();
             if (classes.length > 0) {
-                class_name= classes[0].getQualifiedName();
+                className= classes[0].getQualifiedName();
             }
         }
 
-        Date action_date = new Date();
-        int from_library;
+        Date actionDate = new Date();
+        int fromLibrary;
 
         User userRecord = new User();
         DatabaseAccess dataAccessObject = new DatabaseAccess();
@@ -472,37 +273,37 @@ public class ReplacementAction extends AnAction {
         //Check if the user clicked on a line that is potentially replaceable (i.e. import statement is in database)
         int currentLine = 0;
 
-        while (currentLine < ImportListObjects.size()) {
-            if (ImportListObjects.get(currentLine).getImportLocation() == clickedLineNumber) {
+        while (currentLine < javaImportList.size()) {
+            if (javaImportList.get(currentLine).getImportLocation() == clickedLineNumber) {
 
                 //found a replaceable import statement
                 String importStatementFull;
                 String importStatementLastWord; //this importStatementObject the last library of the import statement (i.e. last word at the end)
                 int offsetLastWord = 0;
-                int line_num;
+                int lineNum;
 
-                from_library = ImportListObjects.get(currentLine).getImportLib();
-                int finalFrom_library = from_library;
-                PsiImportStatementBase importStatementObject =  ImportListObjects.get(currentLine).getImportListBase();
+                fromLibrary = javaImportList.get(currentLine).getImportLib();
+                int finalFromLibrary = fromLibrary;
+                PsiImportStatementBase importStatementObject =  javaImportList.get(currentLine).getImportListBase();
                 importStatementFull = importStatementObject.getImportReference().getQualifiedName();
                 importStatementLastWord = importStatementObject.getImportReference().getReferenceName();
 
                 offsetLastWord = importStatementObject.getImportReference().getTextOffset();
-                line_num = document.getLineNumber(offsetLastWord);
+                lineNum = document.getLineNumber(offsetLastWord);
 
                 int locationStartOfImport = offsetLastWord - (importStatementFull.length() - importStatementLastWord.length());
-                int locationEndOfImport = document.getLineEndOffset(line_num) - 1;
+                int locationEndOfImport = document.getLineEndOffset(lineNum) - 1;
 
-                ReplacementDialog replacementDialog =new ReplacementDialog(ImportListObjects.get(currentLine).getDomainName(), ImportListObjects.get(currentLine).getImportDomain(),ImportListObjects.get(currentLine).getImportLib());
+                ReplacementDialog replacementDialog =new ReplacementDialog(javaImportList.get(currentLine).getDomainName(), javaImportList.get(currentLine).getImportDomain(),javaImportList.get(currentLine).getImportLib());
 
-                String finalClass_name = class_name;
+                String finalClassName = className;
                 WindowAdapter adapter = new WindowAdapter() {
 
                     @Override
                     public void windowLostFocus(WindowEvent e) {
                         String finalChoice = replacementDialog.getLibraryReturned();
-                        to_library = replacementDialog.getto_library();
-                        full_lib_list = replacementDialog.getSelectionLibrary();
+                        toLibrary = replacementDialog.getto_library();
+                        selectedLibList = replacementDialog.getSelectionLibrary();
 
                         if (finalChoice.equals("None") == false) {
                             finalChoice = finalChoice + ".*";
@@ -512,12 +313,9 @@ public class ReplacementAction extends AnAction {
                         }
 
                         try {
-
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
+                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, lineNum, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
                                 dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
-
-
                         }
                         catch (IOException ioException) {
                             ioException.printStackTrace();
@@ -527,8 +325,8 @@ public class ReplacementAction extends AnAction {
                     @Override
                     public void windowClosing(WindowEvent e) {
                         String finalChoice = replacementDialog.getLibraryReturned();
-                        to_library = replacementDialog.getto_library();
-                        full_lib_list = replacementDialog.getSelectionLibrary();
+                        toLibrary = replacementDialog.getto_library();
+                        selectedLibList = replacementDialog.getSelectionLibrary();
 
                         if (finalChoice.equals("None") == false) {
                             finalChoice = finalChoice + ".*";
@@ -536,20 +334,17 @@ public class ReplacementAction extends AnAction {
                             WriteCommandAction.runWriteCommandAction(project, () ->
                                     document.replaceString(locationStartOfImport, locationEndOfImport, finalChoice1));
                             try {
-
                                     DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                    ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
+                                    ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, lineNum, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
                                     dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
-
                             }
                             catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
                         }
                         try {
-
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, line_num, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
+                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, lineNum, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
                                 dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
                             }
                         catch (IOException ioException) {
@@ -561,298 +356,171 @@ public class ReplacementAction extends AnAction {
                replacementDialog.addWindowFocusListener(adapter);
                replacementDialog.setVisible(true);
             }
-            currentLine = currentLine + 1;
+            currentLine++;
+        }
+    }
+
+    public void replaceRequestedMavenGradle(@NotNull final AnActionEvent event,
+                                          @NotNull final String className,
+                                          @NotNull final int typeofMaven,
+                                          @NotNull final ArrayList<DependencyStatement> dependencyList) throws ParseException {
+        final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
+        final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
+        final Document document = editor.getDocument();
+        PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
+
+        String projectName = project.getName();
+
+        Date actionDate = new Date();
+        int fromLibrary;
+
+        User userRecord = new User();
+        DatabaseAccess dataAccessObject = new DatabaseAccess();
+        userRecord = dataAccessObject.readUserProfile();
+        sendToCloud = (Integer.parseInt(userRecord.getSendAllCloud())==1);
+
+        //Work off of the primary caret to get the selection info
+        Caret primaryCaret = editor.getCaretModel().getPrimaryCaret();
+
+        //Get the location of the mouse click, get the caret offset, then from the offset get the line number
+        int mouseClickLocation = primaryCaret.getOffset();
+        int clickedLineNumber = document.getLineNumber(mouseClickLocation);
+
+        //Check if the user clicked on a line that is potentially replaceable (i.e. import statement is in database)
+        int currentLine = 0;
+        int locationStartOfImport;
+        int locationEndOfImport;
+
+        while (currentLine < dependencyList.size()) {
+            if (dependencyList.get(currentLine).getImportLocation() == clickedLineNumber) {
+                fromLibrary = dependencyList.get(currentLine).getImportLib();
+                locationStartOfImport = dependencyList.get(currentLine).getFromlocation();
+                locationEndOfImport = dependencyList.get(currentLine).getTolocation();
+                int finalFromLibrary = fromLibrary;
+
+                ReplacementDialog replacementDialog =new ReplacementDialog(dependencyList.get(currentLine).getDomainName(), dependencyList.get(currentLine).getImportDomain(),dependencyList.get(currentLine).getImportLib());
+
+                int finalLocationStartOfImport = document.getLineStartOffset(clickedLineNumber - 1);
+                int finalLocationEndOfImport = locationEndOfImport;
+                finalLocationEndOfImport = document.getLineEndOffset(clickedLineNumber + 4);
+                String finalClassName = className;
+                int finalLocationEndOfImport1 = finalLocationEndOfImport;
+                int finalLocationEndOfImport2 = finalLocationEndOfImport;
+                WindowAdapter adapter = new WindowAdapter() {
+
+                    @Override
+                    public void windowLostFocus(WindowEvent e) {
+                        String finalChoice = replacementDialog.getMavenReturned();
+
+                        toLibrary = replacementDialog.getto_library();
+                        selectedLibList = replacementDialog.getSelectionLibrary();
+                        libraryName = replacementDialog.getLibraryname();
+
+                        if (finalChoice.equals("None") == false) {
+                            try {
+                                finalChoice = dataAccessObject.readMavenVersion(finalChoice,typeofMaven);
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+
+                            String finalChoice1 = finalChoice;
+                            WriteCommandAction.runWriteCommandAction(project, () ->
+                                    document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport1, finalChoice1));
+
+                            try {
+                                detectMavenDependency(editor, psiFile, projectName);
+                            } catch (IOException | SAXException exception) {
+                                exception.printStackTrace();
+                            }
+                        }
+
+                        try {
+                            DatabaseAccess dataAccessObject = new DatabaseAccess();
+                            ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, clickedLineNumber, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
+                            dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
+                        }
+                        catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        String finalChoice = replacementDialog.getMavenReturned();
+                        toLibrary = replacementDialog.getto_library();
+                        selectedLibList = replacementDialog.getSelectionLibrary();
+                        libraryName = replacementDialog.getLibraryname();
+
+                        if (finalChoice.equals("None") == false) {
+
+                            try {
+                                finalChoice = dataAccessObject.readMavenVersion(finalChoice, typeofMaven);
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+
+                            String finalChoice1 = finalChoice;
+
+                            WriteCommandAction.runWriteCommandAction(project, () ->
+                                    document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport2, finalChoice1));
+
+                            try {
+                                detectMavenDependency(editor, psiFile, projectName);
+                            } catch (IOException | SAXException exception) {
+                                exception.printStackTrace();
+                            }
+
+
+                            try {
+                                DatabaseAccess dataAccessObject = new DatabaseAccess();
+                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, clickedLineNumber, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
+                                dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
+
+                            }
+                            catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+                        }
+                        try {
+
+                            DatabaseAccess dataAccessObject = new DatabaseAccess();
+                            ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, clickedLineNumber, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
+                            dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
+
+                        }
+                        catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        }
+                    }
+                };
+                replacementDialog.addWindowListener(adapter);
+                replacementDialog.addWindowFocusListener(adapter);
+                replacementDialog.setVisible(true);
+            }
+            currentLine++;
         }
     }
 
     public void replaceRequestedMaven(@NotNull final AnActionEvent event) throws ParseException {
+        String className = "Maven File";
 
-        final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-        final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
-        final Document document = editor.getDocument();
-        PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
-
-        String project_name = project.getName();
-        String class_name = "Maven File";
-
-        Date action_date = new Date();
-        int from_library;
-
-        User userRecord = new User();
-        DatabaseAccess dataAccessObject = new DatabaseAccess();
-        userRecord = dataAccessObject.readUserProfile();
-        sendToCloud = (Integer.parseInt(userRecord.getSendAllCloud())==1);
-
-        //Work off of the primary caret to get the selection info
-        Caret primaryCaret = editor.getCaretModel().getPrimaryCaret();
-
-        //Get the location of the mouse click, get the caret offset, then from the offset get the line number
-        int mouseClickLocation = primaryCaret.getOffset();
-        int clickedLineNumber = document.getLineNumber(mouseClickLocation);
-
-        //Check if the user clicked on a line that is potentially replaceable (i.e. import statement is in database)
-        int currentLine = 0;
-        int locationStartOfImport;
-        int locationEndOfImport;
-
-        while (currentLine < MavenListObjects.size()) {
-            if (MavenListObjects.get(currentLine).getImportLocation() == clickedLineNumber) {
-                from_library = MavenListObjects.get(currentLine).getImportLib();
-                locationStartOfImport = MavenListObjects.get(currentLine).getFromlocation();
-                locationEndOfImport = MavenListObjects.get(currentLine).getTolocation();
-                int finalFrom_library = from_library;
-
-                ReplacementDialog replacementDialog =new ReplacementDialog(MavenListObjects.get(currentLine).getDomainName(), MavenListObjects.get(currentLine).getImportDomain(),MavenListObjects.get(currentLine).getImportLib());
-
-              //  int finalLocationStartOfImport = locationStartOfImport;
-                int finalLocationStartOfImport = document.getLineStartOffset(clickedLineNumber - 1);
-                int finalLocationEndOfImport = locationEndOfImport;
-                finalLocationEndOfImport = document.getLineEndOffset(clickedLineNumber + 4);
-                String finalClass_name = class_name;
-                int finalLocationEndOfImport1 = finalLocationEndOfImport;
-                int finalLocationEndOfImport2 = finalLocationEndOfImport;
-                WindowAdapter adapter = new WindowAdapter() {
-
-                    @Override
-                    public void windowLostFocus(WindowEvent e) {
-                        String finalChoice = replacementDialog.getMavenReturned();
-
-                        to_library = replacementDialog.getto_library();
-                        full_lib_list = replacementDialog.getSelectionLibrary();
-                        libraryName = replacementDialog.getLibraryname();
-
-                        if (finalChoice.equals("None") == false) {
-                            try {
-                                finalChoice = dataAccessObject.readMavenVersion(finalChoice,2);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-
-                            String finalChoice1 = finalChoice;
-                            WriteCommandAction.runWriteCommandAction(project, () ->
-                                    document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport1, finalChoice1));
-
-                            try {
-                                detectMaven(editor, psiFile, project_name);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-
-
-                        }
-
-                        try {
-
-                            DatabaseAccess dataAccessObject = new DatabaseAccess();
-                            ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                            dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
-
-                        }
-                        catch (IOException ioException) {
-                            ioException.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void windowClosing(WindowEvent e) {
-                        String finalChoice = replacementDialog.getMavenReturned();
-                        to_library = replacementDialog.getto_library();
-                        full_lib_list = replacementDialog.getSelectionLibrary();
-                        libraryName = replacementDialog.getLibraryname();
-
-                        if (finalChoice.equals("None") == false) {
-
-                            try {
-                                finalChoice = dataAccessObject.readMavenVersion(finalChoice, 2);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-
-                            String finalChoice1 = finalChoice;
-
-                            WriteCommandAction.runWriteCommandAction(project, () ->
-                                    document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport2, finalChoice1));
-
-                            try {
-                                detectMaven(editor, psiFile, project_name);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-
-
-                            try {
-                                DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                                dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
-
-                            }
-                            catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-                        }
-                        try {
-
-                            DatabaseAccess dataAccessObject = new DatabaseAccess();
-                            ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                            dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
-
-                        }
-                        catch (IOException ioException) {
-                            ioException.printStackTrace();
-                        }
-                    }
-                };
-                replacementDialog.addWindowListener(adapter);
-                replacementDialog.addWindowFocusListener(adapter);
-                replacementDialog.setVisible(true);
-            }
-            currentLine = currentLine + 1;
+        try {
+            replaceRequestedMavenGradle(event, className, 2, mavenDepList);
+        }
+        catch (ParseException parseException) {
+            parseException.printStackTrace();
         }
     }
 
 
-
     public void replaceRequestedDependency(@NotNull final AnActionEvent event) throws ParseException {
+        String className = "groovy Class";
 
-        final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-        final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
-        final Document document = editor.getDocument();
-        PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
-
-        String project_name = project.getName();
-        String class_name = "groovy Class";
-
-        Date action_date = new Date();
-        int from_library;
-
-        User userRecord = new User();
-        DatabaseAccess dataAccessObject = new DatabaseAccess();
-        userRecord = dataAccessObject.readUserProfile();
-        sendToCloud = (Integer.parseInt(userRecord.getSendAllCloud())==1);
-
-        //Work off of the primary caret to get the selection info
-        Caret primaryCaret = editor.getCaretModel().getPrimaryCaret();
-
-        //Get the location of the mouse click, get the caret offset, then from the offset get the line number
-        int mouseClickLocation = primaryCaret.getOffset();
-        int clickedLineNumber = document.getLineNumber(mouseClickLocation);
-
-        //Check if the user clicked on a line that is potentially replaceable (i.e. import statement is in database)
-        int currentLine = 0;
-        int locationStartOfImport;
-        int locationEndOfImport;
-
-        while (currentLine < DependListObjects.size()) {
-            if (DependListObjects.get(currentLine).getImportLocation() == clickedLineNumber) {
-                from_library = DependListObjects.get(currentLine).getImportLib();
-                locationStartOfImport = DependListObjects.get(currentLine).getFromlocation();
-                locationEndOfImport = DependListObjects.get(currentLine).getTolocation();
-                int finalFrom_library = from_library;
-
-                ReplacementDialog replacementDialog =new ReplacementDialog(DependListObjects.get(currentLine).getDomainName(), DependListObjects.get(currentLine).getImportDomain(),DependListObjects.get(currentLine).getImportLib());
-
-                int finalLocationStartOfImport = locationStartOfImport;
-                int finalLocationEndOfImport = locationEndOfImport;
-                finalLocationEndOfImport = document.getLineEndOffset(clickedLineNumber);
-                String finalClass_name = class_name;
-                int finalLocationEndOfImport1 = finalLocationEndOfImport;
-                int finalLocationEndOfImport2 = finalLocationEndOfImport;
-                WindowAdapter adapter = new WindowAdapter() {
-
-                    @Override
-                    public void windowLostFocus(WindowEvent e) {
-                        String finalChoice = replacementDialog.getMavenReturned();
-
-                        to_library = replacementDialog.getto_library();
-                        full_lib_list = replacementDialog.getSelectionLibrary();
-                        libraryName = replacementDialog.getLibraryname();
-
-                        if (finalChoice.equals("None") == false) {
-                            try {
-                                finalChoice = dataAccessObject.readMavenVersion(finalChoice, 1);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-
-                            String finalChoice1 = finalChoice;
-                            WriteCommandAction.runWriteCommandAction(project, () ->
-                                    document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport1, finalChoice1));
-
-                            try {
-                                detectDependancy(editor, psiFile, project_name);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-
-
-                        }
-
-                        try {
-
-                                DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                                dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
-
-                        }
-                        catch (IOException ioException) {
-                            ioException.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void windowClosing(WindowEvent e) {
-                        String finalChoice = replacementDialog.getMavenReturned();
-                        to_library = replacementDialog.getto_library();
-                        full_lib_list = replacementDialog.getSelectionLibrary();
-                        libraryName = replacementDialog.getLibraryname();
-
-                        if (finalChoice.equals("None") == false) {
-
-                            try {
-                                finalChoice = dataAccessObject.readMavenVersion(finalChoice, 1);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-
-                            String finalChoice1 = finalChoice;
-
-                            WriteCommandAction.runWriteCommandAction(project, () ->
-                                    document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport2, finalChoice1));
-
-                            try {
-                                detectDependancy(editor, psiFile, project_name);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-
-
-                            try {
-                                    DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                    ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                                    dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
-
-                            }
-                            catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-                        }
-                        try {
-
-                                DatabaseAccess dataAccessObject = new DatabaseAccess();
-                                ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, action_date, clickedLineNumber, project_name, finalClass_name, full_lib_list, finalFrom_library, to_library);
-                                dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
-
-                        }
-                        catch (IOException ioException) {
-                            ioException.printStackTrace();
-                        }
-                    }
-                };
-                replacementDialog.addWindowListener(adapter);
-                replacementDialog.addWindowFocusListener(adapter);
-                replacementDialog.setVisible(true);
-            }
-            currentLine = currentLine + 1;
+        try {
+            replaceRequestedMavenGradle(event, className, 1, gradleDepList);
+        }
+        catch (ParseException parseException) {
+            parseException.printStackTrace();
         }
     }
 
@@ -864,13 +532,17 @@ public class ReplacementAction extends AnAction {
 
         return enabledDomain;
     }
+
     /**
-     * The detectImportStatementMethod will got through the current open file and test the import statements to see if they are in the database
+     * The detectJavaImport method will got through the current open file and test the import statements to see if they are in the database
      * The trigger for this to occur is a right click anywhere in the editor, I have yet to figure out how to have it work onLoad
      * Right now, the library being queried is the "last word" of the import statement
      * ex. for my.import.statement.rehab, the term queried against in the database is "rehab"
+     * @param editor is currently focused editor instance.
+     * @param psiFile is a PSI (Program Structure Interface) file, the root of a structure representing a file's contents as a hierarchy of elements
+     * @param projectName is the name of current project
      */
-    public void detectImports(@NotNull final PsiFile psiFile, @NotNull final Editor editor, @NotNull final  String project_name ) {
+    public void detectJavaImport(@NotNull final PsiFile psiFile, @NotNull final Editor editor, @NotNull final  String projectName ) {
 
         try {
             final MarkupModel editorModel = editor.getMarkupModel();
@@ -888,7 +560,7 @@ public class ReplacementAction extends AnAction {
                 return;
             }
 
-            ImportListObjects.clear();
+            javaImportList.clear();
             editorModel.removeAllHighlighters();
 
             int locationLastWord = 0;
@@ -912,13 +584,13 @@ public class ReplacementAction extends AnAction {
                     impObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
                     impObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
                     impObj.setDomainName(choicesArray.get(2));
-                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), project_name)) {
+                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
                         impObj.setEnableddomain(false);
                     }
                     else {
                         impObj.setEnableddomain(true);
                     }
-                    ImportListObjects.add(impObj);
+                    javaImportList.add(impObj);
 
                     if (impObj.getEnableddomain()) {
                         editorModel.addLineHighlighter(importLineNumber,
@@ -932,18 +604,177 @@ public class ReplacementAction extends AnAction {
         }
     }
 
-    public void detectImportOnAction(@NotNull final AnActionEvent event) throws IOException {
+    /**
+     * The detectGradleStartLocation method parses PSI file to detect the PSI dependencies node and return the start location for dependencies.
+     * @param psinode is an abstract syntax tree(AST) node corresponding to elements for gradle file.
+     * @return the location of PSI dependencies node.
+     */
+    public int detectGradleStartLocation(FileASTNode psinode)
+    {
+        int startLocation = -1;
+        ASTNode child = psinode.getFirstChildNode();
+        String name = child.getText();
+        boolean isFound = name.contains("dependencies");
+        boolean isReadAll = false;
+        while ((!isFound) && (!isReadAll)) {
+            child = child.getTreeNext();
+            if (child != null)
+            {
+                name = child.getText();
+                isFound = name.contains("dependencies");
+            }
+            else isReadAll = true;
+        }
+        if (isFound) {
+            startLocation = child.getStartOffset();
+        }
+        return startLocation;
+    }
 
-         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
-         Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-         final Project project = event.getRequiredData(CommonDataKeys.PROJECT);
-         String project_name = project.getName();
+    /**
+     * The detectGradleDependency method gets through the current open gradle file and test the dependency statements to see if they are in the database.
+     * The detectGradleDependency method calls detectStatement method to highlight targeted libraries which are in the database.
+     * @param editor is currently focused editor instance.
+     * @param psiFile is a PSI (Program Structure Interface) file, the root of a structure representing a file's contents as a hierarchy of elements
+     * @param projectName is the name of current project
+     */
+    public void detectGradleDependency(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException {
 
-         try {
-             detectImports(psiFile, editor, project_name);
-         }
-         catch(Exception e) {
-             e.printStackTrace();
-         }
+        final MarkupModel editorModel = editor.getMarkupModel();
+        final Document document = editor.getDocument();
+        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+        TextAttributes softerAttributes = attributes.clone();
+        boolean dependenciesExists = false;
+        int currentLine = 0;
+        int loc = detectGradleStartLocation(psiFile.getNode()); // Parse PSI to detect the PSI dependencies node
+        if (loc!= -1) // dependencies exists
+        {
+            dependenciesExists = true;
+            currentLine = document.getLineNumber(loc); // line number of the dependencies PSI node
+        }
+        String lineText;
+        String selectedTerm;
+        gradleDepList.clear();
+        editorModel.removeAllHighlighters();
+
+        while (dependenciesExists)
+        {
+            int startOffset = document.getLineStartOffset(currentLine);
+            int endOffset = document.getLineEndOffset(currentLine);
+            lineText = null;
+            String[] valuesInQuotes = new String[0];
+            valuesInQuotes = null;
+
+            lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
+
+            if ((lineText != null) && (lineText.length()>2))
+            {valuesInQuotes = StringUtils.substringsBetween(lineText, "\'", "\'");}
+
+            if (valuesInQuotes != null) {
+                selectedTerm = valuesInQuotes[0];
+
+                DatabaseAccess dataAccessObject = new DatabaseAccess();
+                ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
+                if (choicesArray.size() > 0) {
+                    DependencyStatement depObj = new DependencyStatement();
+                    depObj.setImportLocation(currentLine);
+                    depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
+                    depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
+                    depObj.setDomainName(choicesArray.get(2));
+                    depObj.setFromlocation(startOffset);
+                    depObj.setTolocation(endOffset);
+
+                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
+                        depObj.setEnableddomain(false);
+                    }
+                    else {
+                        depObj.setEnableddomain(true);
+                    }
+
+                    gradleDepList.add(depObj);
+
+                    if (depObj.getEnableddomain()) {
+                        editorModel.addLineHighlighter(currentLine,
+                                DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
+
+                    }
+                }
+            }
+            ++currentLine;
+            boolean isContainsEnd = lineText.contains("}");
+            if (isContainsEnd) {
+                dependenciesExists = false;
+            }
+        }
+    }
+
+    /**
+     * The detectMavenDependency method gets through the current open maven file and test the dependency statements to see if they are in the database.
+     * This will highlight targeted libraries which are in the database.
+     * @param editor is currently focused editor instance.
+     * @param psiFile is a PSI (Program Structure Interface) file, the root of a structure representing a file's contents as a hierarchy of elements.
+     * @param projectName is the name of current project.
+     */
+    public void detectMavenDependency(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException, SAXException {
+
+        final MarkupModel editorModel = editor.getMarkupModel();
+        final Document document = editor.getDocument();
+        TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+        TextAttributes softerAttributes = attributes.clone();
+
+        XmlFile xmlFile = (XmlFile) psiFile;
+        InputStream is = new ByteArrayInputStream(xmlFile.getText().getBytes());
+        org.w3c.dom.Document doc = PositionalXMLReader.readXML(is);
+        is.close();
+
+        Node parentNode = doc.getElementsByTagName("dependencies").item(0);
+        NodeList nodeList = parentNode.getChildNodes();
+
+        mavenDepList.clear();
+        int currentLine;
+        try {
+            DatabaseAccess dataAccessObject = new DatabaseAccess();
+            String selectedTerm = null;
+            Element element;
+            Node node;
+
+            for (int nodeIndex = 0; nodeIndex < nodeList.getLength(); nodeIndex++) {
+                if(nodeList.item(nodeIndex).getNodeType() == Node.ELEMENT_NODE){
+                    element = (Element) nodeList.item(nodeIndex);
+                    node = element.getElementsByTagName("groupId").item(0);
+                    selectedTerm = node.getTextContent();
+
+                    ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
+
+                    if (choicesArray.size() > 0) {
+                        String s = (String) node.getUserData("lineNumber");
+                        currentLine = Integer.valueOf(s);
+
+                        DependencyStatement depObj = new DependencyStatement();
+                        depObj.setImportLocation(currentLine-1);
+                        depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
+                        depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
+                        depObj.setDomainName(choicesArray.get(2));
+
+                        if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
+                            depObj.setEnableddomain(false);
+                        }
+                        else {
+                            depObj.setEnableddomain(true);
+                        }
+
+                        mavenDepList.add(depObj);
+
+                        if (depObj.getEnableddomain()) {
+                            editorModel.addLineHighlighter(currentLine-1,
+                                    DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
+                        }
+                    }
+                }
+            }
+        }
+        catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 }

@@ -33,7 +33,7 @@ public class ReplacementDialog extends JFrame {
     private String LibraryReturned = "None";
     private String mavenReturned = "None";
     private String LibraryName = "None";
-    private String full_lib_list = "";
+    private String selectedLibList = "";
     private int to_library;
     private int libID;
     private int domainID;
@@ -86,7 +86,7 @@ public class ReplacementDialog extends JFrame {
 
 
     public String getSelectionLibrary() {
-        return full_lib_list;
+        return selectedLibList;
     }
     public String getLibraryReturned() { return LibraryReturned; }
     public String getMavenReturned(){ return mavenReturned; }
@@ -259,10 +259,10 @@ public class ReplacementDialog extends JFrame {
 
             data[9][current + offsetBtnCols] = libraryList.get(current).getLicense();
 
-            if (full_lib_list.length() < 1)
-                full_lib_list = "" + libraryList.get(current).getLibrary_id();
+            if (selectedLibList.length() < 1)
+                selectedLibList = "" + libraryList.get(current).getLibrary_id();
             else
-                full_lib_list = full_lib_list + "," + libraryList.get(current).getLibrary_id();
+                selectedLibList = selectedLibList + "," + libraryList.get(current).getLibrary_id();
             current = current + 1;
         }
 
