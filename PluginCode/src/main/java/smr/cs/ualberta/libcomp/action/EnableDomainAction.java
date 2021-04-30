@@ -26,6 +26,7 @@ import com.intellij.psi.PsiImportList;
 import com.intellij.psi.PsiFile;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.xml.sax.SAXException;
 import smr.cs.ualberta.libcomp.*;
 import smr.cs.ualberta.libcomp.data.DependencyStatement;
 import smr.cs.ualberta.libcomp.data.ReplacementFeedback;
@@ -194,7 +195,7 @@ public class EnableDomainAction extends AnAction {
                         ReplacementAction actionPerformed = new ReplacementAction();
                         try {
                             actionPerformed.detectAllOpenEditors();
-                        } catch (IOException e) {
+                        } catch (IOException | SAXException e) {
                             e.printStackTrace();
                         }
                     }
@@ -253,7 +254,7 @@ public class EnableDomainAction extends AnAction {
                         ReplacementAction actionPerformed = new ReplacementAction();
                         try {
                             actionPerformed.detectAllOpenEditors();
-                        } catch (IOException e) {
+                        } catch (IOException | SAXException e) {
                             e.printStackTrace();
                         }
                     }

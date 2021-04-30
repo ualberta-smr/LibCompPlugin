@@ -17,6 +17,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.psi.xml.XmlFile;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -30,19 +31,21 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import smr.cs.ualberta.libcomp.*;
 import smr.cs.ualberta.libcomp.data.DependencyStatement;
 import smr.cs.ualberta.libcomp.data.ReplacementFeedback;
 import smr.cs.ualberta.libcomp.data.ImportStatement;
 import smr.cs.ualberta.libcomp.data.User;
 import smr.cs.ualberta.libcomp.dialog.ReplacementDialog;
+import smr.cs.ualberta.libcomp.utils.PositionalXMLReader;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
+import java.io.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,7 +56,6 @@ import java.util.List;
  * This is triggered by the replacement button on the main plugin dialog
  */
 public class ReplacementAction extends AnAction {
-    
     public ArrayList<ImportStatement> ImportListObjects;
     public ArrayList<DependencyStatement> DependListObjects;
     public ArrayList<DependencyStatement> MavenListObjects;
@@ -61,7 +63,6 @@ public class ReplacementAction extends AnAction {
     private String selectedLibList;
     private String libraryName;
     private boolean sendToCloud = false ;
-
 
     public ReplacementAction() {
     ImportListObjects = new ArrayList<>();
@@ -134,7 +135,7 @@ public class ReplacementAction extends AnAction {
         return  activeProject;
     }
 
-    public void detectAllOpenEditors() throws IOException {
+    public void detectAllOpenEditors() throws IOException, SAXException {
         Project proj= getActiveProject();
         String projectName = "none";
         if (proj == null)  { return;}
@@ -200,7 +201,7 @@ public class ReplacementAction extends AnAction {
 
         try {
             detectAllOpenEditors();
-        } catch (IOException e) {
+        } catch (IOException | SAXException e) {
             e.printStackTrace();
         }
 
@@ -439,7 +440,7 @@ public class ReplacementAction extends AnAction {
 
                             try {
                                 detectMaven(editor, psiFile, projectName);
-                            } catch (IOException ioException) {
+                            } catch (IOException | SAXException ioException) {
                                 ioException.printStackTrace();
                             }
                         }
@@ -478,7 +479,7 @@ public class ReplacementAction extends AnAction {
 
                             try {
                                 detectMaven(editor, psiFile, projectName);
-                            } catch (IOException ioException) {
+                            } catch (IOException | SAXException ioException) {
                                 ioException.printStackTrace();
                             }
 
@@ -759,38 +760,6 @@ public class ReplacementAction extends AnAction {
         }
     }
 
-
-    /**
-     * The detectMavenPSI method parses PSI file to detect the PSI dependencies node and return it's location.
-     * @param document is current document instance in the editor.
-     * @return the location of PSI dependencies node.
-     */
-    public int detectMavenPSI(final Document document)
-    {
-        int location = -1;
-        int i = 0;
-
-        int startOffset = document.getLineStartOffset(i);
-        int endOffset = document.getLineEndOffset(i);
-        String name = document.getText(new TextRange(startOffset, endOffset)).trim();
-        boolean found = name.contains("dependencies");
-        boolean over = false;
-        while ((!found) && (!over))
-        {
-            ++i;
-            startOffset = document.getLineStartOffset(i);
-            endOffset = document.getLineEndOffset(i);
-            name = document.getText(new TextRange(startOffset, endOffset)).trim();
-            found = name.contains("dependencies");
-            over = name.contains("</project>");
-        }
-        if (found)
-        {
-            location = i;
-        }
-        return location;
-    }
-
     /**
      * The detectMaven method gets through the current open maven file and test the dependency statements to see if they are in the database.
      * This will highlight targeted libraries which are in the database.
@@ -798,52 +767,50 @@ public class ReplacementAction extends AnAction {
      * @param psiFile is a PSI (Program Structure Interface) file, the root of a structure representing a file's contents as a hierarchy of elements.
      * @param projectName is the name of current project.
      */
-    public void detectMaven(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException {
+    public void detectMaven(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException, SAXException {
 
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
         TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
         TextAttributes softerAttributes = attributes.clone();
-        int lineNum = 0;
-        int loc = detectMavenPSI(document); // Parse PSI to detect the PSI dependencies node
-        if (loc != -1) // dependencies exists
-        {
-            lineNum = loc; // line number of the dependencies PSI node
-        }
+
+        XmlFile xmlFile = (XmlFile) psiFile;
+        InputStream is = new ByteArrayInputStream(xmlFile.getText().getBytes());
+        org.w3c.dom.Document doc = PositionalXMLReader.readXML(is);
+        is.close();
+
+        int nodeIndex = 0;
+        NodeList nodeList = doc.getElementsByTagName("groupId");
 
         MavenXpp3Reader Xpp3Reader = new MavenXpp3Reader();
         editorModel.removeAllHighlighters();
         VirtualFile vFile = psiFile.getOriginalFile().getVirtualFile();
         String path = vFile.getPath();
         MavenListObjects.clear();
-        int i = lineNum;
+        int i;
         try {
             Model model = Xpp3Reader.read(new FileReader(path));
             List<Dependency> dependencies = model.getDependencies();
             String selectedTerm = null;
-            String lineText = "";
-            int startOffset = 0;
-            int endOffset = 0;
+
             for (Dependency dependency : dependencies) {
                 selectedTerm = dependency.getGroupId();
 
-                while(!(lineText.contains(selectedTerm) && lineText.contains("<groupId>"))) {
-                    startOffset = document.getLineStartOffset(i);
-                    endOffset = document.getLineEndOffset(i);
-                    lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
-                    ++i;
-                }
                 DatabaseAccess dataAccessObject = new DatabaseAccess();
                 ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
 
                 if (choicesArray.size() > 0) {
+                    while (!selectedTerm.equals(nodeList.item(nodeIndex).getTextContent())) {
+                        nodeIndex += 1;
+                    }
+                    String s = (String) nodeList.item(nodeIndex).getUserData("lineNumber");
+                    i = Integer.valueOf(s);
+
                     DependencyStatement depObj = new DependencyStatement();
                     depObj.setImportLocation(i-1);
                     depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
                     depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
                     depObj.setDomainName(choicesArray.get(2));
-                    depObj.setFromlocation(startOffset);
-                    depObj.setTolocation(endOffset);
 
                     if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
                         depObj.setEnableddomain(false);
@@ -858,10 +825,8 @@ public class ReplacementAction extends AnAction {
                         editorModel.addLineHighlighter(i-1,
                                 DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
                     }
+                    nodeIndex += 1;
                 }
-                startOffset = document.getLineStartOffset(i);
-                endOffset = document.getLineEndOffset(i);
-                lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
             }
         }
         catch (IOException | XmlPullParserException ioException) {

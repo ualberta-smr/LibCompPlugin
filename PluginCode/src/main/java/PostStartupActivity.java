@@ -13,6 +13,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
+import org.xml.sax.SAXException;
 import smr.cs.ualberta.libcomp.DatabaseAccess;
 import smr.cs.ualberta.libcomp.action.ReplacementAction;
 import javax.swing.*;
@@ -37,7 +38,7 @@ public class PostStartupActivity implements StartupActivity {
                 ReplacementAction actionPerformed = new ReplacementAction();
                 try {
                     actionPerformed.detectAllOpenEditors();
-                } catch (IOException e) {
+                } catch (IOException | SAXException e) {
                     e.printStackTrace();
                 }
             }
@@ -49,7 +50,7 @@ public class PostStartupActivity implements StartupActivity {
                 ReplacementAction actionPerformed = new ReplacementAction();
                 try {
                     actionPerformed.detectAllOpenEditors();
-                } catch (IOException e) {
+                } catch (IOException | SAXException e) {
                     e.printStackTrace();
                 }
 
@@ -64,7 +65,7 @@ public class PostStartupActivity implements StartupActivity {
                 ReplacementAction actionPerformed = new ReplacementAction();
                 try {
                     actionPerformed.detectAllOpenEditors();
-                } catch (IOException e) {
+                } catch (IOException | SAXException e) {
                     e.printStackTrace();
                 }
             });
