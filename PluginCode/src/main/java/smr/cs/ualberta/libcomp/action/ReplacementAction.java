@@ -741,12 +741,12 @@ public class ReplacementAction extends AnAction {
         try {
             Model model = Xpp3Reader.read(new FileReader(path));
             List<Dependency> dependencies = model.getDependencies();
+            DatabaseAccess dataAccessObject = new DatabaseAccess();
             String selectedTerm = null;
 
             for (Dependency dependency : dependencies) {
                 selectedTerm = dependency.getGroupId();
 
-                DatabaseAccess dataAccessObject = new DatabaseAccess();
                 ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
 
                 if (choicesArray.size() > 0) {

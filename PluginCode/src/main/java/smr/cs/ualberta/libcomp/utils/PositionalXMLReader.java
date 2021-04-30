@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * This solution follows the method suggested by Michael Kay.
+ * This solution is copied from priomsrb's answer on Stackoverflow following the method suggested by Michael Kay.
  * https://stackoverflow.com/questions/4915422/get-line-number-from-xml-node-java?rq=1
  * PositionalXMLReader reads XMl from the input stream and creates a DOM document with a line numbers for each node.
  */
