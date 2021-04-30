@@ -4,6 +4,7 @@ import com.android.aapt.Resources;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -67,13 +68,13 @@ public class EnableDomainAction extends AnAction {
             FileType fileType = psiFile.getFileType();
 
             if (fileType.getDefaultExtension().equalsIgnoreCase("java")) {
-                detectImports(psiFile, editor, project);
+                detectJavaImport(psiFile, editor, project);
             }
 
-            if (fileType.getDefaultExtension().equalsIgnoreCase("groovy"))
+            if (fileType.getDefaultExtension().equalsIgnoreCase("gradle"))
             {
                 try {
-                    detectDependancy(editor, psiFile , project);
+                    detectGradleDependency(editor, psiFile , project);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -83,7 +84,7 @@ public class EnableDomainAction extends AnAction {
             if (fileType.getDefaultExtension().equalsIgnoreCase("xml"))
             {
                 try {
-                    detectMaven(editor, psiFile , project);
+                    detectMavenDependency(editor, psiFile , project);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -93,60 +94,55 @@ public class EnableDomainAction extends AnAction {
             event.getPresentation().setVisible(true);
             event.getPresentation().setEnabled(true);
         }
-    } // end of actionPErformed
+    }
 
-
-    public int detectDependenciesPSI(FileASTNode psinode)
+    public int detectGradleStartLocation(FileASTNode psinode)
     {
-        int location = -1;
+        int startLocation = -1;
         ASTNode child = psinode.getFirstChildNode();
         String name = child.getText();
-        boolean found = name.contains("dependencies");
-        boolean over = false;
-        while ((!found) && (!over))
-        {
+        boolean isFound = name.contains("dependencies");
+        boolean isReadAll = false;
+        while ((!isFound) && (!isReadAll)) {
             child = child.getTreeNext();
             if (child != null)
             {
                 name = child.getText();
-                found = name.contains("dependencies");
+                isFound = name.contains("dependencies");
             }
-            else over = true;
+            else isReadAll = true;
         }
-        if (found)
-        {
-            location = child.getStartOffset();
+        if (isFound) {
+            startLocation = child.getStartOffset();
         }
-        return location;
+        return startLocation;
     }
 
-    public int detectMavenPSI(final Document document)
+    public int detectMavenStartLocation(final Document document)
     {
-        int location = -1;
+        int startLocation = -1;
         int i = 0;
 
         int startOffset = document.getLineStartOffset(i);
         int endOffset = document.getLineEndOffset(i);
         String name = document.getText(new TextRange(startOffset, endOffset)).trim();
-        boolean found = name.contains("dependencies");
-        boolean over = false;
-        while ((!found) && (!over))
-        {
+        boolean isFound = name.contains("dependencies");
+        boolean isReadAll = false;
+        while ((!isFound) && (!isReadAll)) {
             ++i;
             startOffset = document.getLineStartOffset(i);
             endOffset = document.getLineEndOffset(i);
             name = document.getText(new TextRange(startOffset, endOffset)).trim();
-            found = name.contains("dependencies");
-            over = name.contains("</project>");
+            isFound = name.contains("dependencies");
+            isReadAll = name.contains("</project>");
         }
-        if (found)
-        {
-            location = i;
+        if (isFound) {
+            startLocation = i;
         }
-        return location;
+        return startLocation;
     }
 
-    public void detectMaven(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  Project project  ) throws IOException {
+    public void detectMavenDependency(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  Project project  ) throws IOException {
 
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
@@ -156,7 +152,7 @@ public class EnableDomainAction extends AnAction {
         TextAttributes softerAttributes = attributes.clone();
         boolean dependenciesExists = false;
         int i = 0;
-        int loc = detectMavenPSI(document); // Parse PSI to detect the PSI dependencies node
+        int loc = detectMavenStartLocation(document); // Parse PSI to detect the PSI dependencies node
         if (loc != -1) // dependencies exists
         {
             dependenciesExists = true;
@@ -166,7 +162,6 @@ public class EnableDomainAction extends AnAction {
         Caret primaryCaret = editor.getCaretModel().getPrimaryCaret();
         int mouseClickLocation = primaryCaret.getOffset();
         int clickedLineNumber = document.getLineNumber(mouseClickLocation);
-
 
         String lineText = null;
         String selectedTerm;
@@ -211,7 +206,7 @@ public class EnableDomainAction extends AnAction {
 
 
 
-    public void detectDependancy(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  Project project  ) throws IOException {
+    public void detectGradleDependency(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  Project project  ) throws IOException {
 
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
@@ -221,7 +216,7 @@ public class EnableDomainAction extends AnAction {
         TextAttributes softerAttributes = attributes.clone();
         boolean dependenciesExists = false;
         int i = 0;
-        int loc = detectDependenciesPSI(psiFile.getNode()); // Parse PSI to detect the PSI dependencies node
+        int loc = detectGradleStartLocation(psiFile.getNode()); // Parse PSI to detect the PSI dependencies node
         if (loc != -1) // dependencies exists
         {
             dependenciesExists = true;
@@ -235,7 +230,6 @@ public class EnableDomainAction extends AnAction {
 
         String lineText = null;
         String selectedTerm;
-//        editorModel.removeAllHighlighters();
 
         while (dependenciesExists)
         {
@@ -268,8 +262,7 @@ public class EnableDomainAction extends AnAction {
         }
     }
 
-
-    public void detectImports(@NotNull final PsiFile psiFile, @NotNull final Editor editor, @NotNull final  Project project ) {
+    public void detectJavaImport(@NotNull final PsiFile psiFile, @NotNull final Editor editor, @NotNull final  Project project ) {
 
         try {
             final Document document = editor.getDocument();
@@ -308,11 +301,4 @@ public class EnableDomainAction extends AnAction {
             e.printStackTrace();
         }
     }
-
-
-
-
-
-
 } // end of class
-

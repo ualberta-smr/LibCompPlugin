@@ -31,7 +31,6 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import smr.cs.ualberta.libcomp.*;
@@ -56,19 +55,18 @@ import java.util.List;
  * This is triggered by the replacement button on the main plugin dialog
  */
 public class ReplacementAction extends AnAction {
-    public ArrayList<ImportStatement> ImportListObjects;
-    public ArrayList<DependencyStatement> DependListObjects;
-    public ArrayList<DependencyStatement> MavenListObjects;
+    public ArrayList<ImportStatement> importObjectList;
+    public ArrayList<DependencyStatement> dependObjectList;
+    public ArrayList<DependencyStatement> mavenObjectList;
     private int toLibrary;
     private String selectedLibList;
     private String libraryName;
     private boolean sendToCloud = false ;
 
     public ReplacementAction() {
-    ImportListObjects = new ArrayList<>();
-    DependListObjects = new ArrayList<>();
-    MavenListObjects = new ArrayList<>();
-
+        importObjectList = new ArrayList<>();
+        dependObjectList = new ArrayList<>();
+        mavenObjectList = new ArrayList<>();
     }
 
     enum FileTypes {
@@ -107,7 +105,7 @@ public class ReplacementAction extends AnAction {
 
             }
 
-            if (fileExtention.equalsIgnoreCase("groovy"))  {
+            if (fileExtention.equalsIgnoreCase("gradle"))  {
                 try {
                     replaceRequestedDependency(event);
                     detectOnAction(event, FileTypes.GRADLE);
@@ -121,8 +119,7 @@ public class ReplacementAction extends AnAction {
         }
     }
 
-   public  Project getActiveProject()
-    {
+   public  Project getActiveProject() {
 
         Project[] projects = ProjectManager.getInstance().getOpenProjects();
         Project activeProject = null;
@@ -136,6 +133,7 @@ public class ReplacementAction extends AnAction {
     }
 
     public void detectAllOpenEditors() throws IOException, SAXException {
+
         Project proj= getActiveProject();
         String projectName = "none";
         if (proj == null)  { return;}
@@ -156,16 +154,16 @@ public class ReplacementAction extends AnAction {
                 String fileExtention = fileType.getDefaultExtension();
 
                 if (fileExtention.equalsIgnoreCase("java")) {
-                    detectImports(psiFile, editor, projectName);
+                    detectJavaImport(psiFile, editor, projectName);
                 }
                 if (fileName.equalsIgnoreCase("pom.xml")) {
-                    detectMaven(editor, psiFile, projectName);
+                    detectMavenDependency(editor, psiFile, projectName);
                 }
-                if (fileExtention.equalsIgnoreCase("groovy")) {
-                    detectGradle(editor, psiFile, projectName);
+                if (fileExtention.equalsIgnoreCase("gradle")) {
+                    detectGradleDependency(editor, psiFile, projectName);
                 }
             }
-            indexOpenEditors = indexOpenEditors + 1;
+            indexOpenEditors++;
         }
     }
 
@@ -178,11 +176,11 @@ public class ReplacementAction extends AnAction {
 
         try {
             if (fileType.equals(FileTypes.JAVA)) {
-                detectImports(psiFile, editor, projectName);
+                detectJavaImport(psiFile, editor, projectName);
             } else if (fileType.equals(FileTypes.MAVEN)) {
-                detectMaven(editor, psiFile, projectName);
+                detectMavenDependency(editor, psiFile, projectName);
             } else if (fileType.equals(FileTypes.GRADLE)) {
-                detectGradle(editor, psiFile, projectName);
+                detectGradleDependency(editor, psiFile, projectName);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -222,7 +220,7 @@ public class ReplacementAction extends AnAction {
                     e.printStackTrace();
                 }
             }
-            if (fileType.getDefaultExtension().equalsIgnoreCase("groovy")) {
+            if (fileType.getDefaultExtension().equalsIgnoreCase("gradle")) {
                 try {
                     detectOnAction(event, FileTypes.GRADLE);
                     event.getPresentation().setEnabledAndVisible(true);
@@ -277,8 +275,8 @@ public class ReplacementAction extends AnAction {
         //Check if the user clicked on a line that is potentially replaceable (i.e. import statement is in database)
         int currentLine = 0;
 
-        while (currentLine < ImportListObjects.size()) {
-            if (ImportListObjects.get(currentLine).getImportLocation() == clickedLineNumber) {
+        while (currentLine < importObjectList.size()) {
+            if (importObjectList.get(currentLine).getImportLocation() == clickedLineNumber) {
 
                 //found a replaceable import statement
                 String importStatementFull;
@@ -286,9 +284,9 @@ public class ReplacementAction extends AnAction {
                 int offsetLastWord = 0;
                 int lineNum;
 
-                fromLibrary = ImportListObjects.get(currentLine).getImportLib();
+                fromLibrary = importObjectList.get(currentLine).getImportLib();
                 int finalFromLibrary = fromLibrary;
-                PsiImportStatementBase importStatementObject =  ImportListObjects.get(currentLine).getImportListBase();
+                PsiImportStatementBase importStatementObject =  importObjectList.get(currentLine).getImportListBase();
                 importStatementFull = importStatementObject.getImportReference().getQualifiedName();
                 importStatementLastWord = importStatementObject.getImportReference().getReferenceName();
 
@@ -298,7 +296,7 @@ public class ReplacementAction extends AnAction {
                 int locationStartOfImport = offsetLastWord - (importStatementFull.length() - importStatementLastWord.length());
                 int locationEndOfImport = document.getLineEndOffset(lineNum) - 1;
 
-                ReplacementDialog replacementDialog =new ReplacementDialog(ImportListObjects.get(currentLine).getDomainName(), ImportListObjects.get(currentLine).getImportDomain(),ImportListObjects.get(currentLine).getImportLib());
+                ReplacementDialog replacementDialog =new ReplacementDialog(importObjectList.get(currentLine).getDomainName(), importObjectList.get(currentLine).getImportDomain(),importObjectList.get(currentLine).getImportLib());
 
                 String finalClassName = className;
                 WindowAdapter adapter = new WindowAdapter() {
@@ -317,12 +315,9 @@ public class ReplacementAction extends AnAction {
                         }
 
                         try {
-
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
                                 ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, lineNum, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
                                 dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
-
-
                         }
                         catch (IOException ioException) {
                             ioException.printStackTrace();
@@ -341,18 +336,15 @@ public class ReplacementAction extends AnAction {
                             WriteCommandAction.runWriteCommandAction(project, () ->
                                     document.replaceString(locationStartOfImport, locationEndOfImport, finalChoice1));
                             try {
-
                                     DatabaseAccess dataAccessObject = new DatabaseAccess();
                                     ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, lineNum, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
                                     dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
-
                             }
                             catch (IOException ioException) {
                                 ioException.printStackTrace();
                             }
                         }
                         try {
-
                                 DatabaseAccess dataAccessObject = new DatabaseAccess();
                                 ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, lineNum, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
                                 dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
@@ -366,7 +358,7 @@ public class ReplacementAction extends AnAction {
                replacementDialog.addWindowFocusListener(adapter);
                replacementDialog.setVisible(true);
             }
-            currentLine = currentLine + 1;
+            currentLine++;
         }
     }
 
@@ -410,7 +402,6 @@ public class ReplacementAction extends AnAction {
 
                 ReplacementDialog replacementDialog =new ReplacementDialog(dependencyList.get(currentLine).getDomainName(), dependencyList.get(currentLine).getImportDomain(),dependencyList.get(currentLine).getImportLib());
 
-                //  int finalLocationStartOfImport = locationStartOfImport;
                 int finalLocationStartOfImport = document.getLineStartOffset(clickedLineNumber - 1);
                 int finalLocationEndOfImport = locationEndOfImport;
                 finalLocationEndOfImport = document.getLineEndOffset(clickedLineNumber + 4);
@@ -439,18 +430,16 @@ public class ReplacementAction extends AnAction {
                                     document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport1, finalChoice1));
 
                             try {
-                                detectMaven(editor, psiFile, projectName);
+                                detectMavenDependency(editor, psiFile, projectName);
                             } catch (IOException | SAXException ioException) {
                                 ioException.printStackTrace();
                             }
                         }
 
                         try {
-
                             DatabaseAccess dataAccessObject = new DatabaseAccess();
                             ReplacementFeedback replacementFeedbackPoint = new ReplacementFeedback(0, actionDate, clickedLineNumber, projectName, finalClassName, selectedLibList, finalFromLibrary, toLibrary);
                             dataAccessObject.updateFeedback(sendToCloud, replacementFeedbackPoint);
-
                         }
                         catch (IOException ioException) {
                             ioException.printStackTrace();
@@ -478,7 +467,7 @@ public class ReplacementAction extends AnAction {
                                     document.replaceString(finalLocationStartOfImport, finalLocationEndOfImport2, finalChoice1));
 
                             try {
-                                detectMaven(editor, psiFile, projectName);
+                                detectMavenDependency(editor, psiFile, projectName);
                             } catch (IOException | SAXException ioException) {
                                 ioException.printStackTrace();
                             }
@@ -510,7 +499,7 @@ public class ReplacementAction extends AnAction {
                 replacementDialog.addWindowFocusListener(adapter);
                 replacementDialog.setVisible(true);
             }
-            currentLine = currentLine + 1;
+            currentLine++;
         }
     }
 
@@ -518,7 +507,7 @@ public class ReplacementAction extends AnAction {
         String className = "Maven File";
 
         try {
-            replaceRequestedMavenGradle(event, className, 2, MavenListObjects);
+            replaceRequestedMavenGradle(event, className, 2, mavenObjectList);
         }
         catch (ParseException parseException) {
             parseException.printStackTrace();
@@ -530,7 +519,7 @@ public class ReplacementAction extends AnAction {
         String className = "groovy Class";
 
         try {
-            replaceRequestedMavenGradle(event, className, 1, DependListObjects);
+            replaceRequestedMavenGradle(event, className, 1, dependObjectList);
         }
         catch (ParseException parseException) {
             parseException.printStackTrace();
@@ -547,7 +536,7 @@ public class ReplacementAction extends AnAction {
     }
 
     /**
-     * The detectImports method will got through the current open file and test the import statements to see if they are in the database
+     * The detectJavaImport method will got through the current open file and test the import statements to see if they are in the database
      * The trigger for this to occur is a right click anywhere in the editor, I have yet to figure out how to have it work onLoad
      * Right now, the library being queried is the "last word" of the import statement
      * ex. for my.import.statement.rehab, the term queried against in the database is "rehab"
@@ -555,7 +544,7 @@ public class ReplacementAction extends AnAction {
      * @param psiFile is a PSI (Program Structure Interface) file, the root of a structure representing a file's contents as a hierarchy of elements
      * @param projectName is the name of current project
      */
-    public void detectImports(@NotNull final PsiFile psiFile, @NotNull final Editor editor, @NotNull final  String projectName ) {
+    public void detectJavaImport(@NotNull final PsiFile psiFile, @NotNull final Editor editor, @NotNull final  String projectName ) {
 
         try {
             final MarkupModel editorModel = editor.getMarkupModel();
@@ -573,7 +562,7 @@ public class ReplacementAction extends AnAction {
                 return;
             }
 
-            ImportListObjects.clear();
+            importObjectList.clear();
             editorModel.removeAllHighlighters();
 
             int locationLastWord = 0;
@@ -603,7 +592,7 @@ public class ReplacementAction extends AnAction {
                     else {
                         impObj.setEnableddomain(true);
                     }
-                    ImportListObjects.add(impObj);
+                    importObjectList.add(impObj);
 
                     if (impObj.getEnableddomain()) {
                         editorModel.addLineHighlighter(importLineNumber,
@@ -618,75 +607,62 @@ public class ReplacementAction extends AnAction {
     }
 
     /**
-     * The detectGradlePSI method parses PSI file to detect the PSI dependencies node and return it's location.
+     * The detectGradleStartLocation method parses PSI file to detect the PSI dependencies node and return the start location for dependencies.
      * @param psinode is an abstract syntax tree(AST) node corresponding to elements for gradle file.
      * @return the location of PSI dependencies node.
      */
-    public int detectGradlePSI(FileASTNode psinode)
+    public int detectGradleStartLocation(FileASTNode psinode)
     {
-        int location = -1;
+        int startLocation = -1;
         ASTNode child = psinode.getFirstChildNode();
         String name = child.getText();
-        boolean found = name.contains("dependencies");
-        boolean over = false;
-        while ((!found) && (!over))
-        {
+        boolean isFound = name.contains("dependencies");
+        boolean isReadAll = false;
+        while ((!isFound) && (!isReadAll)) {
             child = child.getTreeNext();
             if (child != null)
             {
                 name = child.getText();
-                found = name.contains("dependencies");
+                isFound = name.contains("dependencies");
             }
-            else over = true;
+            else isReadAll = true;
         }
-        if (found)
-        {
-            location = child.getStartOffset();
+        if (isFound) {
+            startLocation = child.getStartOffset();
         }
-        return location;
+        return startLocation;
     }
 
     /**
-     * The detectStatement method gets through the current open gradle file and test the dependency statements to see if they are in the database.
-     * The detectStatement method uses string match parsing strategy to extract the libraries and highlight those libraries in database on the editor.
+     * The detectGradleDependency method gets through the current open gradle file and test the dependency statements to see if they are in the database.
+     * The detectGradleDependency method calls detectStatement method to highlight targeted libraries which are in the database.
      * @param editor is currently focused editor instance.
-     * @param projectName is the name of current project.
-     * @param loc is the location where the dependencies start.
-     * @param lineNum is the line number of current line.
-     * @param identifier is the start identifier for library extraction.
-     * @param closeIdentifier is the end identifier for library extraction.
-     * @param endIdentifier is the end of identifier indicates a complete scan of dependencies.
-     * @param dependencyList is a list of DependencyStatement objects.
+     * @param psiFile is a PSI (Program Structure Interface) file, the root of a structure representing a file's contents as a hierarchy of elements
+     * @param projectName is the name of current project
      */
-    public void detectStatement(@NotNull final Editor editor,
-                                @NotNull final String projectName,
-                                @NotNull final int loc,
-                                @NotNull final int lineNum,
-                                @NotNull final String identifier,
-                                @NotNull final String closeIdentifier,
-                                @NotNull final String endIdentifier,
-                                @NotNull ArrayList<DependencyStatement> dependencyList) throws IOException {
+    public void detectGradleDependency(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException {
+
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
-        String lineText;
-        String selectedTerm;
         TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
         TextAttributes softerAttributes = attributes.clone();
         boolean dependenciesExists = false;
-        int i = 0;
-        if (loc != -1) // dependencies exists
+        int currentLine = 0;
+        int loc = detectGradleStartLocation(psiFile.getNode()); // Parse PSI to detect the PSI dependencies node
+        if (loc!= -1) // dependencies exists
         {
             dependenciesExists = true;
-            i = lineNum; // line number of the dependencies PSI node
+            currentLine = document.getLineNumber(loc); // line number of the dependencies PSI node
         }
-
-        dependencyList.clear();
+        String lineText;
+        String selectedTerm;
+        dependObjectList.clear();
         editorModel.removeAllHighlighters();
 
         while (dependenciesExists)
         {
-            int startOffset = document.getLineStartOffset(i);
-            int endOffset = document.getLineEndOffset(i);
+            int startOffset = document.getLineStartOffset(currentLine);
+            int endOffset = document.getLineEndOffset(currentLine);
             lineText = null;
             String[] valuesInQuotes = new String[0];
             valuesInQuotes = null;
@@ -694,17 +670,16 @@ public class ReplacementAction extends AnAction {
             lineText = document.getText(new TextRange(startOffset, endOffset)).trim();
 
             if ((lineText != null) && (lineText.length()>2))
-            {valuesInQuotes = StringUtils.substringsBetween(lineText, identifier , closeIdentifier);}
+            {valuesInQuotes = StringUtils.substringsBetween(lineText, "\'", "\'");}
 
             if (valuesInQuotes != null) {
                 selectedTerm = valuesInQuotes[0];
 
                 DatabaseAccess dataAccessObject = new DatabaseAccess();
                 ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
-
                 if (choicesArray.size() > 0) {
                     DependencyStatement depObj = new DependencyStatement();
-                    depObj.setImportLocation(i);
+                    depObj.setImportLocation(currentLine);
                     depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
                     depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
                     depObj.setDomainName(choicesArray.get(2));
@@ -718,17 +693,17 @@ public class ReplacementAction extends AnAction {
                         depObj.setEnableddomain(true);
                     }
 
-                    dependencyList.add(depObj);
+                    dependObjectList.add(depObj);
 
                     if (depObj.getEnableddomain()) {
-                        editorModel.addLineHighlighter(i,
+                        editorModel.addLineHighlighter(currentLine,
                                 DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
 
                     }
                 }
             }
-            ++i;
-            boolean isContainsEnd = lineText.contains(endIdentifier);
+            ++currentLine;
+            boolean isContainsEnd = lineText.contains("}");
             if (isContainsEnd) {
                 dependenciesExists = false;
             }
@@ -736,38 +711,13 @@ public class ReplacementAction extends AnAction {
     }
 
     /**
-     * The detectGradle method gets through the current open gradle file and test the dependency statements to see if they are in the database.
-     * The detectGradle method calls detectStatement method to highlight targeted libraries which are in the database.
-     * @param editor is currently focused editor instance.
-     * @param psiFile is a PSI (Program Structure Interface) file, the root of a structure representing a file's contents as a hierarchy of elements
-     * @param projectName is the name of current project
-     */
-    public void detectGradle(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException {
-
-        final Document document = editor.getDocument();
-        int lineNum = 0;
-        int loc = detectGradlePSI(psiFile.getNode()); // Parse PSI to detect the PSI dependencies node for gradle file
-        if (loc != -1) // dependencies exists
-        {
-            lineNum = document.getLineNumber(loc); // line number of the dependencies PSI node for gradle file
-        }
-
-        try {
-            detectStatement(editor, projectName, loc, lineNum, "\'", "\'","}", DependListObjects);
-        }
-        catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
-    }
-
-    /**
-     * The detectMaven method gets through the current open maven file and test the dependency statements to see if they are in the database.
+     * The detectMavenDependency method gets through the current open maven file and test the dependency statements to see if they are in the database.
      * This will highlight targeted libraries which are in the database.
      * @param editor is currently focused editor instance.
      * @param psiFile is a PSI (Program Structure Interface) file, the root of a structure representing a file's contents as a hierarchy of elements.
      * @param projectName is the name of current project.
      */
-    public void detectMaven(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException, SAXException {
+    public void detectMavenDependency(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  String projectName ) throws IOException, SAXException {
 
         final MarkupModel editorModel = editor.getMarkupModel();
         final Document document = editor.getDocument();
@@ -786,8 +736,8 @@ public class ReplacementAction extends AnAction {
         editorModel.removeAllHighlighters();
         VirtualFile vFile = psiFile.getOriginalFile().getVirtualFile();
         String path = vFile.getPath();
-        MavenListObjects.clear();
-        int i;
+        mavenObjectList.clear();
+        int currentLine;
         try {
             Model model = Xpp3Reader.read(new FileReader(path));
             List<Dependency> dependencies = model.getDependencies();
@@ -804,10 +754,10 @@ public class ReplacementAction extends AnAction {
                         nodeIndex += 1;
                     }
                     String s = (String) nodeList.item(nodeIndex).getUserData("lineNumber");
-                    i = Integer.valueOf(s);
+                    currentLine = Integer.valueOf(s);
 
                     DependencyStatement depObj = new DependencyStatement();
-                    depObj.setImportLocation(i-1);
+                    depObj.setImportLocation(currentLine-1);
                     depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
                     depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
                     depObj.setDomainName(choicesArray.get(2));
@@ -819,10 +769,10 @@ public class ReplacementAction extends AnAction {
                         depObj.setEnableddomain(true);
                     }
 
-                    MavenListObjects.add(depObj);
+                    mavenObjectList.add(depObj);
 
                     if (depObj.getEnableddomain()) {
-                        editorModel.addLineHighlighter(i-1,
+                        editorModel.addLineHighlighter(currentLine-1,
                                 DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
                     }
                     nodeIndex += 1;
