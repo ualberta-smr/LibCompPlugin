@@ -119,8 +119,8 @@ public class DatabaseAccess {
             JSONObject obj = new JSONObject(content);
             JSONArray localDate = obj.getJSONArray("version");
             int i = 0;
-            boolean found = false;
-            while (i < localDate.length() && !(found)) {
+            boolean isFound = false;
+            while (i < localDate.length() && !(isFound)) {
                 JSONObject jsonObj = (JSONObject) localDate.get(i);
                 if (jsonObj.has("created_on")) {
                     datelocal = jsonObj.getString("created_on");
@@ -556,7 +556,6 @@ public class DatabaseAccess {
             if (successfulsent<=jsonarr.length()) {
                 Files.deleteIfExists(Paths.get(filePath));
             }
-
         }
     }
 
@@ -591,7 +590,6 @@ public class DatabaseAccess {
                         }
                     }
                 }
-                in.close();
             }
         }
         catch (IOException e) {
@@ -796,8 +794,6 @@ public class DatabaseAccess {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void setEnabled(int domain, String project_name) {
@@ -843,8 +839,6 @@ public class DatabaseAccess {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
 
@@ -886,8 +880,4 @@ public class DatabaseAccess {
 
         return disabled;
     }
-
-
-
 }
-

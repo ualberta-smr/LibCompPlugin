@@ -210,7 +210,6 @@ public class EnableDomainAction extends AnAction {
         int mouseClickLocation = primaryCaret.getOffset();
         int clickedLineNumber = document.getLineNumber(mouseClickLocation);
 
-
         String lineText = null;
         String selectedTerm;
 

@@ -22,11 +22,9 @@ public class Library {
     private LocalDate last_discussed_so;
     private LocalDate Last_modification_date;
 
-
     private double overall_score;
     private String license;
     private String mavenlink;
-
 
     public Library() {
     }
@@ -113,7 +111,6 @@ public class Library {
     public void setLicense(String license) { this.license = license; }
     public void setMavenlink(String mavenlink) { this.mavenlink = mavenlink; }
     public void setBackwards_compatibility(double backwards_compatibility) {this.backwards_compatibility = backwards_compatibility;
-
 
     }
 }
