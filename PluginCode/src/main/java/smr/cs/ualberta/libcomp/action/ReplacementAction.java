@@ -89,8 +89,8 @@ public class ReplacementAction extends AnAction {
                 try {
                     replaceRequestedImport(event);
                     detectOnAction(event, FileTypes.JAVA);
-                } catch (ParseException | IOException e) {
-                    e.printStackTrace();
+                } catch (ParseException | IOException exception) {
+                    exception.printStackTrace();
                 }
 
             }
@@ -99,18 +99,18 @@ public class ReplacementAction extends AnAction {
                 try {
                     replaceRequestedMaven(event);
                     detectOnAction(event, FileTypes.MAVEN);
-                } catch (ParseException | IOException e) {
-                    e.printStackTrace();
+                } catch (ParseException | IOException exception) {
+                    exception.printStackTrace();
                 }
 
             }
 
-            if (fileExtention.equalsIgnoreCase("gradle"))  {
+            if (fileExtention.equalsIgnoreCase("groovy"))  {
                 try {
                     replaceRequestedDependency(event);
                     detectOnAction(event, FileTypes.GRADLE);
-                } catch (ParseException | IOException e) {
-                    e.printStackTrace();
+                } catch (ParseException | IOException exception) {
+                    exception.printStackTrace();
                 }
 
             }
@@ -159,7 +159,7 @@ public class ReplacementAction extends AnAction {
                 if (fileName.equalsIgnoreCase("pom.xml")) {
                     detectMavenDependency(editor, psiFile, projectName);
                 }
-                if (fileExtention.equalsIgnoreCase("gradle")) {
+                if (fileExtention.equalsIgnoreCase("groovy")) {
                     detectGradleDependency(editor, psiFile, projectName);
                 }
             }
@@ -199,8 +199,8 @@ public class ReplacementAction extends AnAction {
 
         try {
             detectAllOpenEditors();
-        } catch (IOException | SAXException e) {
-            e.printStackTrace();
+        } catch (IOException | SAXException exception) {
+            exception.printStackTrace();
         }
 
         PsiFile psiFile = event.getRequiredData(CommonDataKeys.PSI_FILE);
@@ -209,24 +209,24 @@ public class ReplacementAction extends AnAction {
             if (fileType.getDefaultExtension().equalsIgnoreCase("java")) {
                 try {
                     detectOnAction(event, FileTypes.JAVA);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
                 }
             }
             if (psiFile.getName().equalsIgnoreCase("pom.xml")) {
                 try {
                     detectOnAction(event, FileTypes.MAVEN);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
                 }
             }
-            if (fileType.getDefaultExtension().equalsIgnoreCase("gradle")) {
+            if (fileType.getDefaultExtension().equalsIgnoreCase("groovy")) {
                 try {
                     detectOnAction(event, FileTypes.GRADLE);
                     event.getPresentation().setEnabledAndVisible(true);
                 }
-                catch (IOException e) {
-                    e.printStackTrace();
+                catch (IOException exception) {
+                    exception.printStackTrace();
                 }
             }
              event.getPresentation().setVisible(true);
@@ -431,8 +431,8 @@ public class ReplacementAction extends AnAction {
 
                             try {
                                 detectMavenDependency(editor, psiFile, projectName);
-                            } catch (IOException | SAXException ioException) {
-                                ioException.printStackTrace();
+                            } catch (IOException | SAXException exception) {
+                                exception.printStackTrace();
                             }
                         }
 
@@ -468,8 +468,8 @@ public class ReplacementAction extends AnAction {
 
                             try {
                                 detectMavenDependency(editor, psiFile, projectName);
-                            } catch (IOException | SAXException ioException) {
-                                ioException.printStackTrace();
+                            } catch (IOException | SAXException exception) {
+                                exception.printStackTrace();
                             }
 
 
@@ -779,8 +779,8 @@ public class ReplacementAction extends AnAction {
                 }
             }
         }
-        catch (IOException | XmlPullParserException ioException) {
-            ioException.printStackTrace();
+        catch (IOException | XmlPullParserException exception) {
+            exception.printStackTrace();
         }
     }
 }

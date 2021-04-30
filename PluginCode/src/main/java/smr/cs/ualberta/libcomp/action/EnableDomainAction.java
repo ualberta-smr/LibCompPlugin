@@ -71,7 +71,7 @@ public class EnableDomainAction extends AnAction {
                 detectJavaImport(psiFile, editor, project);
             }
 
-            if (fileType.getDefaultExtension().equalsIgnoreCase("gradle"))
+            if (fileType.getDefaultExtension().equalsIgnoreCase("groovy"))
             {
                 try {
                     detectGradleDependency(editor, psiFile , project);
@@ -204,8 +204,6 @@ public class EnableDomainAction extends AnAction {
         }
     }
 
-
-
     public void detectGradleDependency(@NotNull final Editor editor, @NotNull final PsiFile psiFile, @NotNull final  Project project  ) throws IOException {
 
         final MarkupModel editorModel = editor.getMarkupModel();
@@ -301,4 +299,4 @@ public class EnableDomainAction extends AnAction {
             e.printStackTrace();
         }
     }
-} // end of class
+}
