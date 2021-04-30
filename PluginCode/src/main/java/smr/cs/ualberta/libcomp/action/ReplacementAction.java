@@ -1,6 +1,5 @@
 package smr.cs.ualberta.libcomp.action;
 
-import com.android.aapt.Resources;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.editor.Editor;
