@@ -25,11 +25,9 @@ import com.intellij.psi.*;
 import com.intellij.psi.PsiImportList;
 import com.intellij.psi.PsiFile;
 import org.apache.commons.lang.StringUtils;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import smr.cs.ualberta.libcomp.*;
@@ -729,57 +727,53 @@ public class ReplacementAction extends AnAction {
         org.w3c.dom.Document doc = PositionalXMLReader.readXML(is);
         is.close();
 
-        int nodeIndex = 0;
-        NodeList nodeList = doc.getElementsByTagName("groupId");
+        Node parentNode = doc.getElementsByTagName("dependencies").item(0);
+        NodeList nodeList = parentNode.getChildNodes();
 
-        MavenXpp3Reader Xpp3Reader = new MavenXpp3Reader();
-        editorModel.removeAllHighlighters();
-        VirtualFile vFile = psiFile.getOriginalFile().getVirtualFile();
-        String path = vFile.getPath();
         mavenDepList.clear();
         int currentLine;
         try {
-            Model model = Xpp3Reader.read(new FileReader(path));
-            List<Dependency> dependencies = model.getDependencies();
             DatabaseAccess dataAccessObject = new DatabaseAccess();
             String selectedTerm = null;
+            Element element;
+            Node node;
 
-            for (Dependency dependency : dependencies) {
-                selectedTerm = dependency.getGroupId();
+            for (int nodeIndex = 0; nodeIndex < nodeList.getLength(); nodeIndex++) {
+                if(nodeList.item(nodeIndex).getNodeType() == Node.ELEMENT_NODE){
+                    element = (Element) nodeList.item(nodeIndex);
+                    node = element.getElementsByTagName("groupId").item(0);
+                    selectedTerm = node.getTextContent();
 
-                ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
+                    ArrayList<String> choicesArray = dataAccessObject.selectJsonAllLibraries(selectedTerm);
 
-                if (choicesArray.size() > 0) {
-                    while (!selectedTerm.equals(nodeList.item(nodeIndex).getTextContent())) {
-                        nodeIndex += 1;
+                    if (choicesArray.size() > 0) {
+                        String s = (String) node.getUserData("lineNumber");
+                        currentLine = Integer.valueOf(s);
+
+                        DependencyStatement depObj = new DependencyStatement();
+                        depObj.setImportLocation(currentLine-1);
+                        depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
+                        depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
+                        depObj.setDomainName(choicesArray.get(2));
+
+                        if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
+                            depObj.setEnableddomain(false);
+                        }
+                        else {
+                            depObj.setEnableddomain(true);
+                        }
+
+                        mavenDepList.add(depObj);
+
+                        if (depObj.getEnableddomain()) {
+                            editorModel.addLineHighlighter(currentLine-1,
+                                    DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
+                        }
                     }
-                    String s = (String) nodeList.item(nodeIndex).getUserData("lineNumber");
-                    currentLine = Integer.valueOf(s);
-
-                    DependencyStatement depObj = new DependencyStatement();
-                    depObj.setImportLocation(currentLine-1);
-                    depObj.setImportLib(Integer.parseInt(choicesArray.get(0)));
-                    depObj.setImportDomain(Integer.parseInt(choicesArray.get(1)));
-                    depObj.setDomainName(choicesArray.get(2));
-
-                    if (dataAccessObject.isEnabled(Integer.parseInt(choicesArray.get(1)), projectName)) {
-                        depObj.setEnableddomain(false);
-                    }
-                    else {
-                        depObj.setEnableddomain(true);
-                    }
-
-                    mavenDepList.add(depObj);
-
-                    if (depObj.getEnableddomain()) {
-                        editorModel.addLineHighlighter(currentLine-1,
-                                DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
-                    }
-                    nodeIndex += 1;
                 }
             }
         }
-        catch (IOException | XmlPullParserException exception) {
+        catch (IOException exception) {
             exception.printStackTrace();
         }
     }
